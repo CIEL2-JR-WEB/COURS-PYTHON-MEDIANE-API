@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTS CIEL - Dashboard API Python & Statistiques</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>BTS CIEL // Informatique & Réseaux</h1>
+            <p>TP Python, Flask & MySQL : Algorithmes statistiques et API REST</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Section Ex 4.2 -->
+        <section class="card" id="sec-tri">
+            <h2>Exercice 4.2 : Tri par sélection & Médiane (API)</h2>
+            <p>Transmettez une liste d'entiers séparés par des virgules pour obtenir le tri et la médiane via Flask.</p>
+            <div class="form-group">
+                <input type="text" id="input-tri" placeholder="Exemple: 15, 3, 22, 8, 19" value="1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000">
+                <button id="btn-tri">Envoyer à /api/tri</button>
+            </div>
+            <pre class="output" id="output-tri">En attente d'une requête...</pre>
+        </section>
+
+        <!-- Section Ex 4.3 -->
+        <section class="card" id="sec-random">
+            <h2>Exercice 4.3 : Générateur aléatoire de salaires (JS vers API)</h2>
+            <p>Générez 9 salaires aléatoires en JavaScript (1200€ à 5000€) et déléguez le tri et la médiane à Flask.</p>
+            <div class="actions">
+                <button id="btn-random">Générer & Analyser</button>
+            </div>
+            <div class="stats-preview">
+                <p><strong>Salaires bruts générés (JS) :</strong> <span id="span-brut">-</span></p>
+                <p><strong>Salaires triés reçus (Flask) :</strong> <span id="span-trie">-</span></p>
+                <p><strong>Médiane calculée :</strong> <span id="span-mediane" class="badge">-</span></p>
+            </div>
+        </section>
+
+        <!-- Section Ex 5 -->
+        <section class="card" id="sec-fusion">
+            <h2>Exercice 5 : Fusion de tableaux (Concaténation)</h2>
+            <p>Fusionne deux séries d'entiers via <code>/api/fusion?t1=...&t2=...</code>.</p>
+            <div class="grid-2">
+                <input type="text" id="input-t1" placeholder="Tableau 1 (ex: 12, 18, 5)" value="12, 18, 5">
+                <input type="text" id="input-t2" placeholder="Tableau 2 (ex: 20, 8, 14)" value="20, 8, 14">
+            </div>
+            <button id="btn-fusion" style="margin-top: 10px;">Fusionner les listes</button>
+            <pre class="output" id="output-fusion">En attente d'une requête...</pre>
+        </section>
+
+        <!-- Section Ex 6 -->
+        <section class="card" id="sec-db">
+            <h2>Exercice 6 : Employés MySQL & Comparaison de salaire</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>1. Statistiques globales (/api/salaires/stats)</h3>
+                    <button id="btn-db-stats">Charger les statistiques BDD</button>
+                    <pre class="output" id="output-db-stats">Cliquez pour interroger MySQL.</pre>
+                </div>
+                <div>
+                    <h3>2. Position d'un employé (/api/employees/&lt;id&gt;/comparaison)</h3>
+                    <div class="form-group">
+                        <input type="number" id="input-emp-id" placeholder="ID employé (ex: 2, 3, 4, 8, 20, 21)" value="3">
+                        <button id="btn-db-emp">Comparer</button>
+                    </div>
+                    <pre class="output" id="output-db-emp">Saisissez un ID valide.</pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; BTS CIEL - Institut Saint-Jean / Département Informatique & Réseaux</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
