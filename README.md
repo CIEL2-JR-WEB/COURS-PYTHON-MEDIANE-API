@@ -1,6 +1,6 @@
 # BTS CIEL // Algorithmique, Python & API REST avec Flask
 
-Bienvenue dans ce cycle de travaux pratiques. Ce projet vous permet de faire la transition entre vos acquis en **PHP / JavaScript** et l'écosystème **Python / Flask / MySQL**.
+Bienvenue dans ce cycle de travaux pratiques dédié à l'apprentissage de **Python 3**, des algorithmes statistiques et au développement d'une **API REST avec Flask** adossée à une base de données **MySQL**.
 
 ---
 
@@ -83,7 +83,7 @@ docker compose exec api python main.py
 ---
 
 ### Exercice 2 : Table de multiplication et alignement
-* **Objectif** : Formater l'affichage console sans fonction tierce à l'aide des f-strings et de `.rjust()` (équivalent du `str_pad` en PHP).
+* **Objectif** : Formater l'affichage console sans module tiers à l'aide des f-strings et de `.rjust()` pour aligner les colonnes.
 * **Fichiers** : `api/multiplication.py`.
 * **Consignes** :
   * Écrivez `multiplication_n_m(n, m)` qui affiche la table complète de $1 \times 1$ jusqu'à $n \times m$.
@@ -162,12 +162,12 @@ fin procédure
 ---
 
 ### Exercice 4.3 : Client Web Fetch & Salaires aléatoires
-* **Objectif** : Connecter une interface JavaScript asynchrone à votre API Flask.
+* **Objectif** : Connecter une interface web cliente à votre API Flask.
 * **Fichiers** : `nginx/html/app.js`.
 * **Consignes** :
-  * En JavaScript, écoutez le clic sur le bouton `btn-random`.
+  * Dans le client web, écoutez le clic sur le bouton `btn-random`.
   * Générez une série de 9 entiers aléatoires compris entre 1200 et 5000.
-  * Émettez une requête `fetch()` vers l'API Flask `/api/tri?t=...`.
+  * Émettez une requête HTTP vers l'API Flask `/api/tri?t=...`.
   * Affichez la série triée et la médiane renvoyées dans le DOM.
 * **Exemple d'exécution** :
   * Clic sur le bouton $\rightarrow$ Les salaires bruts s'affichent, l'API renvoie le tri et la médiane sans rechargement de page.
@@ -176,11 +176,11 @@ fin procédure
 ---
 
 ### Exercice 5 : Fusion de listes (Concaténation)
-* **Objectif** : Traiter plusieurs paramètres de requêtes et manipuler la concaténation de listes (`+`).
+* **Objectif** : Traiter plusieurs paramètres de requêtes et manipuler la concaténation de listes avec l'opérateur `+`.
 * **Fichiers** : `api/app.py`.
 * **Consignes** :
   * Créez la route `GET /api/fusion?t1=...&t2=...`.
-  * Concaténez les deux séries reçues (équivalent de `array_merge` en PHP).
+  * Concaténez les deux séries reçues en utilisant l'opérateur `+`.
   * Renvoyez le tableau fusionné, le tableau trié et la médiane globale en JSON.
 * **Question théorique (à consigner dans votre compte-rendu)** :
   * *Quelle URI et structure de requête devez-vous adopter pour transmettre et fusionner 3 tableaux t1, t2 et t3 ?*
