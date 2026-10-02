@@ -1,29 +1,39 @@
 """
-Point d'entrée principal pour les tests des exercices console (0.1 à 4.1).
+Point d'entrée principal - Démonstration et validation console complète - CORRIGÉ.
 """
-import sys
 from statistique import moyenne, mediane
-from triangle import triangle
-from multiplication import multiplication_n_m
-from recursion import somme_iterative, somme_recursive, factorielle_iterative, factorielle_recursive
-from read_tab import afficher_tableau
-from tri_selection import tri_selection_copie, tri_selection_en_place
+from tri_selection import tri_selection_copie
 
 def run_exercice_0():
     print("=== EXERCICE 0.1 & 0.2 : Statistiques et Problème de Nicolas ===")
-    salaires_nicolas = [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]
     
-    # TODO:
-    # 1. Calculer et afficher la moyenne des salaires
-    # 2. Trier la liste avec tri_selection_copie()
-    # 3. Calculer et afficher la médiane
-    # 4. Afficher la réponse argumentée concernant l'affirmation de Nicolas
-    pass
+    # Données officielles fournies
+    salaires_nicolas = [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]
+    salaire_nicolas = 2200
 
-def main():
-    print("BTS CIEL - Lancement des tests console")
-    # Pour tester un exercice spécifique, décommentez ou passez des arguments
-    run_exercice_0()
+    # 1. Calcul de la moyenne
+    moy = moyenne(salaires_nicolas)
+    
+    # 2. Tri de la série
+    salaires_tries = tri_selection_copie(salaires_nicolas)
+    
+    # 3. Calcul de la médiane
+    med = mediane(salaires_tries)
+
+    print(f"Salaires de l'entreprise : {salaires_nicolas}")
+    print(f"Moyenne des salaires : {moy:.2f} €")
+    print(f"Salaires triés       : {salaires_tries}")
+    print(f"Médiane des salaires : {med:.2f} €")
+    print(f"Salaire de Nicolas   : {salaire_nicolas:.2f} €")
+
+    # 4. Conclusion sur l'affirmation de Nicolas
+    print("-> Affirmation de Nicolas : \"Je suis dans les moins bien payés de l'entreprise !\"")
+    if salaire_nicolas > med:
+        print("-> Bilan : FAUX. Nicolas gagne plus que la médiane (2200 € > 2000 €). Il est mieux payé que plus de la moitié des salariés de l'entreprise.")
+    elif salaire_nicolas < med:
+        print("-> Bilan : VRAI. Nicolas gagne moins que la médiane.")
+    else:
+        print("-> Bilan : Nicolas gagne exactement le salaire médian.")
 
 if __name__ == '__main__':
-    main()
+    run_exercice_0()

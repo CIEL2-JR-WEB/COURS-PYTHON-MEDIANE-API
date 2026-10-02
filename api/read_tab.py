@@ -1,16 +1,13 @@
 """
-Exercice 4.1 : Module utilitaire d'affichage de tableau.
+Module d'affichage de tableaux formatés - CORRIGÉ.
 """
 
 def afficher_tableau(t: list, titre: str = "Contenu du tableau") -> None:
-    """
-    Affiche proprement les éléments d'une liste avec leur indice.
-    Exemple :
-    --- Contenu du tableau ---
-    [0] : 1500
-    [1] : 4500
-    ...
-    """
-    # TODO: Exercice 4.1
-    # Parcourir le tableau avec enumerate(t)
-    pass
+    """Affiche proprement une liste avec les indices d'éléments."""
+    print(f"--- {titre} (taille = {len(t)}) ---")
+    for idx, val in enumerate(t):
+        print(f"  [{idx}] : {val}")
+    print("-" * (len(titre) + 8))
+
+if __name__ == '__main__':
+    afficher_tableau([1500, 4500, 2200], "Test Salaires")

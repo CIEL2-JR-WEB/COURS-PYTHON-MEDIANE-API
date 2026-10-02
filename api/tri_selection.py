@@ -1,31 +1,42 @@
 """
-Exercice 4.1 : Tri par sélection selon le pseudo-code imposé.
-RAPPEL : Ne pas utiliser sorted() ni .sort().
+Implémentation du tri par sélection - CORRIGÉ.
+Strictement conforme au pseudo-code de l'énoncé.
 """
+from read_tab import afficher_tableau
 
 def tri_selection_copie(t: list) -> list:
     """
-    Tri par sélection - Version par valeur (retourne une nouvelle liste triée).
-    La liste originale 't' passée en argument ne DOIT PAS être modifiée.
+    Tri par sélection - Version passage par valeur.
+    Travaille sur une copie de la liste originale et la retourne triée.
     """
-    # TODO:
-    # 1. Créer une copie de la liste : copie = t.copy() ou list(t)
-    # 2. Implémenter l'algorithme sur la copie
-    # 3. Retourner la liste triée
-    pass
+    copie = list(t)
+    tri_selection_en_place(copie)
+    return copie
 
 
 def tri_selection_en_place(t: list) -> None:
     """
-    Tri par sélection - Version en place (modifie directement la liste en mémoire).
-    Ne retourne rien (None).
+    Tri par sélection - Version passage par référence (en place).
+    Modifie la liste passée en paramètre directement en mémoire.
     """
-    # TODO:
-    # Implémenter l'algorithme directement sur t selon le pseudo-code de l'énoncé :
-    # pour i de 0 à n - 2
-    #     min ← i
-    #     pour j de i + 1 à n - 1
-    #         si t[j] < t[min], alors min ← j
-    #     fin pour
-    #     si min ≠ i, alors échanger t[i] et t[min]
-    pass
+    n = len(t)
+    for i in range(n - 1):  # pour i de 0 à n - 2
+        min_idx = i
+        for j in range(i + 1, n):  # pour j de i + 1 à n - 1
+            if t[j] < t[min_idx]:
+                min_idx = j
+        if min_idx != i:
+            # Échange idiomatique en Python : t[i], t[min] = t[min], t[i]
+            t[i], t[min_idx] = t[min_idx], t[i]
+
+
+if __name__ == '__main__':
+    tab_test = [15, 3, 22, 8, 19]
+    print("Tableau original :", tab_test)
+    
+    tab_trie = tri_selection_copie(tab_test)
+    print("Après tri_selection_copie(t) ->", tab_trie)
+    print("Tableau original non modifié :", tab_test)
+
+    tri_selection_en_place(tab_test)
+    print("Après tri_selection_en_place(t) -> t a été modifié directement :", tab_test)

@@ -1,6 +1,5 @@
 """
-API REST Flask - BTS CIEL
-Gestion des routes HTTP pour les exercices 4.2, 4.3, 5 et 6.
+API REST Flask Complète - CORRIGÉ.
 """
 from flask import Flask, request, jsonify
 from statistique import moyenne, mediane
@@ -9,60 +8,134 @@ import db
 
 app = Flask(__name__)
 
+def parse_int_list(raw_string: str) -> list:
+    """Convertit une chaîne '12, 15, 8' en liste d'entiers [12, 15, 8]."""
+    if not raw_string:
+        return []
+    result = []
+    for item in raw_string.split(','):
+        clean = item.strip()
+        if clean:
+            result.append(int(clean))
+    return result
+
+
 @app.route('/api/tri', methods=['GET'])
 def route_tri():
     """
     Exercice 4.2 & 4.3 :
-    Reçoit un paramètre t dans la Query String (ex: /api/tri?t=15,3,8).
-    Retourne le tableau trié et la médiane au format JSON.
+    Exemple d'appel : /api/tri?t=1500,4500,2200,1500,3300,1800,1700,2000,4000
     """
-    # TODO:
-    # 1. Récupérer 't' depuis request.args
-    # 2. Convertir la chaîne en liste d'entiers
-    # 3. Trier la liste avec tri_selection_copie()
-    # 4. Calculer la médiane avec mediane()
-    # 5. Retourner avec jsonify()
-    return jsonify({"message": "TODO: Implémenter /api/tri"}), 501
+    raw_t = request.args.get('t', '')
+    if not raw_t:
+        return jsonify({"erreur": "Paramètre 't' manquant"}), 400
+
+    try:
+        tableau_original = parse_int_list(raw_t)
+        tableau_trie = tri_selection_copie(tableau_original)
+        valeur_mediane = mediane(tableau_trie)
+
+        return jsonify({
+            "original": tableau_original,
+            "tri": tableau_trie,
+            "mediane": valeur_mediane
+        }), 200
+    except ValueError:
+        return jsonify({"erreur": "Le paramètre 't' doit contenir uniquement des nombres entiers séparés par des virgules."}), 400
 
 
 @app.route('/api/fusion', methods=['GET'])
 def route_fusion():
     """
     Exercice 5 :
-    Reçoit t1 et t2 dans l'URL (ex: /api/fusion?t1=12,5&t2=8,20).
-    Concatène les deux listes, effectue le tri et calcule la médiane.
+    Concaténation de deux listes t1 et t2.
+    Exemple d'appel : /api/fusion?t1=12,18,5&t2=20,8,14
     """
-    # TODO:
-    # 1. Extraire t1 et t2
-    # 2. Concaténer avec l'opérateur +
-    # 3. Trier et calculer la médiane
-    return jsonify({"message": "TODO: Implémenter /api/fusion"}), 501
+    raw_t1 = request.args.get('t1', '')
+    raw_t2 = request.args.get('t2', '')
+
+    try:
+        t1 = parse_int_list(raw_t1)
+        t2 = parse_int_list(raw_t2)
+
+        # Concaténation de listes en Python via l'opérateur +
+        fusion = t1 + t2
+        tableau_trie = tri_selection_copie(fusion)
+        valeur_mediane = mediane(tableau_trie)
+
+        return jsonify({
+            "fusion": fusion,
+            "tri": tableau_trie,
+            "mediane": valeur_mediane
+        }), 200
+    except ValueError:
+        return jsonify({"erreur": "Format des paramètres t1 ou t2 invalide."}), 400
 
 
 @app.route('/api/salaires/stats', methods=['GET'])
 def route_salaires_stats():
     """
     Exercice 6 :
-    Interroge la table employees, lit les salaires et renvoie moyenne et médiane en JSON.
+    Lecture des salaires depuis MySQL, calcul de la moyenne et de la médiane.
     """
-    # TODO:
-    # 1. Récupérer la liste des salaires via db.get_all_salaries()
-    # 2. Calculer moyenne() et mediane(tri_selection_copie(salaires))
-    # 3. Renvoyer le JSON
-    return jsonify({"message": "TODO: Implémenter /api/salaires/stats"}), 501
+    salaires = db.get_all_salaries()
+    if not salaires:
+        return jsonify({"erreur": "Impossible de lire les salaires en base de données"}), 500
+
+    salaires_tries = tri_selection_copie(salaires)
+    moy = moyenne(salaires)
+    med = mediane(salaires_tries)
+
+    return jsonify({
+        "nombre_employes": len(salaires),
+        "salaires_bruts": salaires,
+        "salaires_tries": salaires_tries,
+        "moyenne": moy,
+        "mediane": med
+    }), 200
 
 
 @app.route('/api/employees/<int:emp_id>/comparaison', methods=['GET'])
 def route_employee_comparaison(emp_id):
     """
     Exercice 6 :
-    Situe le salaire d'un employé donné par rapport à la moyenne et à la médiane globale.
+    Compare le salaire de l'employé 'emp_id' aux statistiques globales.
     """
-    # TODO:
-    # 1. Récupérer l'employé avec db.get_employee_by_id(emp_id) -> 404 si non trouvé
-    # 2. Récupérer l'ensemble des salaires et calculer moyenne et médiane
-    # 3. Comparer le salaire de l'employé et retourner le bilan JSON
-    return jsonify({"message": "TODO: Implémenter /api/employees/<id>/comparaison"}), 501
+    employe = db.get_employee_by_id(emp_id)
+    if not employe:
+        return jsonify({"erreur": "Employé introuvable"}), 404
+
+    salaires = db.get_all_salaries()
+    salaires_tries = tri_selection_copie(salaires)
+    moy = moyenne(salaires)
+    med = mediane(salaires_tries)
+
+    salaire_emp = employe['salary']
+
+    situation_moyenne = "égal"
+    if salaire_emp > moy:
+        situation_moyenne = "supérieur"
+    elif salaire_emp < moy:
+        situation_moyenne = "inférieur"
+
+    situation_mediane = "égal"
+    if salaire_emp > med:
+        situation_mediane = "supérieur"
+    elif salaire_emp < med:
+        situation_mediane = "inférieur"
+
+    return jsonify({
+        "employe": employe,
+        "statistiques_globales": {
+            "moyenne": moy,
+            "mediane": med
+        },
+        "situation": {
+            "par_rapport_a_la_moyenne": situation_moyenne,
+            "par_rapport_a_la_mediane": situation_mediane
+        }
+    }), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

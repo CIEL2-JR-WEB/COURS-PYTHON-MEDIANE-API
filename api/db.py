@@ -1,37 +1,59 @@
 """
-Exercice 6 : Module de connexion MySQL et requêtes.
+Gestion de la persistance MySQL - CORRIGÉ.
 """
 import os
 import mysql.connector
 from mysql.connector import Error
 
 def get_db_connection():
-    """
-    Établit la connexion à la base MySQL 'CRUD' dans un bloc try/except.
-    Retourne l'objet connexion ou None en cas d'erreur.
-    """
-    # TODO: Exercice 6
-    # Lire les paramètres d'environnement (MYSQL_HOST, MYSQL_USER, etc.)
-    # Se connecter avec mysql.connector.connect(...)
-    # Intercepter Error et afficher l'erreur si échec
-    pass
+    """Établit la connexion avec MySQL dans un try/except robuste."""
+    try:
+        connection = mysql.connector.connect(
+            host=os.getenv('MYSQL_HOST', 'db'),
+            port=int(os.getenv('MYSQL_PORT', 3306)),
+            database=os.getenv('MYSQL_DB', 'CRUD'),
+            user=os.getenv('MYSQL_USER', 'eleve'),
+            password=os.getenv('MYSQL_PASSWORD', 'eleve')
+        )
+        if connection.is_connected():
+            return connection
+    except Error as e:
+        print(f"Erreur de connexion MySQL : {e}")
+        return None
 
 
 def get_all_salaries() -> list:
-    """
-    Récupère l'ensemble des salaires de la table 'employees' sous forme de liste d'entiers.
-    """
-    # TODO:
-    # Exécuter : SELECT salary FROM employees
-    # Extraire les valeurs dans une liste Python [row[0] ...]
-    pass
+    """Récupère l'intégralité des salaires sous forme d'une liste d'entiers."""
+    conn = get_db_connection()
+    if not conn:
+        return []
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT salary FROM employees")
+        rows = cursor.fetchall()
+        return [row[0] for row in rows]
+    except Error as e:
+        print(f"Erreur SQL get_all_salaries : {e}")
+        return []
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
 
 
 def get_employee_by_id(emp_id: int):
-    """
-    Récupère un employé par son identifiant unique.
-    Retourne un dictionnaire {id, name, address, salary} ou None.
-    """
-    # TODO:
-    # Requête préparée : SELECT id, name, address, salary FROM employees WHERE id = %s
-    pass
+    """Récupère un employé par son ID unique sous forme de dictionnaire."""
+    conn = get_db_connection()
+    if not conn:
+        return None
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id, name, address, salary FROM employees WHERE id = %s", (emp_id,))
+        return cursor.fetchone()
+    except Error as e:
+        print(f"Erreur SQL get_employee_by_id : {e}")
+        return None
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()

@@ -1,30 +1,36 @@
 """
-Module de calculs statistiques élémentaires.
-RAPPEL : Ne pas utiliser le module 'statistics' ni la fonction 'sorted()'.
+Module de calculs statistiques élémentaires - CORRIGÉ.
+Conforme aux exigences : aucun recours à statistics ni sorted().
 """
 
 def moyenne(tab: list) -> float:
     """
-    Calcule et retourne la moyenne arithmétique d'une liste de nombres.
-    Si la liste est vide, retourne 0.0.
+    Calcule la moyenne arithmétique d'une liste de nombres.
     """
-    # TODO: Exercice 0.1
-    # 1. Vérifier si tab est vide
-    # 2. Calculer la somme des éléments avec une boucle ou sum()
-    # 3. Retourner la moyenne sous forme de float
-    pass
+    if not tab:
+        return 0.0
+    somme = sum(tab)
+    return round(float(somme) / len(tab), 2)
 
 
 def mediane(tab: list) -> float:
     """
     Calcule la médiane d'une série SUPPOSÉE TRIÉE.
-    Formule :
     - N impair : élément central d'indice N // 2
-    - N pair : moyenne des deux éléments centraux (tab[N//2 - 1] et tab[N//2])
+    - N pair : moyenne des deux éléments au centre
     """
-    # TODO: Exercice 0.2
-    # 1. Vérifier si tab est vide
-    # 2. Déterminer la longueur N
-    # 3. Utiliser le modulo (%) pour distinguer les cas N pair et N impair
-    # 4. Retourner la valeur médiane calculée
-    pass
+    if not tab:
+        return 0.0
+
+    n = len(tab)
+    centre = n // 2
+
+    # Modulo de N pour vérifier la parité
+    if n % 2 != 0:
+        # N impair : valeur centrale exacte
+        return float(tab[centre])
+    else:
+        # N pair : moyenne arithmétique des deux valeurs centrales
+        valeur_centrale_gauche = tab[centre - 1]
+        valeur_centrale_droite = tab[centre]
+        return round((valeur_centrale_gauche + valeur_centrale_droite) / 2.0, 2)
