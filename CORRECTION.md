@@ -92,7 +92,9 @@ Après tri_selection_en_place(t) -> t a été modifié directement : [3, 8, 15, 
 
 ---
 
-### Exercice 4.2 : Route API Tri
+### Exercice 4.2 : Route API Tri & IHM Saisie Dynamique
+* **Vidéo de référence** : https://drive.google.com/file/d/1_iikt1uk9Wx-tPY79woa0aJHjuJ83r5l/view?usp=drive_link (ou ressource locale : `resources/video_saisie_tri_ex4_2.mp4`)
+* **Validation API (curl)** :
 ```bash
 curl -s "http://localhost/api/tri?t=1500,4500,2200,1500,3300,1800,1700,2000,4000"
 ```
@@ -104,6 +106,13 @@ curl -s "http://localhost/api/tri?t=1500,4500,2200,1500,3300,1800,1700,2000,4000
   "tri": [1500, 1500, 1700, 1800, 2000, 2200, 3300, 4000, 4500]
 }
 ```
+
+* **Validation Web & DOM** :
+  1. Ouvrir `http://localhost`.
+  2. Saisie manuelle : saisir des entiers > 0 dans le champ et cliquer sur **« Ajouter (push) »** (ou touche Entrée). Le tableau `[val1, val2, ...]` se remplit en direct.
+  3. Saisir une valeur <= 0 (ex: 0 ou -1) : la condition d'arrêt déclenche automatiquement la requête `fetch` vers `/api/tri?t=...`.
+  4. Constater l'affichage dans le DOM du tableau original, du tableau trié et de la médiane.
+  5. Ou cliquer sur **« Saisie via prompt() »** pour exécuter la saisie en boucle dialoguée conforme à la vidéo.
 
 ---
 
