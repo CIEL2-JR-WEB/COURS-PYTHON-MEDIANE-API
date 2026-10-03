@@ -1,283 +1,332 @@
 # Support de cours & Exercices pratiques : Les bases de Flask
 **BTS CIEL (Option Informatique et Réseaux) — Module Développement Web & API REST**
 
-Ce support prépare directement à l'**Exercice 4.2** (et aux exercices suivants 4.3, 5 et 6) du TP. Il vous permet de comprendre le fonctionnement d'un micro-framework web en Python, la création de routes HTTP, la récupération des paramètres et l'émission de réponses au format JSON.
+Ce support prépare directement à l'**Exercice 4.2** (puis aux exercices 4.3, 5 et 6). Il vous apprend comment fonctionne un micro-framework web en Python, où écrire votre code, comment démarrer le serveur, et comment manipuler des **chaînes de caractères**, des **paramètres d'URL** et des **payloads JSON (POST)**.
 
 ---
 
-## 1. Qu'est-ce que Flask & Une API REST ?
+## 1. Où coder et comment lancer Flask ?
 
-### Le rôle de Flask
-**Flask** est un micro-framework web écrit en Python. Il fournit les mécanismes essentiels pour :
-1. Écouter des requêtes HTTP émises par un client (navigateur web, script JavaScript `fetch`, application mobile, commande `curl` ou Postman).
-2. Associer une URL demandée à une fonction Python dédiée : c'est le principe du **routage** (*routing*).
-3. Renvoyer une réponse au client, généralement au format textuel standardisé **JSON** (*JavaScript Object Notation*).
-
-### Le cycle d'une requête dans notre architecture Docker
-Dans ce TP, l'architecture se compose de :
+### Où se trouvent les fichiers dans le projet ?
+Dans l'arborescence du dépôt :
 ```text
-[ Client (Navigateur / curl) ]
-               │
-               ▼  (Port 80)
-      [ Reverse Proxy Nginx ]
-               │
-        /api/* │ (Redirection interne port 5000)
-               ▼
-     [ API Python / Flask ]  <──────> [ Base MySQL (CRUD) ]
+tp-python-flask-ciel/
+├── api/                  <── DOSSIER BACKEND FLASK
+│   ├── app.py            <── FICHIER PRINCIPAL de l'API Flask (vous codez ici !)
+│   ├── statistique.py    <── Vos fonctions moyenne() et mediane()
+│   ├── tri_selection.py  <── Votre algorithme de tri par sélection
+│   ├── db.py             <── Module de connexion MySQL (pour l'exercice 6)
+│   └── requirements.txt  <── Dépendances Python (flask, mysql-connector-python)
+├── nginx/                <── Serveur web et reverse proxy
+└── docker-compose.yml    <── Orchestration des conteneurs
 ```
-Le serveur Flask s'exécute dans le conteneur `api`. Il recharge automatiquement son code dès que vous sauvegardez vos fichiers (`debug=True`).
+
+> 🎯 **Règle pratique :**  
+> Toutes vos routes Flask doivent être écrites dans le fichier [`api/app.py`](api/app.py).
 
 ---
 
-## 2. Structure minimale d'une application Flask
+### Comment lancer et tester Flask ?
 
-Une application Flask minimale tient en quelques lignes :
+Deux méthodes s'offrent à vous :
+
+#### Méthode 1 : Avec Docker Compose (Recommandé — Environnement du TP)
+Ouvrez un terminal à la racine du projet et démarrez les conteneurs :
+```bash
+docker compose up -d
+```
+
+- Le conteneur `api` démarre automatiquement Flask avec le rechargement à chaud (**Hot-Reload**) activé (`debug=True`).
+- **Vous n'avez pas besoin de redémarrer le conteneur à chaque modification :** dès que vous enregistrez [`api/app.py`](api/app.py), Flask détecte la sauvegarde et recharge votre code instantanément !
+- Pour observer les messages du serveur et voir vos éventuelles erreurs Python en temps réel :
+  ```bash
+  docker compose logs -f api
+  ```
+- Vos routes sont accessibles :
+  - Soit via Nginx sur le port standard : `http://localhost/api/...`
+  - Soit directement sur le port Flask : `http://localhost:5000/api/...`
+
+#### Méthode 2 : En local autonome (sans Docker)
+Si vous souhaitez tester directement sur votre machine hôte :
+```bash
+# 1. Se déplacer dans le dossier api
+cd api
+
+# 2. Installer les dépendances
+pip install -r requirements.txt
+
+# 3. Démarrer Flask en mode débogage
+flask --app app.py run --debug
+```
+Le serveur écoute sur `http://localhost:5000/`.
+
+---
+
+## 2. Qu'est-ce qu'une route et comment fonctionne Flask ?
+
+Une API REST associe une **URL** et une **méthode HTTP** (`GET`, `POST`, etc.) à une fonction Python.
 
 ```python
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
-# 1. Instanciation de l'application Flask
+# Création de l'application
 app = Flask(__name__)
 
-# 2. Définition d'une route avec un décorateur
-@app.route('/api/bienvenue', methods=['GET'])
-def bienvenue():
-    # 3. Retour d'un dictionnaire converti en JSON
+# Déclaration d'une route avec un décorateur
+@app.route('/api/status', methods=['GET'])
+def get_status():
+    # Retour d'un dictionnaire sérialisé en JSON avec le code HTTP 200 OK
     return jsonify({
-        "message": "Bienvenue sur l'API Flask du BTS CIEL !",
-        "version": "1.0"
+        "etat": "operationnel",
+        "service": "API Flask BTS CIEL"
     }), 200
-
-# 4. Point d'entrée pour démarrer le serveur (en écoute sur toutes les interfaces)
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
 ```
 
-> **Points clés :**
-> - `@app.route('/chemin', methods=['GET'])` : ce décorateur indique à Flask d'appeler la fonction `bienvenue()` lorsque l'URL `/api/bienvenue` est sollicitée avec le verbe HTTP `GET`.
-> - `jsonify(dictionnaire)` : sérialise un dictionnaire Python en une chaîne JSON valide avec l'en-tête HTTP `Content-Type: application/json`.
-> - `, 200` : code de statut HTTP (*200 OK*).
+---
+
+## 3. Série d'exercices progressifs
 
 ---
 
-## 3. Série d'exercices très progressifs
+### Niveau 1 : Première route et manipulation de chaînes de caractères
 
----
+Dans ce premier niveau, nous allons créer des routes qui manipulent des chaînes de caractères (*strings*).
 
-### Niveau 1 : Route simple et réponse JSON
+#### Notion : Récupérer une chaîne dans l'URL (`request.args.get`)
+Lorsqu'un client émet une requête `GET /api/salutation?prenom=Nicolas` :
+- `request.args.get('prenom', 'Inconnu')` récupère la valeur `'Nicolas'`.
+- Si le paramètre n'est pas fourni dans l'URL, la valeur par défaut `'Inconnu'` est utilisée.
 
-#### Syntaxe :
 ```python
-@app.route('/api/ping', methods=['GET'])
-def ping():
-    return jsonify({"status": "ok", "service": "api-ciel"}), 200
+@app.route('/api/salutation', methods=['GET'])
+def salutation():
+    prenom = request.args.get('prenom', 'etudiant')
+    message = f"Bienvenue en BTS CIEL, {prenom.capitalize()} !"
+    return jsonify({
+        "prenom": prenom,
+        "message": message
+    }), 200
 ```
 
-#### Mini-Exercice 1.1 : Test de la route
-Testez cette route depuis votre terminal avec `curl` :
+#### Mini-Exercice 1.1 : Analyseur de texte (Chaînes de caractères)
+Écrivez dans `api/app.py` une route `GET /api/texte/analyse` qui reçoit un paramètre `mot` dans l'URL et renvoie :
+1. Le mot en majuscules (`.upper()`).
+2. Le mot inversé (`mot[::-1]`).
+3. Le nombre de caractères (`len(mot)`).
+4. Un booléen indiquant si le mot est un palindrome (s'il se lit de la même façon dans les deux sens).
+
+*Exemple de code à tester :*
+```python
+@app.route('/api/texte/analyse', methods=['GET'])
+def analyse_texte():
+    mot = request.args.get('mot', '')
+    if not mot:
+        return jsonify({"erreur": "Veuillez fournir un mot via ?mot=..."}), 400
+
+    mot_nettoye = mot.strip().lower()
+    est_palindrome = (mot_nettoye == mot_nettoye[::-1])
+
+    return jsonify({
+        "original": mot,
+        "majuscules": mot.upper(),
+        "longueur": len(mot),
+        "inverse": mot[::-1],
+        "palindrome": est_palindrome
+    }), 200
+```
+
+*Commandes de test dans votre terminal :*
 ```bash
-curl -i "http://localhost/api/ping"
+curl "http://localhost/api/texte/analyse?mot=radar"
+# Réponse : {"longueur":5,"majuscules":"RADAR","original":"radar","palindrome":true,"inverse":"radar"}
+
+curl "http://localhost/api/texte/analyse?mot=informatique"
+# Réponse : {"longueur":12,"majuscules":"INFORMATIQUE","original":"informatique","palindrome":false,"inverse":"euqitamrofni"}
+```
+
+---
+
+### Niveau 2 : Traitement de Payloads JSON simples (Requêtes POST)
+
+#### Pourquoi utiliser la méthode `POST` et un Payload ?
+- Avec la méthode `GET`, les données transitent dans l'URL (**Query String**). C'est parfait pour rechercher ou filtrer, mais inadapté pour envoyer des données volumineuses, confidentielles ou des objets structurés.
+- Avec la méthode `POST`, les données sont transmises dans le **corps de la requête** (*request body* ou **payload**), le plus souvent au format **JSON**.
+
+#### Comment lire un payload JSON dans Flask ?
+On utilise la fonction `request.get_json()` :
+```python
+@app.route('/api/echo', methods=['POST'])
+def echo():
+    # Récupère le payload JSON envoyé par le client sous forme de dictionnaire Python
+    donnees = request.get_json()
+
+    # Si le client n'a pas envoyé de JSON valide
+    if not donnees:
+        return jsonify({"erreur": "Payload JSON manquant ou invalide"}), 400
+
+    return jsonify({
+        "statut": "donnees_recues",
+        "contenu": donnees
+    }), 200
+```
+
+#### Mini-Exercice 2.1 : Message utilisateur avec validation de payload
+Créez une route `POST /api/message` qui attend un payload JSON contenant le nom d'un auteur et un message :
+```json
+{
+  "auteur": "Thomas",
+  "texte": "Bonjour le réseau CIEL !"
+}
+```
+La fonction doit :
+1. Vérifier la présence des clés `"auteur"` et `"texte"`.
+2. Calculer le nombre de mots du message (`len(texte.split())`).
+3. Renvoyer une confirmation avec le code HTTP `201 Created`.
+
+*Exemple de code à ajouter dans `api/app.py` :*
+```python
+@app.route('/api/message', methods=['POST'])
+def creer_message():
+    donnees = request.get_json()
+    if not donnees:
+        return jsonify({"erreur": "Format JSON attendu."}), 400
+
+    auteur = donnees.get('auteur', '').strip()
+    texte = donnees.get('texte', '').strip()
+
+    if not auteur or not texte:
+        return jsonify({"erreur": "Les champs 'auteur' et 'texte' sont obligatoires."}), 400
+
+    nombre_mots = len(texte.split())
+
+    return jsonify({
+        "statut": "Message enregistre",
+        "auteur": auteur,
+        "texte": texte,
+        "nombre_mots": nombre_mots,
+        "accuse_reception": f"Merci {auteur}, votre message de {nombre_mots} mot(s) a bien ete traite."
+    }), 201
+```
+
+*Test avec la commande `curl` (envoi d'un payload JSON avec l'en-tête `Content-Type`) :*
+```bash
+curl -X POST "http://localhost/api/message" \
+     -H "Content-Type: application/json" \
+     -d "{\"auteur\": \"Thomas\", \"texte\": \"Bonjour le reseau CIEL\"}"
 ```
 
 **Sortie attendue :**
-```text
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"service":"api-ciel","status":"ok"}
+```json
+{
+  "accuse_reception": "Merci Thomas, votre message de 4 mot(s) a bien ete traite.",
+  "auteur": "Thomas",
+  "nombre_mots": 4,
+  "statut": "Message enregistre",
+  "texte": "Bonjour le reseau CIEL"
+}
 ```
+
+> 💡 **Avec Postman :**  
+> Sélectionnez la méthode **POST**, entrez l'URL `http://localhost/api/message`, allez dans l'onglet **Body**, cochez **raw**, sélectionnez **JSON** dans la liste déroulante et collez votre payload.
 
 ---
 
-### Niveau 2 : Passage de paramètres via la Query String (`request.args`)
+### Niveau 3 : De la chaîne de caractères à la liste de nombres
 
-C'est la méthode de transmission utilisée dans l'**Exercice 4.2** (`/api/tri?t=15,3,8`) et l'**Exercice 5** (`/api/fusion?t1=12,5&t2=8,20`).
+Dans l'**Exercice 4.2**, le client transmet une série de nombres sous forme d'une chaîne de caractères dans la Query String :  
+`GET /api/tri?t=15,3,22,8`
 
-#### Principe de la Query String :
-Dans l'URL `http://localhost/api/saluer?nom=Alice&annee=2026` :
-- Le point d'interrogation `?` marque le début des paramètres.
-- Les couples `cle=valeur` sont séparés par des esperluettes `&`.
-- Dans Flask, ces valeurs sont accessibles via l'objet `request.args`.
-
-```python
-from flask import request
-
-@app.route('/api/saluer', methods=['GET'])
-def saluer():
-    # request.args.get('cle', valeur_par_defaut)
-    nom = request.args.get('nom', 'Anonyme')
-    return jsonify({
-        "salutation": f"Bonjour {nom} !",
-        "destinataire": nom
-    }), 200
-```
-
-> ⚠️ **Attention cruciale aux types de données :**  
-> `request.args.get()` renvoie **toujours une chaîne de caractères** (`str`), jamais un entier ou un flottant !  
-> Si vous attendez un nombre, vous devez le convertir explicitement avec `int()` ou `float()`.
-
-#### Mini-Exercice 2.1 : Route d'addition de deux entiers
-Observez comment extraire et additionner deux nombres transmis dans l'URL :
-
-```python
-@app.route('/api/addition', methods=['GET'])
-def addition():
-    # Récupération des deux paramètres sous forme de chaînes
-    raw_a = request.args.get('a', '0')
-    raw_b = request.args.get('b', '0')
-    
-    # Conversion en entiers
-    a = int(raw_a)
-    b = int(raw_b)
-    
-    return jsonify({
-        "a": a,
-        "b": b,
-        "somme": a + b
-    }), 200
-```
-
-*Test curl :*
-```bash
-curl "http://localhost/api/addition?a=12&b=8"
-# Réponse attendue : {"a": 12, "b": 8, "somme": 20}
-```
-
----
-
-### Niveau 3 : Transmission et découpage d'une liste de nombres
-
-Dans l'**Exercice 4.2**, l'utilisateur transmet une liste de nombres séparés par des virgules dans le paramètre `t` :  
-Exemple : `GET /api/tri?t=1500,4500,2200,1800`
-
-#### Comment transformer cette chaîne en liste d'entiers en Python ?
-On utilise la méthode `.split(',')` combinée au nettoyage des espaces `.strip()` :
+#### La fonction utilitaire de découpage : `parse_int_list`
+Pour transformer `'15,3,22,8'` en une liste Python d'entiers `[15, 3, 22, 8]`, nous créons une fonction réutilisable :
 
 ```python
 def parse_int_list(raw_string: str) -> list:
-    """Convertit '15, 3, 22' en [15, 3, 22]."""
+    """
+    Convertit une chaîne de type '15, 3, 22' en liste Python [15, 3, 22].
+    Lève ValueError si un élément n'est pas un entier valide.
+    """
     if not raw_string:
         return []
-    result = []
+    resultat = []
     for item in raw_string.split(','):
-        clean = item.strip()
-        if clean:
-            result.append(int(clean))
-    return result
+        element_propre = item.strip()
+        if element_propre:
+            resultat.append(int(element_propre))
+    return resultat
 ```
 
-#### Mini-Exercice 3.1 : Route de calcul de statistiques sur une liste
-```python
-from statistique import moyenne, mediane
-from tri_selection import tri_selection_copie
+#### Mini-Exercice 3.1 : Route de calcul sur une chaîne numérique
+Créez une route `GET /api/somme` qui prend une série `t` dans l'URL, la convertit en liste d'entiers et renvoie la somme et le nombre d'éléments.
 
-@app.route('/api/demo-stats', methods=['GET'])
-def demo_stats():
+*Exemple de code :*
+```python
+@app.route('/api/somme', methods=['GET'])
+def calculer_somme():
     raw_t = request.args.get('t', '')
-    liste_entiers = parse_int_list(raw_t)
-    
-    liste_triee = tri_selection_copie(liste_entiers)
-    val_mediane = mediane(liste_triee)
-    
+    if not raw_t:
+        return jsonify({"erreur": "Parametre 't' manquant (ex: /api/somme?t=10,20,5)"}), 400
+
+    try:
+        nombres = parse_int_list(raw_t)
+        total = sum(nombres)
+        return jsonify({
+            "nombres_recus": nombres,
+            "effectif": len(nombres),
+            "somme": total
+        }), 200
+    except ValueError:
+        return jsonify({"erreur": "La serie 't' doit contenir uniquement des entiers separes par des virgules."}), 400
+```
+
+*Test curl :*
+```bash
+curl "http://localhost/api/somme?t=10,20,5"
+# Réponse : {"effectif": 3, "nombres_recus": [10, 20, 5], "somme": 35}
+
+curl "http://localhost/api/somme?t=10,erreur,5"
+# Réponse HTTP 400 : {"erreur": "La serie 't' doit contenir uniquement des entiers..."}
+```
+
+---
+
+### Niveau 4 : Paramètres dans le chemin d'URL (*Path parameters*)
+
+Pour préparer l'**Exercice 6** (`/api/employees/<id>/comparaison`), on utilise parfois des variables directement dans le chemin de la route.
+
+```python
+@app.route('/api/articles/<int:article_id>', methods=['GET'])
+def get_article(article_id):
+    # La variable article_id est automatiquement convertie en int par Flask
     return jsonify({
-        "original": liste_entiers,
-        "tri": liste_triee,
-        "mediane": val_mediane
+        "id": article_id,
+        "titre": f"Article reference #{article_id}",
+        "disponible": True
     }), 200
 ```
 
 *Test curl :*
 ```bash
-curl "http://localhost/api/demo-stats?t=15,3,22,8"
-# Réponse attendue : {"mediane": 11.5, "original": [15, 3, 22, 8], "tri": [3, 8, 15, 22]}
+curl "http://localhost/api/articles/42"
+# Réponse : {"disponible": true, "id": 42, "titre": "Article reference #42"}
 ```
 
 ---
 
-### Niveau 4 : Gestion des erreurs & Codes HTTP (`400 Bad Request`)
+## 4. Synthèse des mécanismes à retenir
 
-Une API professionnelle doit être **robuste** et rejeter les requêtes invalides avec des codes de statut HTTP explicites :
-- `200 OK` : traitement réussi.
-- `400 Bad Request` : paramètre obligatoire manquant ou type incorrect (ex: du texte au lieu de nombres).
-- `404 Not Found` : ressource demandée inexistante.
-- `500 Internal Server Error` : erreur non interceptée côté serveur.
-
-#### Exemple de validation rigoureuse :
-```python
-@app.route('/api/tri-securise', methods=['GET'])
-def tri_securise():
-    raw_t = request.args.get('t')
-    
-    # 1. Vérification de présence
-    if not raw_t:
-        return jsonify({
-            "erreur": "Le paramètre 't' est obligatoire (ex: /api/tri?t=12,5,8)"
-        }), 400
-
-    # 2. Vérification du format numérique avec bloc try/except
-    try:
-        nombres = parse_int_list(raw_t)
-        if len(nombres) == 0:
-            return jsonify({"erreur": "La liste transmise est vide."}), 400
-            
-        tri = tri_selection_copie(nombres)
-        med = mediane(tri)
-        return jsonify({"original": nombres, "tri": tri, "mediane": med}), 200
-        
-    except ValueError:
-        return jsonify({
-            "erreur": "Le paramètre 't' doit contenir uniquement des entiers séparés par des virgules."
-        }), 400
-```
-
-*Test d'une requête erronée :*
-```bash
-curl -i "http://localhost/api/tri-securise?t=12,abc,15"
-# Réponse : HTTP/1.1 400 BAD REQUEST -> {"erreur": "Le paramètre 't' doit contenir uniquement des entiers..."}
-```
-
----
-
-### Niveau 5 : Paramètres dans le chemin d'URL (*Path parameters*)
-
-Dans l'**Exercice 6**, pour consulter la fiche d'un employé selon son identifiant unique, on n'utilise pas la Query String mais une variable directement dans le chemin de l'URL :  
-Exemple : `GET /api/employees/3/comparaison`
-
-#### Syntaxe Flask avec convertisseur de type :
-```python
-# <int:emp_id> capture la partie correspondante de l'URL et la convertit automatiquement en entier
-@app.route('/api/employees/<int:emp_id>', methods=['GET'])
-def get_employe(emp_id):
-    # La variable emp_id est transmise comme argument à la fonction !
-    if emp_id == 3:
-        return jsonify({
-            "id": 3,
-            "name": "Martin Blank",
-            "salary": 8000
-        }), 200
-    else:
-        # Ressource non trouvée
-        return jsonify({"erreur": f"Employé avec l'ID {emp_id} introuvable."}), 404
-```
-
----
-
-## 4. Synthèse des mécanismes Flask du TP
-
-| Notion Flask | Syntaxe | Exercice cible |
+| Besoin | Syntaxe Flask | Exemple d'utilisation |
 | :--- | :--- | :--- |
-| **Création d'une route GET** | `@app.route('/api/...', methods=['GET'])` | Exercices 4.2, 4.3, 5, 6 |
-| **Lecture Query String unique** | `request.args.get('t')` | Exercice 4.2 & 4.3 |
-| **Lecture de paramètres multiples** | `request.args.get('t1')`, `request.args.get('t2')` | Exercice 5 |
-| **Répétition d'un paramètre** | `request.args.getlist('t')` | Exercice 5 (Amélioration) |
-| **Paramètre dans le chemin (ID)** | `@app.route('/api/employees/<int:emp_id>')` | Exercice 6 |
-| **Réponse JSON & Statut HTTP** | `return jsonify(donnees), 200` ou `400` | Tous les exercices d'API |
+| **Lire un paramètre d'URL (GET)** | `request.args.get('cle', defaut)` | `/api/tri?t=12,5` (Ex 4.2 & 5) |
+| **Lire un payload JSON (POST)** | `donnees = request.get_json()` | Validation de formulaires / IHM |
+| **Lire un paramètre de chemin** | `@app.route('/.../<int:id>')` | `/api/employees/3/...` (Ex 6) |
+| **Envoyer du JSON** | `return jsonify(dict), code_http` | Réponse à toutes les requêtes |
+| **Rejet d'entrée invalide** | `return jsonify({"erreur": ...}), 400` | Sécurité et robustesse API |
 
 ---
 
-## 5. Prêt pour l'Exercice 4.2 !
+## 5. Vous êtes prêt pour l'Exercice 4.2 !
 
-Vous comprenez désormais le rôle des routes Flask, de la Query String et du format JSON.
+Vous savez désormais où coder (`api/app.py`), comment Flask recharge automatiquement vos modifications avec Docker, et comment recevoir et renvoyer des données en JSON.
 
-👉 **Rendez-vous sur l'Exercice 4.2 du sujet principal pour connecter votre premier algorithme à une API REST :**  
+👉 **Reprenez le sujet principal pour implémenter l'Exercice 4.2 :**  
 [Retour au README.md — Exercice 4.2 : API REST Flask pour le tri](README.md#exercice-42--api-rest-flask-pour-le-tri)
