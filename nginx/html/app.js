@@ -17,6 +17,7 @@ document.getElementById('btn-push-tri').addEventListener('click', async () => {
     //    - Vider le champ de saisie
     // 2. Si val <= 0 (et tableauSaisieEx4 n'est pas vide) :
     //    - C'est la condition d'arrêt : émettre une requête GET vers /api/tri?t=... avec fetch()
+    //      (Astuce Étape 2 : Vous pouvez d'abord tester avec l'URL de votre serveur Mock Postman)
     //    - Récupérer les données retournées en JSON (original, tri, mediane)
     //    - Mettre à jour span-tri-original, span-tri-trie, span-tri-mediane et outputElem
     //    - Réinitialiser tableauSaisieEx4 pour une nouvelle session
