@@ -43,20 +43,30 @@ docker compose exec api python main.py
 ---
 
 ### Exercice 0.2 : Médiane et problème de l'employé Nicolas
-* **Objectif** : Implémenter le calcul de la médiane sur une liste triée et résoudre un cas concret.
+
+![Médiane d'une série statistique - Problématique de Nicolas](img/mediane_nicolas.png)
+
+> **Problématique de Nicolas :**
+> Dans une entreprise de **9 salariés**, le salaire mensuel moyen est de **2 500 €**. Nicolas travaille dans cette entreprise et gagne **2 200 €** par mois.
+> Constatant que son salaire est inférieur au salaire moyen (2 200 € < 2 500 €), il affirme : *« Je suis dans les moins bien payés de l'entreprise ! »*.
+> Que penser de cette affirmation ?
+>
+> *Élément d'analyse* : Nicolas commet la confusion fréquente entre **salaire moyen** et **salaire médian**. Quelques très hauts salaires suffisent à tirer la moyenne vers le haut. Pour savoir s'il est réellement dans la tranche inférieure ou supérieure de l'entreprise, il faut ordonner la série et trouver la **médiane** qui sépare l'effectif en deux moitiés égales.
+
+* **Objectif** : Implémenter le calcul de la médiane sur une liste triée et résoudre ce cas concret.
 * **Fichiers** : `api/statistique.py`, `api/main.py`.
 * **Consignes** :
   * Dans `statistique.py`, codez la fonction `mediane(tab)` sur une série **supposée triée**.
   * Si $N$ est impair, retournez l'élément central à l'indice $N // 2$ ; si $N$ est pair, retournez la moyenne des deux éléments centraux.
   * Dans `main.py`, appliquez le calcul sur les salaires de l'entreprise : `[1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]`.
-  * Répondez par affichage console : Nicolas gagne 2 200 €. Son affirmation « *Je suis dans les moins bien payés de l'entreprise !* » est-elle vraie ou fausse ?
+  * Répondez par affichage console : concluez formellement sur la validité de l'affirmation de Nicolas en comparant son salaire à la médiane.
 * **Rappel du calcul** :
   * $N = 9$ (impair), série triée : `1500, 1500, 1700, 1800, [2000], 2200, 3300, 4000, 4500` $\rightarrow$ médiane = **2000 €**.
   * $N = 8$ (pair), série triée : `1500, 1700, 1800, [2000 | 2200], 3300, 4000, 4500` $\rightarrow$ médiane = $(2000 + 2200) / 2$ = **2100 €**.
 * **Exemple d'exécution** :
   ```text
   Moyenne = 2500.0 € | Médiane = 2000.0 €
-  Conclusion : Affirmation fausse (Nicolas gagne plus que la médiane).
+  Conclusion : Affirmation fausse (Nicolas gagne 2200 €, soit plus que la médiane de 2000 € ; il fait partie des 50 % les mieux payés).
   ```
 * **Amélioration** : Ajoutez une assertion vérifiant que le résultat est identique que la médiane soit calculée sur des entiers ou des flottants.
 
