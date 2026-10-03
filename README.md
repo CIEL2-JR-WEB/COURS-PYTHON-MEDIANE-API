@@ -155,6 +155,15 @@ fin procédure
 
 ---
 
+### Prérequis à l'Exercice 4.2 : Les fondamentaux de Flask (Routes & Paramètres)
+
+> 📖 **Support de cours & exercices préparatoires :**  
+> C'est à ce stade du TP que vous passez des scripts console à une API Web. Avant d'exposer vos algorithmes en HTTP, vous devez maîtriser les mécanismes clés de Flask : instanciation, déclaration de routes avec `@app.route`, extraction des paramètres dans l'URL avec `request.args` et retour de données JSON avec `jsonify()`.  
+> 👉 **Consultez le cours et réalisez les exercices progressifs dans : [`bases en flask.md`](bases%20en%20flask.md)**  
+> *(Revenez ensuite ici pour réaliser l'Exercice 4.2)*
+
+---
+
 ### Exercice 4.2 : API REST Flask pour le tri
 
 [![Vidéo de démonstration : saisie et tri](img/video_ex4_2_thumbnail.jpg)](https://drive.google.com/file/d/1_iikt1uk9Wx-tPY79woa0aJHjuJ83r5l/view?usp=drive_link)
