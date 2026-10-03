@@ -1,16 +1,50 @@
 // BTS CIEL - Client JavaScript (fetch)
 // Complétez les fonctions ci-dessous pour communiquer avec l'API Flask
 
-// Exercice 4.2 : Appel à /api/tri
-document.getElementById('btn-tri').addEventListener('click', async () => {
-    const rawInput = document.getElementById('input-tri').value;
+// Exercice 4.2 : Saisie dynamique d'entiers (push tant que valeur > 0) puis appel à /api/tri
+let tableauSaisieEx4 = [];
+
+// Option 1 : Saisie via champ de texte et bouton 'Ajouter (push)'
+document.getElementById('btn-push-tri').addEventListener('click', async () => {
+    const input = document.getElementById('input-valeur-tri');
+    const outputElem = document.getElementById('output-tri');
+    const val = parseInt(input.value.trim(), 10);
+
+    // TODO:
+    // 1. Si val > 0 :
+    //    - Ajouter au tableau : tableauSaisieEx4.push(val)
+    //    - Mettre à jour l'élément span-saisie-cours avec le contenu du tableau
+    //    - Vider le champ de saisie
+    // 2. Si val <= 0 (et tableauSaisieEx4 n'est pas vide) :
+    //    - C'est la condition d'arrêt : émettre une requête GET vers /api/tri?t=... avec fetch()
+    //    - Récupérer les données retournées en JSON (original, tri, mediane)
+    //    - Mettre à jour span-tri-original, span-tri-trie, span-tri-mediane et outputElem
+    //    - Réinitialiser tableauSaisieEx4 pour une nouvelle session
+    outputElem.textContent = "TODO: Implémenter la logique push tant que > 0 et l'appel fetch vers /api/tri";
+});
+
+// Option 2 : Saisie via boucle prompt() (conforme à la vidéo de démonstration)
+document.getElementById('btn-prompt-tri').addEventListener('click', async () => {
     const outputElem = document.getElementById('output-tri');
 
     // TODO:
-    // 1. Nettoyer la chaîne de caractères si nécessaire
-    // 2. Émettre une requête GET vers /api/tri?t=... avec fetch()
-    // 3. Récupérer le JSON et l'afficher dans outputElem
-    outputElem.textContent = "TODO: Implémenter l'appel fetch vers /api/tri";
+    // 1. Réinitialiser un tableau local
+    // 2. Utiliser une boucle (while) demandant à l'utilisateur : prompt("saisissez un nombre > 0")
+    // 3. Tant que la valeur saisie est > 0, ajouter la valeur au tableau (push)
+    // 4. Dès qu'une valeur <= 0 (ou annulation) est rencontrée, arrêter la boucle
+    // 5. Envoyer le tableau à l'API Flask (/api/tri?t=...) avec fetch()
+    // 6. Afficher les résultats dans le DOM
+    outputElem.textContent = "TODO: Implémenter la boucle prompt() et l'appel fetch vers /api/tri";
+});
+
+// Réinitialisation
+document.getElementById('btn-reset-tri').addEventListener('click', () => {
+    tableauSaisieEx4 = [];
+    document.getElementById('span-saisie-cours').textContent = '[]';
+    document.getElementById('span-tri-original').textContent = '-';
+    document.getElementById('span-tri-trie').textContent = '-';
+    document.getElementById('span-tri-mediane').textContent = '-';
+    document.getElementById('output-tri').textContent = 'En attente de saisie...';
 });
 
 // Exercice 4.3 : Générateur de salaires aléatoires

@@ -156,13 +156,22 @@ fin procédure
 ---
 
 ### Exercice 4.2 : API REST Flask pour le tri
-* **Objectif** : Exposer un service web HTTP renvoyant du JSON avec Flask.
-* **Fichiers** : `api/app.py`.
+
+[![Vidéo de démonstration : saisie et tri](img/video_ex4_2_thumbnail.jpg)](https://drive.google.com/file/d/1_iikt1uk9Wx-tPY79woa0aJHjuJ83r5l/view?usp=drive_link)
+
+* **Objectif** : Exposer un service web HTTP renvoyant du JSON avec Flask et concevoir une IHM web en JavaScript pour la saisie dynamique des valeurs et l'affichage des résultats.
+* **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
 * **Consignes** :
-  * Créez la route `GET /api/tri`.
-  * Récupérez la série passée dans la Query String `t` (ex: `/api/tri?t=1500,4500,2200`).
-  * Triez le tableau avec votre fonction maison et calculez la médiane.
-  * Renvoyez une réponse JSON structurée : `{"original": [...], "tri": [...], "mediane": 2000.0}`.
+  * **Côté Backend (Flask - `app.py`)** :
+    * Créez la route `GET /api/tri`.
+    * Récupérez la série passée dans la Query String `t` (ex: `/api/tri?t=1500,4500,2200`).
+    * Triez le tableau avec votre fonction maison et calculez la médiane.
+    * Renvoyez une réponse JSON structurée : `{"original": [...], "tri": [...], "mediane": 2000.0}`.
+  * **Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
+    * Développez l'interface permettant de saisir les données comme illustré dans la vidéo :
+      * **Saisie entier + push** : effectuez le remplissage d'un tableau de valeurs en demandant des entiers à l'utilisateur et en les ajoutant (`push`) tant que la valeur saisie est supérieure à 0 (`valeur > 0`).
+      * **Traitement par le service web** : dès qu'une valeur inférieure ou égale à 0 est saisie, transmettez le tableau de valeurs accumulées au service web via une requête `fetch('/api/tri?t=...')`.
+      * **Affichage dans le DOM** : affichez dans la page web le tableau initial saisi, le tableau trié retourné par l'API et la médiane calculée.
 * **Exemple de test curl** :
   ```bash
   curl "http://localhost/api/tri?t=15,3,22,8"
