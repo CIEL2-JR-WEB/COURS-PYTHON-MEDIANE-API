@@ -275,7 +275,7 @@ Créez la route `POST /api/contact` qui reçoit un payload JSON contenant le `no
   "annee_naissance": 2005
 }
 ```
-La route doit calculer l'âge approximatif ($2026 - \text{annee\_naissance}$) et renvoyer une confirmation :
+La route doit calculer l'âge approximatif (`2026 - annee_naissance`) et renvoyer une confirmation :
 ```json
 {
   "statut": "enregistre",
