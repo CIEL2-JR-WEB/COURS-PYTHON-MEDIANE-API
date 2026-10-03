@@ -187,14 +187,7 @@ fin procédure
 
 ### Exercice 5 : Fusion de listes (Concaténation)
 
-[![Cahier des charges en vidéo - Exercice 5 : Fusion de listes](img/video_ex5_thumbnail.jpg)](https://www.youtube.com/watch?v=aGkpJFJ9t4k)
-
-> 📺 **Vidéo du cahier des charges :**  
-> Cliquez sur l'image ci-dessus ou sur le lien ci-dessous pour visionner la démonstration vidéo du fonctionnement attendu :  
-> - **Lien direct YouTube** : [https://www.youtube.com/watch?v=aGkpJFJ9t4k](https://www.youtube.com/watch?v=aGkpJFJ9t4k)  
-> - **Fichier vidéo local autonome (ressource du dépôt)** : [`resources/video_cahier_des_charges_ex5.mp4`](resources/video_cahier_des_charges_ex5.mp4)
->
-> *Cahier des charges* : L'interface JavaScript permet la saisie de deux tableaux (`t1` et `t2`). Les données sont transmises dans l'URL à l'API Flask. Le serveur backend concatène les listes, effectue le tri, calcule la médiane et renvoie les données en JSON. Le script client récupère la réponse et affiche les résultats dynamiquement dans le DOM (avec affichage des tableaux bruts, fusionné, trié et de la médiane).
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/aGkpJFJ9t4k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 * **Objectif** : Traiter plusieurs paramètres de requêtes, manipuler la concaténation de listes avec l'opérateur `+`, et connecter une interface web dynamique pour la saisie et l'affichage.
 * **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
@@ -207,8 +200,6 @@ fin procédure
 * **Exemple d'exécution** :
   * Requête : `GET /api/fusion?t1=12,18,5&t2=20,8,14`
   * Réponse JSON : `{"fusion": [12, 18, 5, 20, 8, 14], "tri": [5, 8, 12, 14, 18, 20], "mediane": 13.0}`
-* **Démonstration vidéo du résultat attendu** :
-  * Visionnez le comportement attendu sur [YouTube (https://www.youtube.com/watch?v=aGkpJFJ9t4k)](https://www.youtube.com/watch?v=aGkpJFJ9t4k) pour valider visuellement votre interface.
 * **Amélioration** : Rendez votre route capable d'accepter une infinité de tableaux grâce à `request.args.getlist('t')`.
 
 ---
