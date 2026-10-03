@@ -226,6 +226,15 @@ fin procédure
 
 ---
 
+### Prérequis à l'Exercice 6 : Les fondamentaux de SQL
+
+> 📖 **Support de cours & exercices préparatoires :**  
+> Avant d'interagir avec la base de données depuis votre API Python/Flask, vous devez maîtriser les requêtes SQL indispensables sur la table `employees`.  
+> 👉 **Consultez le cours et réalisez les exercices progressifs dans : [`bases en sql.md`](bases%20en%20sql.md)**  
+> *(Revenez ensuite ici pour réaliser l'Exercice 6)*
+
+---
+
 ### Exercice 6 : Connexion MySQL & Comparaison de salaire
 * **Objectif** : Interagir avec une base de données MySQL dans un bloc `try/except` et implémenter des routes métier.
 * **Fichiers** : `api/db.py`, `api/app.py`.
