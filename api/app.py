@@ -64,6 +64,8 @@ def route_fusion():
         valeur_mediane = mediane(tableau_trie)
 
         return jsonify({
+            "t1": t1,
+            "t2": t2,
             "fusion": fusion,
             "tri": tableau_trie,
             "mediane": valeur_mediane

@@ -185,15 +185,19 @@ fin procédure
 
 ---
 
-### Exercice 5 : Fusion de listes (Concaténation)
-* **Objectif** : Traiter plusieurs paramètres de requêtes et manipuler la concaténation de listes avec l'opérateur `+`.
-* **Fichiers** : `api/app.py`.
+### Exercice 5 : Fusion de listes (Concaténation) & Interface Web
+* **Vidéo de démonstration & cahier des charges** : [📺 Visionner le cahier des charges en vidéo](https://www.youtubeeducation.com/watch?v=aGkpJFJ9t4k)
+* **Objectif** : Traiter plusieurs paramètres de requêtes, manipuler la concaténation de listes avec l'opérateur `+`, et connecter une interface web dynamique pour la saisie et l'affichage.
+* **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
 * **Consignes** :
-  * Créez la route `GET /api/fusion?t1=...&t2=...`.
-  * Concaténez les deux séries reçues en utilisant l'opérateur `+`.
-  * Renvoyez le tableau fusionné, le tableau trié et la médiane globale en JSON.
+  * Créez la route `GET /api/fusion?t1=...&t2=...` dans Flask qui concatène les deux séries reçues en utilisant l'opérateur `+`, effectue le tri et calcule la médiane globale.
+  * Renvoyez une réponse JSON structurée : `{"t1": [...], "t2": [...], "fusion": [...], "tri": [...], "mediane": ...}`.
+  * Développez l'interface web (`index.html` et `app.js`) pour répondre fidèlement au cahier des charges de la vidéo : saisie des deux tableaux dans le formulaire, transmission via `fetch` dans l'URL, récupération des données JSON et affichage dynamique des résultats dans le DOM.
 * **Question théorique (à consigner dans votre compte-rendu)** :
   * *Quelle URI et structure de requête devez-vous adopter pour transmettre et fusionner 3 tableaux t1, t2 et t3 ?*
+* **Exemple d'exécution** :
+  * Requête : `GET /api/fusion?t1=12,18,5&t2=20,8,14`
+  * Réponse JSON : `{"fusion": [12, 18, 5, 20, 8, 14], "tri": [5, 8, 12, 14, 18, 20], "mediane": 13.0}`
 * **Amélioration** : Rendez votre route capable d'accepter une infinité de tableaux grâce à `request.args.getlist('t')`.
 
 ---

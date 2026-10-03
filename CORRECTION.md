@@ -107,18 +107,28 @@ curl -s "http://localhost/api/tri?t=1500,4500,2200,1500,3300,1800,1700,2000,4000
 
 ---
 
-### Exercice 5 : Fusion de tableaux
+### Exercice 5 : Fusion de tableaux (API & Client Web DOM)
+* **Vidéo de référence** : https://www.youtubeeducation.com/watch?v=aGkpJFJ9t4k
+* **Validation API (curl)** :
 ```bash
 curl -s "http://localhost/api/fusion?t1=12,18,5&t2=20,8,14"
 ```
 **Sortie attendue :**
 ```json
 {
+  "t1": [12, 18, 5],
+  "t2": [20, 8, 14],
   "fusion": [12, 18, 5, 20, 8, 14],
-  "mediane": 13.0,
-  "tri": [5, 8, 12, 14, 18, 20]
+  "tri": [5, 8, 12, 14, 18, 20],
+  "mediane": 13.0
 }
 ```
+
+* **Validation Web & DOM** :
+  1. Ouvrir `http://localhost`.
+  2. Renseigner `Tableau 1` et `Tableau 2` ou conserver les valeurs par défaut.
+  3. Cliquer sur **« Envoyer, Fusionner & Afficher dans le DOM »**.
+  4. Constater la mise à jour immédiate des champs `span-t1`, `span-t2`, `span-fusion`, `span-fusion-tri` et `span-fusion-mediane` dans le DOM.
 
 **Réponse à la question théorique de l'exercice 5 :**
 Pour transmettre 3 tableaux, il existe deux manières idiomatiques :
