@@ -40,7 +40,7 @@ document.getElementById('btn-random').addEventListener('click', async () => {
 });
 
 // Exercice 5 : Fusion de tableaux, tri et affichage dynamique dans le DOM
-// Cahier des charges vidéo : https://www.youtubeeducation.com/watch?v=aGkpJFJ9t4k
+// Cahier des charges vidéo : https://www.youtube.com/watch?v=aGkpJFJ9t4k
 document.getElementById('btn-fusion').addEventListener('click', async () => {
     const t1 = document.getElementById('input-t1').value;
     const t2 = document.getElementById('input-t2').value;

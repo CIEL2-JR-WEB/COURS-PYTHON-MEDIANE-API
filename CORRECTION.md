@@ -108,7 +108,7 @@ curl -s "http://localhost/api/tri?t=1500,4500,2200,1500,3300,1800,1700,2000,4000
 ---
 
 ### Exercice 5 : Fusion de tableaux (API & Client Web DOM)
-* **Vidéo de référence** : https://www.youtubeeducation.com/watch?v=aGkpJFJ9t4k
+* **Vidéo de référence** : https://www.youtube.com/watch?v=aGkpJFJ9t4k (ou ressource locale : `resources/video_cahier_des_charges_ex5.mp4`)
 * **Validation API (curl)** :
 ```bash
 curl -s "http://localhost/api/fusion?t1=12,18,5&t2=20,8,14"

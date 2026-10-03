@@ -186,7 +186,15 @@ fin procédure
 ---
 
 ### Exercice 5 : Fusion de listes (Concaténation) & Interface Web
-* **Vidéo de démonstration & cahier des charges** : [📺 Visionner le cahier des charges en vidéo](https://www.youtubeeducation.com/watch?v=aGkpJFJ9t4k)
+
+[![Vidéo du cahier des charges - Exercice 5](img/video_ex5_thumbnail.jpg)](https://www.youtube.com/watch?v=aGkpJFJ9t4k)
+
+> 📺 **Vidéo du cahier des charges :**
+> - **Lien direct YouTube** : [Visionner sur YouTube](https://www.youtube.com/watch?v=aGkpJFJ9t4k)
+> - **Fichier vidéo local autonome (ressource du dépôt)** : [resources/video_cahier_des_charges_ex5.mp4](resources/video_cahier_des_charges_ex5.mp4)
+>
+> *Cahier des charges* : L'interface JavaScript permet la saisie de deux tableaux (`t1` et `t2`). Les données sont transmises dans l'URL à l'API Flask. Le serveur backend concatène les listes, effectue le tri, calcule la médiane et renvoie les données en JSON. Le script client récupère la réponse et affiche les résultats dynamiquement dans le DOM (avec affichage des tableaux bruts, fusionné, trié et de la médiane).
+
 * **Objectif** : Traiter plusieurs paramètres de requêtes, manipuler la concaténation de listes avec l'opérateur `+`, et connecter une interface web dynamique pour la saisie et l'affichage.
 * **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
 * **Consignes** :
