@@ -42,14 +42,30 @@
 
         <!-- Section Ex 5 -->
         <section class="card" id="sec-fusion">
-            <h2>Exercice 5 : Fusion de tableaux (Concaténation)</h2>
-            <p>Fusionne deux séries d'entiers via <code>/api/fusion?t1=...&t2=...</code>.</p>
-            <div class="grid-2">
-                <input type="text" id="input-t1" placeholder="Tableau 1 (ex: 12, 18, 5)" value="12, 18, 5">
-                <input type="text" id="input-t2" placeholder="Tableau 2 (ex: 20, 8, 14)" value="20, 8, 14">
+            <h2>Exercice 5 : Fusion de tableaux (Concaténation & Affichage DOM)</h2>
+            <p>Saisie des deux tableaux, transmission à l'API via l'URL, concaténation, tri et affichage dynamique du résultat dans le DOM.</p>
+            <div style="margin-bottom: 15px;">
+                <a href="https://www.youtubeeducation.com/watch?v=aGkpJFJ9t4k" target="_blank" class="btn-link">📺 Visionner le cahier des charges en vidéo</a>
             </div>
-            <button id="btn-fusion" style="margin-top: 10px;">Fusionner les listes</button>
-            <pre class="output" id="output-fusion">En attente d'une requête...</pre>
+            <div class="grid-2">
+                <div>
+                    <label for="input-t1"><strong>Tableau 1 (séparé par des virgules) :</strong></label>
+                    <input type="text" id="input-t1" placeholder="Ex: 12, 18, 5" value="12, 18, 5">
+                </div>
+                <div>
+                    <label for="input-t2"><strong>Tableau 2 (séparé par des virgules) :</strong></label>
+                    <input type="text" id="input-t2" placeholder="Ex: 20, 8, 14" value="20, 8, 14">
+                </div>
+            </div>
+            <button id="btn-fusion" style="margin-top: 15px;">Envoyer, Fusionner & Afficher dans le DOM</button>
+            <div class="stats-preview" id="fusion-dom-result" style="margin-top: 15px;">
+                <p><strong>Tableau 1 saisi :</strong> <span id="span-t1">-</span></p>
+                <p><strong>Tableau 2 saisi :</strong> <span id="span-t2">-</span></p>
+                <p><strong>Tableau fusionné brut :</strong> <span id="span-fusion">-</span></p>
+                <p><strong>Tableau fusionné trié :</strong> <span id="span-fusion-tri">-</span></p>
+                <p><strong>Médiane globale :</strong> <span id="span-fusion-mediane" class="badge">-</span></p>
+            </div>
+            <pre class="output" id="output-fusion" style="margin-top: 15px;">Réponse JSON brute : en attente...</pre>
         </section>
 
         <!-- Section Ex 6 -->

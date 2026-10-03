@@ -25,16 +25,24 @@ document.getElementById('btn-random').addEventListener('click', async () => {
     document.getElementById('span-mediane').textContent = "TODO";
 });
 
-// Exercice 5 : Concaténation et fusion de listes
+// Exercice 5 : Concaténation, tri et affichage dynamique dans le DOM
+// Cahier des charges vidéo : https://www.youtubeeducation.com/watch?v=aGkpJFJ9t4k
 document.getElementById('btn-fusion').addEventListener('click', async () => {
     const t1 = document.getElementById('input-t1').value;
     const t2 = document.getElementById('input-t2').value;
     const outputElem = document.getElementById('output-fusion');
 
-    // TODO:
-    // 1. Émettre un fetch GET vers /api/fusion?t1=...&t2=...
-    // 2. Afficher le résultat JSON formatté dans outputElem
-    outputElem.textContent = "TODO: Implémenter l'appel fetch vers /api/fusion";
+    // TODO: Exercice 5 (Conforme à la vidéo)
+    // 1. Récupérer et nettoyer la saisie des deux tableaux t1 et t2
+    // 2. Émettre une requête GET vers /api/fusion?t1=...&t2=... avec fetch()
+    // 3. Récupérer les données retournées en JSON par Flask
+    // 4. Mettre à jour les éléments du DOM :
+    //    - span-t1, span-t2
+    //    - span-fusion (tableau fusionné brut)
+    //    - span-fusion-tri (tableau fusionné et trié)
+    //    - span-fusion-mediane (médiane calculée)
+    // 5. Afficher la réponse brute dans outputElem
+    outputElem.textContent = "TODO: Implémenter l'appel fetch vers /api/fusion et l'affichage dans le DOM";
 });
 
 // Exercice 6 : Statistiques BDD et comparaison employé
