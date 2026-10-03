@@ -27,13 +27,17 @@ def run_exercice_0():
     print(f"Salaire de Nicolas   : {salaire_nicolas:.2f} €")
 
     # 4. Conclusion sur l'affirmation de Nicolas
-    print("-> Affirmation de Nicolas : \"Je suis dans les moins bien payés de l'entreprise !\"")
+    print("-> Problématique : Nicolas gagne 2 200 € alors que le salaire moyen est de 2 500 €.")
+    print("   Il affirme : \"Je suis dans les moins bien payés de l'entreprise !\"")
     if salaire_nicolas > med:
-        print("-> Bilan : FAUX. Nicolas gagne plus que la médiane (2200 € > 2000 €). Il est mieux payé que plus de la moitié des salariés de l'entreprise.")
+        print("-> Analyse : FAUX. Nicolas confond salaire moyen et salaire médian.")
+        print(f"   La médiane réelle est de {med:.2f} €. Avec {salaire_nicolas:.2f} €, Nicolas se situe")
+        print("   au-dessus de la médiane (6e sur 9). Il fait partie des salariés les mieux rémunérés.")
+        print("   La moyenne est tirée vers le haut par les salaires extrêmes (4000 € et 4500 €).")
     elif salaire_nicolas < med:
-        print("-> Bilan : VRAI. Nicolas gagne moins que la médiane.")
+        print("-> Analyse : VRAI. Nicolas gagne moins que la médiane.")
     else:
-        print("-> Bilan : Nicolas gagne exactement le salaire médian.")
+        print("-> Analyse : Nicolas gagne exactement le salaire médian.")
 
 if __name__ == '__main__':
     run_exercice_0()

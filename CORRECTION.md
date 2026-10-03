@@ -26,8 +26,12 @@ Moyenne des salaires : 2500.00 €
 Salaires triés       : [1500, 1500, 1700, 1800, 2000, 2200, 3300, 4000, 4500]
 Médiane des salaires : 2000.00 €
 Salaire de Nicolas   : 2200.00 €
--> Affirmation de Nicolas : "Je suis dans les moins bien payés de l'entreprise !"
--> Bilan : FAUX. Nicolas gagne plus que la médiane (2200 € > 2000 €). Il est mieux payé que plus de la moitié des salariés de l'entreprise.
+-> Problématique : Nicolas gagne 2 200 € alors que le salaire moyen est de 2 500 €.
+   Il affirme : "Je suis dans les moins bien payés de l'entreprise !"
+-> Analyse : FAUX. Nicolas confond salaire moyen et salaire médian.
+   La médiane réelle est de 2000.00 €. Avec 2200.00 €, Nicolas se situe
+   au-dessus de la médiane (6e sur 9). Il fait partie des salariés les mieux rémunérés.
+   La moyenne est tirée vers le haut par les salaires extrêmes (4000 € et 4500 €).
 ```
 
 ---
