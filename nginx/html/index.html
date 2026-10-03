@@ -17,13 +17,30 @@
     <main class="container">
         <!-- Section Ex 4.2 -->
         <section class="card" id="sec-tri">
-            <h2>Exercice 4.2 : Tri par sélection & Médiane (API)</h2>
-            <p>Transmettez une liste d'entiers séparés par des virgules pour obtenir le tri et la médiane via Flask.</p>
-            <div class="form-group">
-                <input type="text" id="input-tri" placeholder="Exemple: 15, 3, 22, 8, 19" value="1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000">
-                <button id="btn-tri">Envoyer à /api/tri</button>
+            <h2>Exercice 4.2 : Saisie dynamique, Tri par sélection & Médiane (API)</h2>
+            <p>Saisie séquentielle d'entiers ajoutés au tableau (push) tant que la valeur est &gt; 0, puis traitement par l'API Flask.</p>
+            <div style="margin-bottom: 20px;">
+                <video controls width="100%" poster="assets/video_ex4_2_thumbnail.jpg" style="border-radius: 8px; border: 1px solid var(--border-color); max-height: 400px; background: #000;">
+                    <source src="assets/video_saisie_tri_ex4_2.mp4" type="video/mp4">
+                    Votre navigateur ne supporte pas la balise vidéo HTML5.
+                </video>
+                <div style="margin-top: 10px;">
+                    <a href="https://drive.google.com/file/d/1_iikt1uk9Wx-tPY79woa0aJHjuJ83r5l/view?usp=drive_link" target="_blank" class="btn-link">📺 Visionner également la vidéo sur Google Drive</a>
+                </div>
             </div>
-            <pre class="output" id="output-tri">En attente d'une requête...</pre>
+            <div class="form-group" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="number" id="input-valeur-tri" placeholder="Saisir un nombre > 0 (<= 0 pour envoyer)" style="flex: 1; min-width: 250px;">
+                <button id="btn-push-tri">Ajouter (push)</button>
+                <button id="btn-prompt-tri" class="btn-secondary">Saisie via prompt()</button>
+                <button id="btn-reset-tri" class="btn-secondary">Réinitialiser</button>
+            </div>
+            <div class="stats-preview" id="preview-saisie-tri" style="margin-top: 15px;">
+                <p><strong>Tableau en cours de saisie (JS) :</strong> <span id="span-saisie-cours">[]</span></p>
+                <p><strong>Tableau transmis à l'API :</strong> <span id="span-tri-original">-</span></p>
+                <p><strong>Tableau trié reçu (Flask) :</strong> <span id="span-tri-trie">-</span></p>
+                <p><strong>Médiane calculée :</strong> <span id="span-tri-mediane" class="badge">-</span></p>
+            </div>
+            <pre class="output" id="output-tri" style="margin-top: 15px;">En attente de saisie...</pre>
         </section>
 
         <!-- Section Ex 4.3 -->

@@ -1,17 +1,99 @@
 // BTS CIEL - Client JavaScript (fetch) - CORRIGÉ
 
-// Exercice 4.2 : Appel à /api/tri
-document.getElementById('btn-tri').addEventListener('click', async () => {
-    const rawInput = document.getElementById('input-tri').value;
+// Exercice 4.2 : Saisie dynamique d'entiers (push tant que valeur > 0) puis appel à /api/tri
+let tableauSaisieEx4 = [];
+
+async function envoyerEtTraiterTableau(tableau) {
     const outputElem = document.getElementById('output-tri');
+    if (!tableau || tableau.length === 0) {
+        outputElem.textContent = "Aucune valeur saisie à envoyer.";
+        return;
+    }
 
     try {
-        const response = await fetch(`/api/tri?t=${encodeURIComponent(rawInput)}`);
+        const url = `/api/tri?t=${encodeURIComponent(tableau.join(','))}`;
+        const response = await fetch(url);
         const data = await response.json();
+
+        if (!response.ok) {
+            outputElem.textContent = "Erreur : " + (data.erreur || "Erreur de traitement");
+            return;
+        }
+
+        // Mise à jour de l'IHM dans le DOM
+        document.getElementById('span-tri-original').textContent = data.original.join(', ');
+        document.getElementById('span-tri-trie').textContent = data.tri.join(', ');
+        document.getElementById('span-tri-mediane').textContent = data.mediane;
         outputElem.textContent = JSON.stringify(data, null, 2);
     } catch (err) {
         outputElem.textContent = "Erreur lors de l'appel API : " + err.message;
     }
+}
+
+// Option 1 : Saisie via champ de texte et bouton 'Ajouter (push)'
+document.getElementById('btn-push-tri').addEventListener('click', async () => {
+    const input = document.getElementById('input-valeur-tri');
+    const rawVal = input.value.trim();
+    if (rawVal === '') return;
+
+    const val = parseInt(rawVal, 10);
+    input.value = '';
+    input.focus();
+
+    if (val > 0) {
+        // Remplissage du tableau tant que valeur > 0
+        tableauSaisieEx4.push(val);
+        document.getElementById('span-saisie-cours').textContent = `[${tableauSaisieEx4.join(', ')}]`;
+    } else {
+        // Valeur <= 0 : condition d'arrêt et traitement par le service web
+        if (tableauSaisieEx4.length > 0) {
+            await envoyerEtTraiterTableau(tableauSaisieEx4);
+            tableauSaisieEx4 = [];
+            document.getElementById('span-saisie-cours').textContent = '[] (traité)';
+        } else {
+            document.getElementById('output-tri').textContent = "Veuillez saisir au moins une valeur > 0 avant de terminer.";
+        }
+    }
+});
+
+// Validation par la touche 'Entrée' dans le champ de saisie
+document.getElementById('input-valeur-tri').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        document.getElementById('btn-push-tri').click();
+    }
+});
+
+// Option 2 : Saisie via boucle prompt() (conforme à la vidéo de démonstration)
+document.getElementById('btn-prompt-tri').addEventListener('click', async () => {
+    const tableauLocal = [];
+    while (true) {
+        const reponse = prompt("saisissez un nombre > 0");
+        if (reponse === null) break; // Clic sur Annuler
+
+        const nombre = parseInt(reponse.trim(), 10);
+        if (isNaN(nombre) || nombre <= 0) {
+            // Arrêt de la boucle quand valeur <= 0
+            break;
+        }
+
+        tableauLocal.push(nombre);
+        document.getElementById('span-saisie-cours').textContent = `[${tableauLocal.join(', ')}]`;
+    }
+
+    if (tableauLocal.length > 0) {
+        await envoyerEtTraiterTableau(tableauLocal);
+    }
+});
+
+// Réinitialisation
+document.getElementById('btn-reset-tri').addEventListener('click', () => {
+    tableauSaisieEx4 = [];
+    document.getElementById('input-valeur-tri').value = '';
+    document.getElementById('span-saisie-cours').textContent = '[]';
+    document.getElementById('span-tri-original').textContent = '-';
+    document.getElementById('span-tri-trie').textContent = '-';
+    document.getElementById('span-tri-mediane').textContent = '-';
+    document.getElementById('output-tri').textContent = 'En attente de saisie...';
 });
 
 // Exercice 4.3 : Salaires aléatoires générés en JS
