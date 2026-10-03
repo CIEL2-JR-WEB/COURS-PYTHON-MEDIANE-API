@@ -187,7 +187,7 @@ fin procédure
 
 ### Exercice 5 : Fusion de listes (Concaténation)
 
-<iframe width="100%" height="400" src="https://www.youtube.com/embed/aGkpJFJ9t4k" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Vidéo de démonstration](https://img.youtube.com/vi/aGkpJFJ9t4k/maxresdefault.jpg)](https://www.youtube.com/watch?v=aGkpJFJ9t4k)
 
 * **Objectif** : Traiter plusieurs paramètres de requêtes, manipuler la concaténation de listes avec l'opérateur `+`, et connecter une interface web dynamique pour la saisie et l'affichage.
 * **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
