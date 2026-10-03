@@ -159,19 +159,32 @@ fin procédure
 
 [![Vidéo de démonstration : saisie et tri](img/video_ex4_2_thumbnail.jpg)](https://drive.google.com/file/d/1_iikt1uk9Wx-tPY79woa0aJHjuJ83r5l/view?usp=drive_link)
 
-* **Objectif** : Exposer un service web HTTP renvoyant du JSON avec Flask et concevoir une IHM web en JavaScript pour la saisie dynamique des valeurs et l'affichage des résultats.
-* **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
+* **Objectif** : Concevoir une IHM web en JavaScript pour la saisie dynamique de valeurs, valider l'affichage DOM à l'aide d'un serveur Mock Postman, puis exposer le service web réel en Python avec Flask.
+* **Fichiers** : `nginx/html/index.html`, `nginx/html/app.js`, `api/app.py`.
 * **Consignes** :
-  * **Côté Backend (Flask - `app.py`)** :
-    * Créez la route `GET /api/tri`.
-    * Récupérez la série passée dans la Query String `t` (ex: `/api/tri?t=1500,4500,2200`).
-    * Triez le tableau avec votre fonction maison et calculez la médiane.
-    * Renvoyez une réponse JSON structurée : `{"original": [...], "tri": [...], "mediane": 2000.0}`.
-  * **Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
+  * **1. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
     * Développez l'interface permettant de saisir les données comme illustré dans la vidéo :
       * **Saisie entier + push** : effectuez le remplissage d'un tableau de valeurs en demandant des entiers à l'utilisateur et en les ajoutant (`push`) tant que la valeur saisie est supérieure à 0 (`valeur > 0`).
-      * **Traitement par le service web** : dès qu'une valeur inférieure ou égale à 0 est saisie, transmettez le tableau de valeurs accumulées au service web via une requête `fetch('/api/tri?t=...')`.
+      * **Traitement par le service web** : dès qu'une valeur inférieure ou égale à 0 est saisie, transmettez le tableau de valeurs accumulées au service web via une requête `fetch(...)`.
       * **Affichage dans le DOM** : affichez dans la page web le tableau initial saisi, le tableau trié retourné par l'API et la médiane calculée.
+  * **2. Simulation avec un serveur Mock Postman (avant le Backend)** :
+    * Avant de coder le backend Python, créez un **Mock Server** dans Postman simulant la route `GET /api/tri`.
+    * Configurez un exemple de réponse JSON attendue :
+      ```json
+      {
+        "original": [15, 3, 22, 8],
+        "tri": [3, 8, 15, 22],
+        "mediane": 11.5
+      }
+      ```
+    * Pointez temporairement votre fonction `fetch()` vers l'URL générée par le Mock Postman pour valider le bon fonctionnement de votre IHM et l'injection dans le DOM avant de démarrer le serveur local.
+  * **3. Côté Backend (Flask - `app.py`)** :
+    * Développez maintenant la route réelle dans l'application Flask :
+      * Créez la route `GET /api/tri`.
+      * Récupérez la série passée dans la Query String `t` (ex: `/api/tri?t=1500,4500,2200`).
+      * Triez le tableau avec votre fonction maison `tri_selection_copie` et calculez la médiane.
+      * Renvoyez la réponse JSON structurée : `{"original": [...], "tri": [...], "mediane": 2000.0}`.
+    * Reconnectez votre frontend sur l'API Flask locale (`/api/tri?t=...`).
 * **Exemple de test curl** :
   ```bash
   curl "http://localhost/api/tri?t=15,3,22,8"

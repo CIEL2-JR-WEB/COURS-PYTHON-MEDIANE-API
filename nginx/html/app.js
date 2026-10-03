@@ -3,6 +3,7 @@
 // Exercice 4.2 : Saisie dynamique d'entiers (push tant que valeur > 0) puis appel à /api/tri
 let tableauSaisieEx4 = [];
 
+// Fonction utilitaire pour envoyer le tableau au service web (Mock Postman ou API Flask locale)
 async function envoyerEtTraiterTableau(tableau) {
     const outputElem = document.getElementById('output-tri');
     if (!tableau || tableau.length === 0) {
@@ -11,6 +12,8 @@ async function envoyerEtTraiterTableau(tableau) {
     }
 
     try {
+        // Remarque : Pour l'Étape 2, cette URL peut pointer vers votre serveur Mock Postman
+        // Exemple : const url = `https://<mock-id>.mock.pstmn.io/api/tri?t=${encodeURIComponent(tableau.join(','))}`;
         const url = `/api/tri?t=${encodeURIComponent(tableau.join(','))}`;
         const response = await fetch(url);
         const data = await response.json();
