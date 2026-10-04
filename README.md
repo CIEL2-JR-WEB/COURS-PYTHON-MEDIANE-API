@@ -360,3 +360,164 @@ fin procédure
   ```
 * **Amélioration** : Renvoyez une réponse JSON avec code d'état HTTP 404 si l'employé demandé n'existe pas en BDD.
 
+---
+
+### Prérequis à l'Exercice 7 : Les jointures SQL & la modélisation relationnelle
+
+> 📖 **Support de cours & exercices préparatoires :**  
+> Avant d'interfacer l'API Flask avec des requêtes multi-tables et des calculs statistiques sur période, vous devez maîtriser les jointures relationnelles et les agrégations temporelles sur la base `CRUD2`.  
+> 👉 **Consultez le cours et réalisez les exercices progressifs dans : [`bases en jointures.md`](bases%20en%20jointures.md)**  
+> *(Revenez ensuite ici pour réaliser l'Exercice 7)*
+
+---
+
+### Exercice 7 : API Flask & Médiane sur une période (Jointures & BDD CRUD2)
+* **Objectif** : Exposer un service web HTTP REST avec Flask interrogeant la base relationnelle `CRUD2` pour calculer des moyennes individuelles en SQL (`INNER JOIN` + `AVG` + `GROUP BY`) et la médiane globale des salaires moyens en Python.
+* **Fichiers** : `api/db.py`, `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
+* **Consignes** :
+  * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
+    * La route à concevoir est `GET /api/salaires/periode`. Elle accepte trois paramètres optionnels dans la Query String :
+      * `p` : identifiant entier (`id`) de l'employé.
+      * `d1` : date de début au format standard `AAAA-MM-JJ`.
+      * `d2` : date de fin au format standard `AAAA-MM-JJ`.
+    * **Matrice de décision métier (4 cas) :**
+      | `p` (Employé) | `d1` / `d2` (Période) | Réponse attendue de l'API | Exemple d'URL |
+      |:---:|:---:|:---|:---|
+      | **Présent** | **Les deux** | Salaire moyen de l'employé `p` entre `d1` et `d2` | `/api/salaires/periode?p=1&d1=2022-01-01&d2=2022-12-31` |
+      | **Présent** | **Un seul (`d1` ou `d2`)** | Salaire moyen de l'employé `p` à partir de cette date | `/api/salaires/periode?p=1&d1=2022-01-01` |
+      | **Absent** | **Les deux** | Médiane des salaires moyens des employés entre `d1` et `d2` | `/api/salaires/periode?d1=2022-01-01&d2=2022-12-31` |
+      | **Absent** | **Aucun** | Médiane des salaires moyens de tous les employés (toutes dates) | `/api/salaires/periode` |
+
+    * Avant de coder le backend, créez dans Postman un **Mock Server** simulant les 4 retours JSON de référence :
+      * **Cas 1 (`?p=1&d1=2022-01-01&d2=2022-12-31`)** :
+        ```json
+        {
+          "cas": "employe_periode",
+          "employe_id": 1,
+          "employe_nom": "Roland Mendel",
+          "d1": "2022-01-01",
+          "d2": "2022-12-31",
+          "salaire_moyen": 5300.0
+        }
+        ```
+      * **Cas 2 (`?p=1&d1=2022-01-01`)** :
+        ```json
+        {
+          "cas": "employe_partir_de",
+          "employe_id": 1,
+          "employe_nom": "Roland Mendel",
+          "date_debut": "2022-01-01",
+          "salaire_moyen": 5400.0
+        }
+        ```
+      * **Cas 3 (`?d1=2022-01-01&d2=2022-12-31`)** :
+        ```json
+        {
+          "cas": "mediane_periode",
+          "d1": "2022-01-01",
+          "d2": "2022-12-31",
+          "nombre_employes": 3,
+          "moyennes_individuelles": [5300.0, 6600.0, 8000.0],
+          "mediane_des_moyennes": 6600.0
+        }
+        ```
+      * **Cas 4 (`/api/salaires/periode`)** :
+        ```json
+        {
+          "cas": "mediane_globale",
+          "nombre_employes": 3,
+          "moyennes_individuelles": [5200.0, 6600.0, 8000.0],
+          "mediane_des_moyennes": 6600.0
+        }
+        ```
+
+  * **2. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
+    * **Comprendre la structure HTML fournie :**  
+      Ouvrez `nginx/html/index.html` (section `sec-periode`). Les éléments suivants sont mis à disposition :
+      * `<input id="input-periode-p">` : champ numérique pour l'identifiant employé `p` (optionnel).
+      * `<input id="input-periode-d1">` : champ de date pour la date de début `d1`.
+      * `<input id="input-periode-d2">` : champ de date pour la date de fin `d2`.
+      * `<button id="btn-periode">` : bouton « Interroger l'API Période ».
+      * `<button id="btn-periode-reset">` : bouton « Réinitialiser les filtres ».
+      * Balises `<span>` d'affichage dans `#preview-periode` :
+        * `<span id="span-periode-cas">` : cas détecté par l'API (`employe_periode`, `mediane_globale`, etc.).
+        * `<span id="span-periode-employe">` : nom et ID de l'employé concerné (ou mention globale).
+        * `<span id="span-periode-dates">` : période appliquée aux calculs.
+        * `<span id="span-periode-moyennes">` : série des moyennes calculées pour chaque employé.
+        * `<span id="span-periode-resultat">` : valeur statistique finale (salaire moyen ou médiane en €).
+      * `<pre id="output-periode">` : zone d'affichage pour la réponse JSON brute formatée.
+    * **Développement dans `nginx/html/app.js` :**
+      * Câblez l'écouteur d'événements `click` sur `btn-periode`.
+      * Récupérez les valeurs saisies et construisez dynamiquement la Query String avec `URLSearchParams` (en n'ajoutant que les paramètres renseignés).
+      * Connectez temporairement votre `fetch()` vers votre Mock Postman pour valider que tous les éléments du DOM sont mis à jour proprement.
+
+  * **3. Côté Backend (MySQL CRUD2 & Flask - `api/db.py`, `api/app.py`)** :
+    * **Connexion à `CRUD2` (`api/db.py`) :**
+      * Mettez à jour `get_db_connection(database=None)` pour qu'elle accepte un nom de base optionnel (par défaut `CRUD` pour préserver l'Exercice 6, ou `CRUD2` si passé en argument).
+    * **Écriture des requêtes préparées SQL :**
+      * Avant de coder les routes, testez et validez dans `db.py` les requêtes préparées avec `%s` :
+        * *Cas 1 (Employé sur période)* :
+          ```sql
+          SELECT e.id, e.name, AVG(s.salary) AS moyenne
+          FROM employes e
+          INNER JOIN salaires s ON e.id = s.employes_id
+          WHERE e.id = %s AND s.date BETWEEN %s AND %s
+          GROUP BY e.id, e.name;
+          ```
+        * *Cas 2 (Employé à partir d'une date)* :
+          ```sql
+          SELECT e.id, e.name, AVG(s.salary) AS moyenne
+          FROM employes e
+          INNER JOIN salaires s ON e.id = s.employes_id
+          WHERE e.id = %s AND s.date >= %s
+          GROUP BY e.id, e.name;
+          ```
+        * *Cas 3 & 4 (Moyenne par employé pour calcul de médiane)* :
+          ```sql
+          SELECT AVG(s.salary) AS moyenne
+          FROM employes e
+          INNER JOIN salaires s ON e.id = s.employes_id
+          -- (+ clause WHERE s.date BETWEEN %s AND %s pour le Cas 3)
+          GROUP BY e.id
+          ORDER BY e.id ASC;
+          ```
+    * **Calcul de la médiane en Python (`api/app.py`) :**
+      * MySQL ne dispose pas de fonction native standard `MEDIAN()`.
+      * Les moyennes individuelles sont donc calculées en SQL avec `AVG()`, puis récupérées sous forme de liste Python `[moyenne1, moyenne2, ...]`.
+      * Vous devez utiliser vos fonctions maison `tri_selection_copie()` et `mediane()` pour trier les moyennes et en extraire la médiane exacte.
+    * **Route Flask (`/api/salaires/periode`) :**
+      * Récupérez `request.args.get('p')`, `request.args.get('d1')` et `request.args.get('d2')`.
+      * Déterminez le cas approprié parmi les 4 configurations.
+      * Renvoyez la réponse JSON structurée avec `jsonify(...)`.
+      * Dans `app.js`, reconnectez l'appel `fetch()` sur l'API Flask locale.
+
+* **Données de référence BDD (`CRUD2`)** :
+  * 3 employés ($N=3$, impair) :
+    * **Roland Mendel (id=1)** : salaires 4800, 5000, 5200, 5400, 5600 €
+      * Moyenne globale : **5200.00 €** | Moyenne 2022 : **5300.00 €** | Moyenne depuis 2022-01-01 : **5400.00 €**
+    * **Victoria Ashworth (id=2)** : salaires 6200, 6500, 6700, 7000 €
+      * Moyenne globale : **6600.00 €** | Moyenne 2022 : **6600.00 €**
+    * **Martin Blank (id=3)** : salaires 7500, 7800, 8200, 8500 €
+      * Moyenne globale : **8000.00 €** | Moyenne 2022 : **8000.00 €**
+  * **Médiane globale (Cas 4)** : série triée `[5200.0, 6600.0, 8000.0]` $\rightarrow$ Médiane = **6600.00 €**.
+  * **Médiane sur 2022 (Cas 3)** : série triée `[5300.0, 6600.0, 8000.0]` $\rightarrow$ Médiane = **6600.00 €**.
+
+* **Exemples de tests curl** :
+  ```bash
+  # Cas 1 : Roland Mendel sur l'année 2022 (Attendu : 5300.0 €)
+  curl "http://localhost/api/salaires/periode?p=1&d1=2022-01-01&d2=2022-12-31"
+
+  # Cas 2 : Roland Mendel à partir du 2022-01-01 (Attendu : 5400.0 €)
+  curl "http://localhost/api/salaires/periode?p=1&d1=2022-01-01"
+
+  # Cas 3 : Médiane des employés sur 2022 (Attendu : 6600.0 €)
+  curl "http://localhost/api/salaires/periode?d1=2022-01-01&d2=2022-12-31"
+
+  # Cas 4 : Médiane globale toutes dates confondues (Attendu : 6600.0 €)
+  curl "http://localhost/api/salaires/periode"
+  ```
+
+* **Améliorations** :
+  * Renvoyez une erreur HTTP 400 (`Bad Request`) si le format des dates n'est pas `AAAA-MM-JJ` ou si `d1 > d2`.
+  * Renvoyez une erreur HTTP 404 (`Not Found`) si l'employé `p` spécifié n'existe pas dans la base `CRUD2`.
+

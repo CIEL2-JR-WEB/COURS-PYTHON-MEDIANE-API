@@ -108,6 +108,42 @@
                 </div>
             </div>
         </section>
+
+        <!-- Section Ex 7 -->
+        <section class="card" id="sec-periode">
+            <h2>Exercice 7 : Jointures SQL & Médiane sur une période (Base CRUD2)</h2>
+            <p>Interrogez l'API <code>GET /api/salaires/periode</code> avec les paramètres optionnels <code>p</code> (ID employé), <code>d1</code> et <code>d2</code> (dates AAAA-MM-JJ).</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label for="input-periode-p"><strong>ID Employé (paramètre p, optionnel) :</strong></label>
+                    <input type="number" id="input-periode-p" placeholder="Ex: 1, 2, 3 (vide pour tous)">
+                </div>
+                <div>
+                    <label for="input-periode-d1"><strong>Date début d1 (AAAA-MM-JJ) :</strong></label>
+                    <input type="date" id="input-periode-d1" value="2022-01-01">
+                </div>
+                <div>
+                    <label for="input-periode-d2"><strong>Date fin d2 (AAAA-MM-JJ) :</strong></label>
+                    <input type="date" id="input-periode-d2" value="2022-12-31">
+                </div>
+            </div>
+
+            <div class="actions" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
+                <button id="btn-periode">Interroger l'API Période</button>
+                <button id="btn-periode-reset" class="btn-secondary">Réinitialiser les filtres</button>
+            </div>
+
+            <div class="stats-preview" id="preview-periode">
+                <p><strong>Cas métier détecté :</strong> <span id="span-periode-cas" class="badge">-</span></p>
+                <p><strong>Détail employé :</strong> <span id="span-periode-employe">-</span></p>
+                <p><strong>Période appliquée :</strong> <span id="span-periode-dates">-</span></p>
+                <p><strong>Moyennes individuelles calculées :</strong> <span id="span-periode-moyennes">-</span></p>
+                <p><strong>Résultat statistique (Moyenne ou Médiane) :</strong> <span id="span-periode-resultat" class="badge">-</span></p>
+            </div>
+
+            <pre class="output" id="output-periode" style="margin-top: 15px;">En attente d'interrogation...</pre>
+        </section>
     </main>
 
     <footer class="footer">

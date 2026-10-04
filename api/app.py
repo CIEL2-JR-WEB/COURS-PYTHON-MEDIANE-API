@@ -64,5 +64,37 @@ def route_employee_comparaison(emp_id):
     # 3. Comparer le salaire de l'employé et retourner le bilan JSON
     return jsonify({"message": "TODO: Implémenter /api/employees/<id>/comparaison"}), 501
 
+
+@app.route('/api/salaires/periode', methods=['GET'])
+def route_salaires_periode():
+    """
+    Exercice 7 :
+    Route GET /api/salaires/periode
+    Paramètres optionnels de Query String :
+    - p  : identifiant de l'employé (int)
+    - d1 : date de début (AAAA-MM-JJ)
+    - d2 : date de fin (AAAA-MM-JJ)
+
+    Gère les 4 cas métier :
+    1. p présent + d1 et d2 présents -> Salaire moyen de p entre d1 et d2
+    2. p présent + une seule date    -> Salaire moyen de p à partir de cette date
+    3. p absent  + d1 et d2 présents -> Médiane des salaires moyens des employés entre d1 et d2
+    4. p absent  + aucune date       -> Médiane des salaires moyens de tous les employés (toutes dates)
+    """
+    # TODO: Exercice 7
+    # 1. Récupérer p, d1, d2 depuis request.args :
+    #    p = request.args.get('p')
+    #    d1 = request.args.get('d1')
+    #    d2 = request.args.get('d2')
+    # 2. Détecter le cas d'usage parmi les 4 possibilités
+    # 3. Interroger db.py (base CRUD2) pour récupérer les moyennes SQL
+    # 4. Pour les cas 3 et 4 :
+    #    - Trier les moyennes avec tri_selection_copie(moyennes)
+    #    - Calculer la médiane avec mediane(...)
+    # 5. Renvoyer la réponse formatée avec jsonify(...)
+    return jsonify({"message": "TODO: Implémenter /api/salaires/periode"}), 501
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+

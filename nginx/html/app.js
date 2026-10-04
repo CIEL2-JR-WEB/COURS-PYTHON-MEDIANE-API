@@ -102,3 +102,45 @@ document.getElementById('btn-db-emp').addEventListener('click', async () => {
     // TODO: Émettre un fetch vers `/api/employees/${empId}/comparaison` et afficher le JSON formaté dans outputElem
     outputElem.textContent = `TODO: Implémenter l'appel fetch vers /api/employees/${empId}/comparaison`;
 });
+
+// Exercice 7 : Jointures SQL & Médiane sur une période (/api/salaires/periode)
+document.getElementById('btn-periode').addEventListener('click', async () => {
+    const pVal = document.getElementById('input-periode-p').value.trim();
+    const d1Val = document.getElementById('input-periode-d1').value.trim();
+    const d2Val = document.getElementById('input-periode-d2').value.trim();
+    const outputElem = document.getElementById('output-periode');
+
+    // TODO: Exercice 7
+    // 1. Construire les paramètres de requête avec URLSearchParams :
+    //    const params = new URLSearchParams();
+    //    if (pVal !== '') params.append('p', pVal);
+    //    if (d1Val !== '') params.append('d1', d1Val);
+    //    if (d2Val !== '') params.append('d2', d2Val);
+    //
+    // 2. Émettre une requête GET vers `/api/salaires/periode?${params.toString()}` avec fetch()
+    //    (Astuce Étape 1 : Vous pouvez tester d'abord avec l'URL de votre serveur Mock Postman)
+    //
+    // 3. Récupérer les données retournées en JSON (const data = await response.json())
+    //
+    // 4. Mettre à jour les balises du DOM dans index.html :
+    //    - document.getElementById('span-periode-cas').textContent = data.cas
+    //    - document.getElementById('span-periode-employe').textContent = data.employe_nom ? `${data.employe_nom} (id: ${data.employe_id})` : 'Tous les employés'
+    //    - document.getElementById('span-periode-dates').textContent = data.d1 && data.d2 ? `Du ${data.d1} au ${data.d2}` : (data.date_debut ? `À partir du ${data.date_debut}` : 'Toutes dates')
+    //    - document.getElementById('span-periode-moyennes').textContent = data.moyennes_individuelles ? data.moyennes_individuelles.map(m => `${m} €`).join(', ') : '-'
+    //    - document.getElementById('span-periode-resultat').textContent = (data.salaire_moyen !== undefined ? `${data.salaire_moyen} € (Moyenne)` : `${data.mediane_des_moyennes} € (Médiane)`)
+    //    - outputElem.textContent = JSON.stringify(data, null, 2)
+    outputElem.textContent = "TODO: Implémenter l'appel fetch vers /api/salaires/periode et la mise à jour du DOM";
+});
+
+document.getElementById('btn-periode-reset').addEventListener('click', () => {
+    document.getElementById('input-periode-p').value = '';
+    document.getElementById('input-periode-d1').value = '';
+    document.getElementById('input-periode-d2').value = '';
+    document.getElementById('span-periode-cas').textContent = '-';
+    document.getElementById('span-periode-employe').textContent = '-';
+    document.getElementById('span-periode-dates').textContent = '-';
+    document.getElementById('span-periode-moyennes').textContent = '-';
+    document.getElementById('span-periode-resultat').textContent = '-';
+    document.getElementById('output-periode').textContent = "En attente d'interrogation...";
+});
+
