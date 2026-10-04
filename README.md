@@ -454,33 +454,22 @@ fin procédure
   * **3. Côté Backend (MySQL CRUD2 & Flask - `api/db.py`, `api/app.py`)** :
     * **Connexion à `CRUD2` (`api/db.py`) :**
       * Mettez à jour `get_db_connection(database=None)` pour qu'elle accepte un nom de base optionnel (par défaut `CRUD` pour préserver l'Exercice 6, ou `CRUD2` si passé en argument).
-    * **Écriture des requêtes préparées SQL :**
-      * Avant de coder les routes, testez et validez dans `db.py` les requêtes préparées avec `%s` :
-        * *Cas 1 (Employé sur période)* :
-          ```sql
-          SELECT e.id, e.name, AVG(s.salary) AS moyenne
-          FROM employes e
-          INNER JOIN salaires s ON e.id = s.employes_id
-          WHERE e.id = %s AND s.date BETWEEN %s AND %s
-          GROUP BY e.id, e.name;
-          ```
-        * *Cas 2 (Employé à partir d'une date)* :
-          ```sql
-          SELECT e.id, e.name, AVG(s.salary) AS moyenne
-          FROM employes e
-          INNER JOIN salaires s ON e.id = s.employes_id
-          WHERE e.id = %s AND s.date >= %s
-          GROUP BY e.id, e.name;
-          ```
-        * *Cas 3 & 4 (Moyenne par employé pour calcul de médiane)* :
-          ```sql
-          SELECT AVG(s.salary) AS moyenne
-          FROM employes e
-          INNER JOIN salaires s ON e.id = s.employes_id
-          -- (+ clause WHERE s.date BETWEEN %s AND %s pour le Cas 3)
-          GROUP BY e.id
-          ORDER BY e.id ASC;
-          ```
+    * **Conception et validation de vos requêtes SQL dans MySQL Workbench :**
+      * Avant d'écrire votre code Python dans `api/db.py`, connectez-vous à la base `CRUD2` avec **MySQL Workbench** (ou le client en ligne de commande Docker).
+      * Pour chacun des 4 cas de la matrice de décision, vous devez concevoir et tester la requête SQL correspondante :
+        * *Cas 1 (`p` présent, `d1` et `d2` renseignés)* :  
+          Rédigez la requête avec jointure (`employes` et `salaires`) calculant la moyenne (`AVG(s.salary)`) pour l'employé d'identifiant `p` sur la période comprise entre `d1` et `d2`.  
+          *Test dans Workbench :* Pour `p=1`, `d1='2022-01-01'` et `d2='2022-12-31'`, votre requête doit renvoyer la moyenne **5300.00 €** pour Roland Mendel.
+        * *Cas 2 (`p` présent, une seule date `d1` ou `d2`)* :  
+          Adaptez la clause de filtrage sur la date (`s.date >= ...`) pour calculer le salaire moyen à partir de la date fournie.  
+          *Test dans Workbench :* Pour `p=1` et `d1='2022-01-01'`, votre requête doit renvoyer la moyenne **5400.00 €**.
+        * *Cas 3 (`p` absent, `d1` et `d2` renseignés)* :  
+          Rédigez la requête calculant la moyenne des salaires de **chaque employé** sur la période `d1` à `d2`. Quelle clause de regroupement (`GROUP BY`) devez-vous employer ?  
+          *Test dans Workbench :* Sur l'année 2022, votre requête doit renvoyer 3 lignes correspondant aux moyennes respectives des 3 employés : `5300.00 €`, `6600.00 €` et `8000.00 €`.
+        * *Cas 4 (`p`, `d1` et `d2` tous absents)* :  
+          Rédigez la requête calculant le salaire moyen global de chaque employé, toutes dates confondues.  
+          *Test dans Workbench :* Votre requête doit renvoyer les 3 moyennes historiques : `5200.00 €`, `6600.00 €` et `8000.00 €`.
+      * Une fois vos requêtes validées dans MySQL Workbench, intégrez-les dans les fonctions de `api/db.py` en les sécurisant sous forme de **requêtes préparées** (remplacez les valeurs littérales par les marqueurs de substitution `%s` et passez les arguments dans le tuple de paramètres).
     * **Calcul de la médiane en Python (`api/app.py`) :**
       * MySQL ne dispose pas de fonction native standard `MEDIAN()`.
       * Les moyennes individuelles sont donc calculées en SQL avec `AVG()`, puis récupérées sous forme de liste Python `[moyenne1, moyenne2, ...]`.

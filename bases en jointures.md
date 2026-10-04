@@ -5,33 +5,62 @@ Ce support fait suite à [`bases en sql.md`](bases%20en%20sql.md) et prépare di
 
 ---
 
-## 1. Environnement de travail & Connexion à la base `CRUD2`
+## 1. Environnement de travail & Connexion avec MySQL Workbench (IHM)
 
-Pour ces exercices, nous utilisons la nouvelle base de données **`CRUD2`**, hébergée sur le même serveur MySQL dans le conteneur Docker `db`.
+Pour concevoir, tester et visualiser vos requêtes SQL dans une interface graphique conviviale (IHM), vous utiliserez **MySQL Workbench**, le client graphique officiel de référence.
 
-Pour vous connecter en ligne de commande avec le compte applicatif `eleve` / `eleve` à la base `CRUD2`, ouvrez un terminal à la racine du projet et lancez :
+### 1.1. Paramétrage de la connexion dans MySQL Workbench
+Le conteneur Docker `db` (`ciel_mysql_db`) expose son port `3306` sur votre machine hôte.
 
-```bash
-docker compose exec db mysql -u eleve -peleve CRUD2
+1. Lancez **MySQL Workbench** sur votre poste.
+2. Sur la page d'accueil (*MySQL Connections*), cliquez sur le bouton **`+`** à côté de *MySQL Connections* pour créer une nouvelle connexion.
+3. Renseignez les champs suivants :
+   - **Connection Name** : `Docker MySQL - CRUD2`
+   - **Connection Method** : `Standard (TCP/IP)`
+   - **Hostname** : `127.0.0.1` (ou `localhost`)
+   - **Port** : `3306`
+   - **Username** : `eleve`
+   - **Password** : cliquez sur *Store in Vault...* et saisissez `eleve`
+   - **Default Schema** : `CRUD2`
+4. Cliquez sur **Test Connection**. Un message confirmant le succès de la connexion doit s'afficher :  
+   `"Successfully made the MySQL connection"`.
+5. Cliquez sur **OK** pour enregistrer la connexion, puis double-cliquez sur la tuile créée pour ouvrir l'espace de travail.
+
+```text
++----------------------------------------------------------------------------------+
+| MySQL Workbench - [Docker MySQL - CRUD2]                                         |
++-----------------------------------+----------------------------------------------+
+| SCHEMAS                           |  Query 1                                     |
+| 📁 CRUD                           |  SELECT * FROM employes;                     |
+| 📂 CRUD2                          |                                              |
+|    📂 Tables                      |  [ ⚡ Exécuter ]                             |
+|       📄 employes                 +----------------------------------------------+
+|       📄 salaires                 |  Result Grid                                 |
+|       📄 employees                |  id | name              | address            |
+|       📄 Customers                |  1  | Roland Mendel     | C/ Araquil, 67...  |
+|       📄 Orders                   |  2  | Victoria Ashworth | 35 King George...  |
+|       📄 Products                 |  3  | Martin Blank      | 25, Rue Laurist... |
++-----------------------------------+----------------------------------------------+
 ```
 
-> **Rappel des paramètres de connexion :**
-> - Conteneur : `ciel_mysql_db` (service `db`)
-> - Utilisateur : `eleve`
-> - Mot de passe : `eleve`
-> - Base active : `CRUD2`
+### 1.2. Prise en main de l'IHM MySQL Workbench
+* **Panneau de gauche (SCHEMAS)** : Explorez l'arborescence de la base `CRUD2`. Déroulez `Tables` pour afficher la liste des tables créées par le script d'initialisation. Faites un clic droit sur une table $\rightarrow$ *Select Rows - Limit 1000* pour un aperçu instantané.
+* **Éditeur central (SQL Query Tab)** : C'est ici que vous saisirez toutes vos requêtes SQL.
+* **Bouton d'exécution (Éclair ⚡)** : Cliquez sur l'icône éclair (ou raccourci clavier `Ctrl + Entrée`) pour exécuter la requête sous votre curseur.
+* **Panneau inférieur (Result Grid)** : Affiche les résultats sous forme de tableau ordonné, avec le nombre de lignes retournées et le temps d'exécution.
 
-Pour quitter le client MySQL à tout moment :
-```sql
-EXIT;
-```
+> 💡 **Alternative en ligne de commande (Terminal) :**  
+> Si vous préférez le terminal, vous pouvez toujours vous connecter via :
+> ```bash
+> docker compose exec db mysql -u eleve -peleve CRUD2
+> ```
 
 ---
 
 ## 2. De la table plate aux tables relationnelles
 
 ### Situation initiale : La table `employees`
-Dans l'Exercice 6 (base `CRUD`), toutes les données d'un employé étaient regroupées dans une seule table :
+Dans l'Exercice 6 (base `CRUD`), toutes les données d'un employé étaient regroupées dans une seule table plate :
 
 ```text
 +----+-------------------+--------------------------+--------+
@@ -43,26 +72,16 @@ Dans l'Exercice 6 (base `CRUD`), toutes les données d'un employé étaient regr
 +----+-------------------+--------------------------+--------+
 ```
 
-**Limites de cette structure :**
+**Limites majeures de cette structure :**
 1. Un employé ne peut avoir qu'un seul salaire enregistré à un instant $T$.
 2. Impossible d'historiser les augmentations ou de calculer des moyennes au fil du temps sans écraser la donnée précédente.
 3. Si l'on dupliquait les lignes de l'employé pour chaque nouveau salaire, son adresse et son nom seraient répétés inutilement (redondance et risque d'incohérence).
 
 ---
 
-### Question 1 : Décomposition en deux tables (`employes` et `salaires`)
+### Question 1 : Modélisation en deux tables (`employes` et `salaires`)
 
 Pour séparer l'identité de l'employé de son historique financier, nous créons deux tables distinctes reliées par une **clé étrangère** (*Foreign Key*) :
-
-1. **Table `employes` (Entité parent)** :
-   - `id` : identifiant unique de l'employé (`INT AUTO_INCREMENT PRIMARY KEY`).
-   - `name` : nom et prénom (`VARCHAR(100)`).
-   - `address` : adresse postale (`VARCHAR(255)`).
-
-2. **Table `salaires` (Entité enfant)** :
-   - `idsalaires` : identifiant unique de la fiche de paie (`INT AUTO_INCREMENT PRIMARY KEY`).
-   - `salary` : montant du salaire perçu (`INT`).
-   - `employes_id` : référence vers l'employé concerné (`INT`, clé étrangère pointant sur `employes(id)`).
 
 ```text
   +------------------+             +----------------------+
@@ -74,92 +93,75 @@ Pour séparer l'identité de l'employé de son historique financier, nous créon
   +------------------+             +----------------------+
 ```
 
-*Définition SQL des tables :*
-```sql
-CREATE TABLE employes (
-    id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-    address VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE salaires (
-    idsalaires INT NOT NULL AUTO_INCREMENT,
-    salary INT NOT NULL,
-    employes_id INT NOT NULL,
-    PRIMARY KEY (idsalaires),
-    FOREIGN KEY (employes_id) REFERENCES employes(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-```
+#### À vous de jouer :
+1. Observez la structure des tables `employes` et `salaires` dans le panneau *SCHEMAS* de MySQL Workbench (ou avec `DESCRIBE employes;` et `DESCRIBE salaires;`).
+2. Quelle est la clé primaire (*Primary Key*) de chaque table ?
+3. Quelle colonne de la table `salaires` assure la relation avec `employes` ? Quel est son rôle ?
+4. Que signifie la contrainte `ON DELETE CASCADE` définie sur la clé étrangère ?
 
 ---
 
 ### Le paradoxe de l'œuf et de la poule : Quelle table peupler en premier ?
 
-> ❓ **Question :** Dans quel ordre devez-vous insérer vos données : la table `salaires` ou la table `employes` ? Pourquoi ?
+Dans une base de données relationnelle, les tables ne sont pas indépendantes.
 
-**Explication & Règle d'or des SGBD relationnels :**
-* La table **`employes` doit impérativement être peuplée en premier**.
-* **Pourquoi ?** La table `salaires` possède une contrainte d'**intégrité référentielle** (`FOREIGN KEY (employes_id) REFERENCES employes(id)`). Le moteur MySQL vérifie qu'à chaque insertion dans `salaires`, la valeur passée dans `employes_id` existe déjà dans la table `employes`.
-* Si vous essayez d'insérer un salaire en premier, MySQL rejettera la requête avec l'erreur `Error 1452: Cannot add or update a child row: a foreign key constraint fails`.
+#### À vous de jouer :
+1. Selon vous, quelle table doit être peuplée en premier : `salaires` ou `employes` ? Pourquoi ?
+2. **Test pratique dans MySQL Workbench :**  
+   Dans un onglet SQL de Workbench, essayez d'exécuter la requête suivante qui tente d'enregistrer un salaire pour un employé inexistant (`employes_id = 99`) :
+   ```sql
+   INSERT INTO salaires (salary, employes_id) VALUES (4000, 99);
+   ```
+   *Quel message d'erreur MySQL retourne-t-il dans l'onglet Output en bas ?*
 
----
-
-### Question 2 : Insertion dans la table `employes`
-
-Insérez les 3 employés initiaux dans la table `employes` :
-
-```sql
-INSERT INTO employes (id, name, address) VALUES
-(1, 'Roland Mendel', 'C/ Araquil, 67, Madrid'),
-(2, 'Victoria Ashworth', '35 King George, London'),
-(3, 'Martin Blank', '25, Rue Lauriston, Paris');
-```
-
-Vérifiez le contenu :
-```sql
-SELECT * FROM employes;
-```
+> 📌 **Règle d'or de l'intégrité référentielle :**  
+> La table parente (`employes`) **doit obligatoirement être peuplée avant** la table enfant (`salaires`).  
+> Si la valeur de `employes_id` n'existe pas encore dans la table `employes`, MySQL bloque l'opération avec l'erreur `Error 1452 (Cannot add or update a child row: a foreign key constraint fails)`.
 
 ---
 
-### Question 3 : Insertion dans la table `salaires`
+### Questions 2 & 3 : Insertion des données initiales
 
-Une fois les employés créés, insérez leurs salaires correspondants en renseignant la clé étrangère `employes_id` :
+#### À vous de jouer :
+1. **Question 2 :** Rédigez la requête SQL `INSERT INTO employes ...` permettant d'insérer les 3 employés suivants :
+   - ID 1 : `Roland Mendel`, résidant `C/ Araquil, 67, Madrid`
+   - ID 2 : `Victoria Ashworth`, résidant `35 King George, London`
+   - ID 3 : `Martin Blank`, résidant `25, Rue Lauriston, Paris`
+2. **Question 3 :** Rédigez ensuite la requête SQL `INSERT INTO salaires ...` pour leur attribuer leur salaire initial :
+   - Employé 1 $\rightarrow$ 5000 €
+   - Employé 2 $\rightarrow$ 6500 €
+   - Employé 3 $\rightarrow$ 8000 €
+3. Exécutez `SELECT * FROM employes;` puis `SELECT * FROM salaires;` dans MySQL Workbench pour vérifier vos insertions.
 
-```sql
-INSERT INTO salaires (idsalaires, salary, employes_id) VALUES
-(1, 5000, 1),
-(2, 6500, 2),
-(3, 8000, 3);
-```
-
-Vérifiez le contenu :
-```sql
-SELECT * FROM salaires;
-```
+*(Note : ces données sont déjà pré-insérées dans la base `CRUD2` fournie avec le projet).*
 
 ---
 
 ## 3. Les jointures internes (`INNER JOIN`) et les alias
 
-### Question 4 : Récupérer les employés ayant un salaire $\ge 5000$ €
+### Question 4 : Employés avec un salaire supérieur ou égal à 5000 €
 
-Pour rapprocher le nom d'un employé (stocké dans `employes`) et son salaire (stocké dans `salaires`), on effectue une **jointure interne** (`INNER JOIN`) sur la condition `employes.id = salaires.employes_id`.
+Pour afficher ensemble des informations réparties sur deux tables différentes (ici le nom dans `employes` et le salaire dans `salaires`), on utilise une **jointure interne** (`INNER JOIN`).
 
-#### Objectif :
-Afficher le nom et le salaire des employés gagnant au moins 5000 €, triés par ordre croissant de salaire.
-
-*Requête SQL :*
+#### Rappel de syntaxe :
 ```sql
-SELECT employes.name, salaires.salary
-FROM employes
-INNER JOIN salaires ON employes.id = salaires.employes_id
-WHERE salaires.salary >= 5000
-ORDER BY salaires.salary ASC;
+SELECT table1.colonneA, table2.colonneB
+FROM table1
+INNER JOIN table2 ON table1.cle_primaire = table2.cle_etrangere
+WHERE condition
+ORDER BY colonne;
 ```
 
-**Sortie attendue :**
+#### À vous de jouer :
+Écrivez la requête SQL permettant d'afficher le **nom** de l'employé et son **salaire** pour tous les employés ayant un salaire **supérieur ou égal à 5000 €**, classés par **salaire croissant**.
+
+*Indices :*
+- Projetez `employes.name` et `salaires.salary`.
+- Effectuez la jointure `INNER JOIN salaires ON employes.id = salaires.employes_id`.
+- Filtrez avec `WHERE salaires.salary >= 5000`.
+- Triez avec `ORDER BY salaires.salary ASC`.
+
+#### Résultat attendu dans le Result Grid de Workbench :
 ```text
 +-------------------+--------+
 | name              | salary |
@@ -168,29 +170,24 @@ ORDER BY salaires.salary ASC;
 | Victoria Ashworth |   6500 |
 | Martin Blank      |   8000 |
 +-------------------+--------+
-3 rows in set (0.00 sec)
+3 rows returned
 ```
 
 ---
 
-### Question 5 : Utilisation des alias de tables et de colonnes
+### Question 5 : Alias de tables et de colonnes
 
-Dans une requête complexe, préfixer chaque colonne par le nom complet de la table alourdit l'écriture.  
-On utilise des **alias de tables** (`e` pour `employes`, `s` pour `salaires`) et des **alias de colonnes** (`AS nom_employe`, `AS salaire_mensuel`) pour clarifier le résultat.
+Dans une requête complexe, préfixer chaque colonne par le nom complet de la table alourdit la syntaxe.  
+On utilise des **alias de tables** (`FROM employes e INNER JOIN salaires s`) et des **alias de colonnes** (`SELECT e.name AS nom_employe`).
 
-#### Objectif :
-Réécrire la requête précédente avec les alias `e` et `s`, et afficher les intitulés de colonnes en français.
+#### À vous de jouer :
+Reprenez la requête de la Question 4 et adaptez-la en respectant les consignes suivantes :
+1. Définissez l'alias `e` pour la table `employes` et l'alias `s` pour la table `salaires`.
+2. Renommez la colonne `name` en `nom_employe` dans le résultat affiché.
+3. Renommez la colonne `salary` en `salaire_mensuel`.
+4. Effectuez le tri croissant directement sur l'alias `salaire_mensuel`.
 
-*Requête SQL :*
-```sql
-SELECT e.name AS nom_employe, s.salary AS salaire_mensuel
-FROM employes e
-INNER JOIN salaires s ON e.id = s.employes_id
-WHERE s.salary >= 5000
-ORDER BY salaire_mensuel ASC;
-```
-
-**Sortie attendue :**
+#### Résultat attendu dans le Result Grid de Workbench :
 ```text
 +-------------------+-----------------+
 | nom_employe       | salaire_mensuel |
@@ -199,65 +196,52 @@ ORDER BY salaire_mensuel ASC;
 | Victoria Ashworth |            6500 |
 | Martin Blank      |            8000 |
 +-------------------+-----------------+
+3 rows returned
 ```
 
 ---
 
 ## 4. Dimension temporelle & Agrégation (`AVG`, `GROUP BY`)
 
-### Question 6 : Historisation des salaires
+### Question 6 : Historisation des rémunérations
 
-Dans une entreprise, le salaire affiché sur un tableau de bord annuel est généralement une **moyenne des rémunérations** perçues sur une période donnée (primes d'été, revalorisations, fin d'année).
+Dans la vie réelle, la rémunération d'un collaborateur évolue au cours de sa carrière (augmentations annuelles, primes, promotions).
 
-> ❓ **Question :** Quelle information indispensable faut-il introduire dans notre modèle pour gérer cet historique ?
+#### À vous de jouer :
+1. Quelle information indispensable manque-t-il dans la structure actuelle de la table `salaires` pour savoir à quelle période correspond un montant donné ?
+2. Quel type de données SQL standard permet d'enregistrer une date au format `AAAA-MM-JJ` ?
+3. Écrivez la commande SQL `ALTER TABLE` qui permet d'ajouter une colonne `date` obligatoire dans la table `salaires`.
 
-**Réponse :**  
-Il faut ajouter une colonne temporelle dans la table `salaires`, par exemple **`date DATE`** (au format standard SQL `AAAA-MM-JJ`), indiquant la date de versement ou d'application du salaire.
-
-*Évolution de la table `salaires` :*
-```sql
-ALTER TABLE salaires ADD COLUMN date DATE NOT NULL;
-```
-
-Grâce à cette colonne, un même employé (`employes_id = 1`) peut avoir plusieurs enregistrements de salaires à des dates différentes.
+*(Note : cette colonne `date` est déjà présente dans la base `CRUD2` du TP).*
 
 ---
 
-### Question 7 : Calculs de moyennes par employé et filtrage temporel
+### Question 7 : Moyennes temporelles par employé
 
-Dans la base `CRUD2` fournie, plusieurs salaires ont été enregistrés entre 2021 et 2023 pour chaque employé :
-- **Roland Mendel (id=1)** :
-  - `2021-01-15` : 4800 €
-  - `2021-07-15` : 5000 €
-  - `2022-01-15` : 5200 €
-  - `2022-07-15` : 5400 €
-  - `2023-01-15` : 5600 €
-- **Victoria Ashworth (id=2)** :
-  - `2021-03-01` : 6200 €
-  - `2022-03-01` : 6500 €
-  - `2022-09-01` : 6700 €
-  - `2023-03-01` : 7000 €
-- **Martin Blank (id=3)** :
-  - `2021-06-01` : 7500 €
-  - `2022-02-01` : 7800 €
-  - `2022-08-01` : 8200 €
-  - `2023-05-01` : 8500 €
+Dans la base `CRUD2`, chaque employé possède désormais un historique de salaires étalé entre 2021 et 2023 :
+- **Roland Mendel (id=1)** : 5 salaires (4800 € en 2021, 5000 € en 2021, 5200 € en janv. 2022, 5400 € en juil. 2022, 5600 € en 2023).
+- **Victoria Ashworth (id=2)** : 4 salaires (6200 € en 2021, 6500 € en 2022, 6700 € en 2022, 7000 € en 2023).
+- **Martin Blank (id=3)** : 4 salaires (7500 € en 2021, 7800 € en 2022, 8200 € en 2022, 8500 € en 2023).
 
----
-
-#### 7.1. Salaire moyen de chaque employé depuis son embauche (`GROUP BY`)
-Pour calculer la moyenne de chaque employé, on utilise la fonction d'agrégation `AVG()` combinée avec la clause `GROUP BY` :
-
-*Requête SQL :*
+#### Rappel de syntaxe pour les agrégations :
 ```sql
-SELECT e.id, e.name, ROUND(AVG(s.salary), 2) AS salaire_moyen
+SELECT e.id, AVG(s.salary) AS moyenne
 FROM employes e
 INNER JOIN salaires s ON e.id = s.employes_id
-GROUP BY e.id, e.name
-ORDER BY e.id ASC;
+GROUP BY e.id;
 ```
+> La clause `GROUP BY e.id` rassemble toutes les lignes associées à un même employé pour que la fonction `AVG()` calcule la moyenne de son groupe de lignes. La fonction `ROUND(valeur, 2)` permet d'arrondir à 2 décimales.
 
-**Sortie attendue :**
+---
+
+#### 7.1. Salaire moyen de chaque employé depuis son embauche
+Écrivez la requête SQL affichant :
+- L'identifiant de l'employé (`id`)
+- Le nom complet de l'employé (`name`)
+- La moyenne de ses salaires historiques arrondie à deux décimales sous l'intitulé `salaire_moyen`
+Triez le résultat par `id` croissant.
+
+#### Résultat attendu dans Workbench :
 ```text
 +----+-------------------+---------------+
 | id | name              | salaire_moyen |
@@ -266,86 +250,55 @@ ORDER BY e.id ASC;
 |  2 | Victoria Ashworth |       6600.00 |
 |  3 | Martin Blank      |       8000.00 |
 +----+-------------------+---------------+
+3 rows returned
 ```
 
 ---
 
 #### 7.2. Salaire moyen de Roland Mendel sur l'année 2022
-Pour restreindre le calcul à une personne et à une période précise, on ajoute des conditions dans la clause `WHERE` :
+Écrivez la requête SQL calculant le salaire moyen perçu uniquement par **Roland Mendel** sur l'ensemble de l'année **2022** (du `2022-01-01` au `2022-12-31` inclus).
 
-*Requête SQL :*
-```sql
-SELECT e.name, ROUND(AVG(s.salary), 2) AS salaire_moyen_2022
-FROM employes e
-INNER JOIN salaires s ON e.id = s.employes_id
-WHERE e.name = 'Roland Mendel'
-  AND s.date BETWEEN '2022-01-01' AND '2022-12-31'
-GROUP BY e.id, e.name;
-```
+*Indices :*
+- Combinez la jointure avec une clause `WHERE`.
+- Filtrez sur le nom (`e.name = 'Roland Mendel'`) ou son identifiant (`e.id = 1`).
+- Filtrez sur les dates avec `s.date BETWEEN '2022-01-01' AND '2022-12-31'` (ou avec `>=` et `<=`).
 
-**Sortie attendue :**
+#### Résultat attendu dans Workbench :
 ```text
 +---------------+--------------------+
 | name          | salaire_moyen_2022 |
 +---------------+--------------------+
 | Roland Mendel |            5300.00 |
 +---------------+--------------------+
+1 row returned
 ```
-*(Calcul de vérification : $(5200 + 5400) / 2 = 5300.00$ €)*
+*(Calcul de vérification : en 2022, Roland a perçu 5200 € le 15/01 et 5400 € le 15/07. La moyenne est bien $(5200 + 5400) / 2 = 5300.00$ €).*
 
 ---
 
 ## 5. Jointure sur plus de deux tables (Question 10)
 
-Dans une application réelle (e-commerce, logistique, billetterie), l'information est souvent répartie sur 3 tables ou plus.
+Dans une application réelle (e-commerce, logistique, billetterie), l'information est fréquemment distribuée sur 3 tables ou davantage.
 
-### Exemple e-commerce : `Customers`, `Products` et `Orders`
-Considérons les trois tables créées dans `CRUD2` :
+Dans la base `CRUD2`, ouvrez les 3 tables `Customers`, `Products` et `Orders` dans Workbench :
+* **`Products`** : `product_id`, `product_name`, `price` (ex: Burger à 10 €, Sandwich à 15 €).
+* **`Customers`** : `customer_id`, `customer_name`, `email` (Alice, Bob).
+* **`Orders`** : `order_id`, `customer_id`, `product_id` (table d'association contenant les commandes passées).
 
-* **`Products`** :
-```text
-+------------+--------------+-------+
-| product_id | product_name | price |
-+------------+--------------+-------+
-|          1 | Burger       |    10 |
-|          2 | Sandwich     |    15 |
-+------------+--------------+-------+
-```
+#### À vous de jouer (Question 10) :
+Rédigez la requête SQL avec jointures successives permettant d'obtenir le récapitulatif des commandes passées avec :
+1. Le numéro de la commande (`order_id`)
+2. Le nom du produit commandé (`product_name`)
+3. Le nom du client ayant passé la commande (`customer_name`)
+4. Le prix unitaire (`price`)
+Triez par numéro de commande (`order_id`) croissant.
 
-* **`Customers`** :
-```text
-+-------------+---------------+-----------------+
-| customer_id | customer_name | email           |
-+-------------+---------------+-----------------+
-|           1 | Alice         | alice@alice.com |
-|           2 | Bob           | bob@bob.com     |
-+-------------+---------------+-----------------+
-```
+*Indices :*
+- Démarrez votre sélection depuis la table `Orders o`.
+- Faites une première jointure `INNER JOIN Customers c ON o.customer_id = c.customer_id`.
+- Enchaînez une seconde jointure `INNER JOIN Products p ON o.product_id = p.product_id`.
 
-* **`Orders`** (table de liaison avec clés étrangères) :
-```text
-+----------+-------------+------------+
-| order_id | customer_id | product_id |
-+----------+-------------+------------+
-|        1 |           1 |          1 |
-|        2 |           1 |          2 |
-|        3 |           2 |          1 |
-+----------+-------------+------------+
-```
-
-#### Objectif de la Question 10 :
-Écrire la requête avec jointures permettant d'obtenir le récapitulatif complet des commandes avec l'identifiant de commande, le nom du produit, le nom du client et le prix.
-
-*Requête SQL :*
-```sql
-SELECT o.order_id, p.product_name, c.customer_name, p.price
-FROM Orders o
-INNER JOIN Customers c ON o.customer_id = c.customer_id
-INNER JOIN Products p ON o.product_id = p.product_id
-ORDER BY o.order_id ASC;
-```
-
-**Sortie attendue :**
+#### Résultat attendu dans Workbench :
 ```text
 +----------+--------------+---------------+-------+
 | order_id | product_name | customer_name | price |
@@ -354,16 +307,18 @@ ORDER BY o.order_id ASC;
 |        2 | Sandwich     | Alice         |    15 |
 |        3 | Burger       | Bob           |    10 |
 +----------+--------------+---------------+-------+
-3 rows in set (0.00 sec)
+3 rows returned
 ```
 
 ---
 
 ## 6. Démarche inverse : Rétro-ingénierie d'une requête SQL (Question 11)
 
-En entreprise, un développeur doit régulièrement analyser des requêtes SQL existantes pour en déduire le modèle de données sous-jacent.
+En entreprise, un développeur doit régulièrement analyser du code SQL existant pour comprendre les liaisons entre entités et reconstituer le modèle relationnel.
 
-### Requête 1 (Étude de cas Marketing) :
+### Exercice 11.1 : Campagne marketing & Webinaires
+Analysez la requête suivante :
+
 ```sql
 SELECT sub.EmailAddress, de.CampaignName, web.AttendanceStatus
 FROM _Subscribers AS sub
@@ -373,21 +328,18 @@ INNER JOIN WebinarParticipants AS web
   ON web.SubscriberKey = sub.SubscriberKey;
 ```
 
-#### Déduction du schéma :
-1. **Tables en jeu** :
-   - `_Subscribers` (alias `sub`)
-   - `DataExtension` (alias `de`)
-   - `WebinarParticipants` (alias `web`)
-2. **Clés de jointure** :
-   - `SubscriberKey` est la clé commune reliant `_Subscribers` à `DataExtension` et `WebinarParticipants`.
-3. **Attributs identifiés** :
-   - `_Subscribers` : `SubscriberKey`, `EmailAddress`
-   - `DataExtension` : `SubscriberKey`, `CampaignName`
-   - `WebinarParticipants` : `SubscriberKey`, `AttendanceStatus`
+#### Questions :
+1. Quelles sont les **trois tables** interrogées par cette requête et quels alias leur sont attribués ?
+2. Quelle est la **clé de liaison commune** utilisée pour relier ces tables entre elles ?
+3. Quelles colonnes finales sont projetées et affichées pour l'utilisateur ?
+4. Expliquez en une phrase ce que permet d'extraire cette requête pour le service marketing.
+5. Esquissez le schéma relationnel correspondant (tables, clés primaires et clés étrangères).
 
 ---
 
-### Requête 2 (Étude de cas Cinéma) :
+### Exercice 11.2 : Base de données Cinéma
+Analysez la requête suivante :
+
 ```sql
 SELECT f.titre
 FROM Film AS f, Role AS r, Artiste AS a1, Artiste AS a2
@@ -398,15 +350,13 @@ WHERE f.idFilm = r.idFilm
   AND a1.nom = 'Depp';
 ```
 
-#### Déduction du schéma relationnel :
-1. **Tables & Clés primaires/étrangères** :
-   - **`Film`** : `idFilm` (PK), `titre`, `idRealisateur` (FK vers `Artiste.idArtiste`).
-   - **`Artiste`** : `idArtiste` (PK), `nom`. (Notez qu'elle apparaît deux fois via les alias `a1` pour l'acteur et `a2` pour le réalisateur).
-   - **`Role`** : `idFilm` (FK vers `Film`), `idActeur` (FK vers `Artiste`).
-2. **Sens de la requête** :
-   - Cette requête sélectionne les titres des films réalisés par **Tim Burton** dans lesquels joue **Johnny Depp** (ex: *Edward aux mains d'argent*, *Sleepy Hollow*, *Charlie et la chocolaterie*).
+#### Questions :
+1. Combien de tables différentes sont interrogées ? Pourquoi la table `Artiste` est-elle mentionnée deux fois avec les alias `a1` et `a2` ?
+2. Identifiez les conditions de jointures exprimées dans la clause `WHERE` (quelles sont les clés étrangères et vers quelles clés primaires pointent-elles) ?
+3. Que recherche précisément cette requête en français ? Donnez un exemple de titre de film susceptible de figurer dans le résultat.
+4. Réécrivez cette même requête en utilisant la norme moderne avec le mot-clé explicite `INNER JOIN ... ON ...`.
 
 ---
 
-> 🚀 **Vous maîtrisez désormais les jointures et l'agrégation SQL !**  
+> 🚀 **Vous maîtrisez désormais les jointures et l'agrégation SQL dans MySQL Workbench !**  
 > Vous pouvez maintenant passer à l'**Exercice 7 dans le `README.md`** pour concevoir l'API Flask de calcul de salaire médian sur période.
