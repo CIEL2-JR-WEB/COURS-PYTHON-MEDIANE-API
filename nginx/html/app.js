@@ -185,3 +185,74 @@ document.getElementById('btn-db-emp').addEventListener('click', async () => {
         outputElem.textContent = "Erreur BDD comparaison : " + err.message;
     }
 });
+
+// Exercice 7 : Jointures SQL & Médiane sur une période (/api/salaires/periode) - CORRIGÉ
+document.getElementById('btn-periode').addEventListener('click', async () => {
+    const pVal = document.getElementById('input-periode-p').value.trim();
+    const d1Val = document.getElementById('input-periode-d1').value.trim();
+    const d2Val = document.getElementById('input-periode-d2').value.trim();
+    const outputElem = document.getElementById('output-periode');
+
+    try {
+        const params = new URLSearchParams();
+        if (pVal !== '') params.append('p', pVal);
+        if (d1Val !== '') params.append('d1', d1Val);
+        if (d2Val !== '') params.append('d2', d2Val);
+
+        const url = `/api/salaires/periode${params.toString() ? '?' + params.toString() : ''}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok) {
+            outputElem.textContent = "Erreur : " + (data.erreur || "Erreur de traitement");
+            document.getElementById('span-periode-cas').textContent = 'Erreur';
+            document.getElementById('span-periode-employe').textContent = '-';
+            document.getElementById('span-periode-dates').textContent = '-';
+            document.getElementById('span-periode-moyennes').textContent = '-';
+            document.getElementById('span-periode-resultat').textContent = '-';
+            return;
+        }
+
+        // Mise à jour de l'affichage DOM
+        document.getElementById('span-periode-cas').textContent = data.cas || '-';
+        document.getElementById('span-periode-employe').textContent = data.employe_nom ? `${data.employe_nom} (id: ${data.employe_id})` : 'Tous les employés';
+        
+        let periodeTexte = 'Toutes dates confondues';
+        if (data.d1 && data.d2) {
+            periodeTexte = `Du ${data.d1} au ${data.d2}`;
+        } else if (data.date_debut) {
+            periodeTexte = `À partir du ${data.date_debut}`;
+        }
+        document.getElementById('span-periode-dates').textContent = periodeTexte;
+
+        document.getElementById('span-periode-moyennes').textContent = data.moyennes_individuelles 
+            ? data.moyennes_individuelles.map(m => `${m} €`).join(', ') 
+            : '-';
+
+        let resultatTexte = '-';
+        if (data.salaire_moyen !== undefined) {
+            resultatTexte = `${data.salaire_moyen} € (Moyenne)`;
+        } else if (data.mediane_des_moyennes !== undefined) {
+            resultatTexte = `${data.mediane_des_moyennes} € (Médiane)`;
+        }
+        document.getElementById('span-periode-resultat').textContent = resultatTexte;
+
+        outputElem.textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+        outputElem.textContent = "Erreur réseau / API : " + err.message;
+    }
+});
+
+document.getElementById('btn-periode-reset').addEventListener('click', () => {
+    document.getElementById('input-periode-p').value = '';
+    document.getElementById('input-periode-d1').value = '';
+    document.getElementById('input-periode-d2').value = '';
+    document.getElementById('span-periode-cas').textContent = '-';
+    document.getElementById('span-periode-employe').textContent = '-';
+    document.getElementById('span-periode-dates').textContent = '-';
+    document.getElementById('span-periode-moyennes').textContent = '-';
+    document.getElementById('span-periode-resultat').textContent = '-';
+    document.getElementById('output-periode').textContent = "En attente d'interrogation...";
+});
+
+

@@ -139,5 +139,103 @@ def route_employee_comparaison(emp_id):
     }), 200
 
 
+
+@app.route('/api/salaires/periode', methods=['GET'])
+def route_salaires_periode():
+    """
+    Exercice 7 - CORRIGÉ :
+    Route GET /api/salaires/periode
+    Paramètres optionnels de Query String :
+    - p  : identifiant de l'employé (int)
+    - d1 : date de début (AAAA-MM-JJ)
+    - d2 : date de fin (AAAA-MM-JJ)
+
+    Gère les 4 cas métier :
+    1. p présent + d1 et d2 présents -> Salaire moyen de p entre d1 et d2
+    2. p présent + une seule date    -> Salaire moyen de p à partir de cette date
+    3. p absent  + d1 et d2 présents -> Médiane des salaires moyens des employés entre d1 et d2
+    4. p absent  + aucune date       -> Médiane des salaires moyens de tous les employés (toutes dates)
+    """
+    raw_p = request.args.get('p')
+    d1 = request.args.get('d1')
+    d2 = request.args.get('d2')
+
+    if raw_p is not None and raw_p.strip() == '':
+        raw_p = None
+    if d1 is not None and d1.strip() == '':
+        d1 = None
+    if d2 is not None and d2.strip() == '':
+        d2 = None
+
+    # Validation du format des dates et cohérence chronologique
+    for d_name, d_val in [('d1', d1), ('d2', d2)]:
+        if d_val:
+            try:
+                from datetime import datetime
+                datetime.strptime(d_val, '%Y-%m-%d')
+            except ValueError:
+                return jsonify({"erreur": f"Le format de {d_name} doit être AAAA-MM-JJ"}), 400
+
+    if d1 and d2 and d1 > d2:
+        return jsonify({"erreur": "La date de début d1 doit être antérieure ou égale à la date de fin d2"}), 400
+
+    # Cas 1 & 2 : p est renseigné
+    if raw_p is not None:
+        try:
+            emp_id = int(raw_p)
+        except ValueError:
+            return jsonify({"erreur": "Le paramètre 'p' doit être un nombre entier"}), 400
+
+        res = db.get_employee_average_salary(emp_id, d1, d2)
+        if not res:
+            return jsonify({"erreur": f"Employé avec id={emp_id} introuvable dans la base CRUD2"}), 404
+
+        if d1 and d2:
+            return jsonify({
+                "cas": "employe_periode",
+                "employe_id": res["id"],
+                "employe_nom": res["name"],
+                "d1": d1,
+                "d2": d2,
+                "salaire_moyen": res["salaire_moyen"]
+            }), 200
+        else:
+            date_ref = d1 if d1 else d2
+            return jsonify({
+                "cas": "employe_partir_de",
+                "employe_id": res["id"],
+                "employe_nom": res["name"],
+                "date_debut": date_ref,
+                "salaire_moyen": res["salaire_moyen"]
+            }), 200
+
+    # Cas 3 & 4 : p est absent -> Médiane des salaires moyens
+    moyennes = db.get_all_employees_average_salaries(d1, d2)
+    if not moyennes:
+        return jsonify({"erreur": "Aucune donnée salariale trouvée pour cette période"}), 404
+
+    # Calcul de la médiane via les algorithmes maison en Python
+    moyennes_triees = tri_selection_copie(moyennes)
+    valeur_mediane = mediane(moyennes_triees)
+
+    if d1 and d2:
+        return jsonify({
+            "cas": "mediane_periode",
+            "d1": d1,
+            "d2": d2,
+            "nombre_employes": len(moyennes),
+            "moyennes_individuelles": moyennes_triees,
+            "mediane_des_moyennes": valeur_mediane
+        }), 200
+    else:
+        return jsonify({
+            "cas": "mediane_globale",
+            "nombre_employes": len(moyennes),
+            "moyennes_individuelles": moyennes_triees,
+            "mediane_des_moyennes": valeur_mediane
+        }), 200
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
