@@ -171,13 +171,8 @@ fin procédure
 * **Objectif** : Concevoir une IHM web en JavaScript pour la saisie dynamique de valeurs, valider l'affichage DOM à l'aide d'un serveur Mock Postman, puis exposer le service web réel en Python avec Flask.
 * **Fichiers** : `nginx/html/index.html`, `nginx/html/app.js`, `api/app.py`.
 * **Consignes** :
-  * **1. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
-    * Développez l'interface permettant de saisir les données comme illustré dans la vidéo :
-      * **Saisie entier + push** : effectuez le remplissage d'un tableau de valeurs en demandant des entiers à l'utilisateur et en les ajoutant (`push`) tant que la valeur saisie est supérieure à 0 (`valeur > 0`).
-      * **Traitement par le service web** : dès qu'une valeur inférieure ou égale à 0 est saisie, transmettez le tableau de valeurs accumulées au service web via une requête `fetch(...)`.
-      * **Affichage dans le DOM** : affichez dans la page web le tableau initial saisi, le tableau trié retourné par l'API et la médiane calculée.
-  * **2. Simulation avec un serveur Mock Postman (avant le Backend)** :
-    * Avant de coder le backend Python, créez un **Mock Server** dans Postman simulant la route `GET /api/tri`.
+  * **1. Simulation avec un serveur Mock Postman (avant le code)** :
+    * Avant de développer, définissez le contrat d'API en créant un **Mock Server** dans Postman simulant la route `GET /api/tri`.
     * Configurez un exemple de réponse JSON attendue :
       ```json
       {
@@ -186,7 +181,12 @@ fin procédure
         "mediane": 11.5
       }
       ```
-    * Pointez temporairement votre fonction `fetch()` vers l'URL générée par le Mock Postman pour valider le bon fonctionnement de votre IHM et l'injection dans le DOM avant de démarrer le serveur local.
+    * Récupérez l'URL générée par le Mock Postman (ex: `https://<mock-id>.mock.pstmn.io/api/tri`).
+  * **2. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
+    * Développez l'interface permettant de saisir les données comme illustré dans la vidéo :
+      * **Saisie entier + push** : effectuez le remplissage d'un tableau de valeurs en demandant des entiers à l'utilisateur et en les ajoutant (`push`) tant que la valeur saisie est supérieure à 0 (`valeur > 0`).
+      * **Traitement par le service web** : dès qu'une valeur inférieure ou égale à 0 est saisie, transmettez le tableau de valeurs accumulées via une requête `fetch(...)`.
+      * Pointez d'abord votre `fetch()` vers l'URL de votre Mock Postman pour valider l'affichage dynamique dans le DOM (tableau initial saisi, tableau trié, médiane).
   * **3. Côté Backend (Flask - `app.py`)** :
     * Développez maintenant la route réelle dans l'application Flask :
       * Créez la route `GET /api/tri`.
@@ -223,9 +223,26 @@ fin procédure
 * **Objectif** : Traiter plusieurs paramètres de requêtes, manipuler la concaténation de listes avec l'opérateur `+`, et connecter une interface web dynamique pour la saisie et l'affichage.
 * **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
 * **Consignes** :
-  * Créez la route `GET /api/fusion?t1=...&t2=...` dans Flask qui concatène les deux séries reçues en utilisant l'opérateur `+`, effectue le tri et calcule la médiane globale.
-  * Renvoyez une réponse JSON structurée : `{"t1": [...], "t2": [...], "fusion": [...], "tri": [...], "mediane": ...}`.
-  * Développez l'interface web (`index.html` et `app.js`) pour répondre fidèlement au cahier des charges de la vidéo : saisie des deux tableaux dans le formulaire, transmission via `fetch` dans l'URL, récupération des données JSON et affichage dynamique des résultats dans le DOM.
+  * **1. Simulation avec un serveur Mock Postman (avant le code)** :
+    * Avant de coder, créez dans Postman un **Mock Server** simulant la route `GET /api/fusion?t1=12,18,5&t2=20,8,14`.
+    * Configurez la réponse JSON de référence conforme au cahier des charges :
+      ```json
+      {
+        "t1": [12, 18, 5],
+        "t2": [20, 8, 14],
+        "fusion": [12, 18, 5, 20, 8, 14],
+        "tri": [5, 8, 12, 14, 18, 20],
+        "mediane": 13.0
+      }
+      ```
+    * Récupérez l'URL du Mock Server.
+  * **2. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
+    * Développez l'interface web (`index.html` et `app.js`) pour répondre fidèlement au cahier des charges de la vidéo : saisie des deux tableaux dans le formulaire, transmission via `fetch` dans l'URL.
+    * Pointez temporairement votre `fetch()` sur le Mock Postman pour vérifier que l'ensemble des éléments (`span-t1`, `span-t2`, `span-fusion`, `span-fusion-tri`, `span-fusion-mediane`) s'affichent correctement dans le DOM.
+  * **3. Côté Backend (Flask - `app.py`)** :
+    * Développez la route réelle `GET /api/fusion?t1=...&t2=...` dans Flask qui concatène les deux séries reçues avec l'opérateur `+`, effectue le tri et calcule la médiane globale.
+    * Renvoyez la réponse JSON structurée.
+    * Reconnectez votre interface web sur l'API Flask locale (`/api/fusion?t1=...&t2=...`).
 * **Question théorique (à consigner dans votre compte-rendu)** :
   * *Quelle URI et structure de requête devez-vous adopter pour transmettre et fusionner 3 tableaux t1, t2 et t3 ?*
 * **Exemple d'exécution** :
@@ -248,9 +265,33 @@ fin procédure
 * **Objectif** : Interagir avec une base de données MySQL dans un bloc `try/except` et implémenter des routes métier.
 * **Fichiers** : `api/db.py`, `api/app.py`.
 * **Consignes** :
-  * Dans `db.py`, connectez-vous à la base `CRUD` avec le compte `eleve` / `eleve`.
-  * Créez la route `GET /api/salaires/stats` : lit les salaires en BDD et renvoie moyenne et médiane.
-  * Créez la route `GET /api/employees/<id>/comparaison` : compare le salaire de l'employé à la moyenne et à la médiane globale (indique si supérieur/inférieur, et l'écart en €).
+  * **1. Simulation avec un serveur Mock Postman (avant le code)** :
+    * Avant d'interfacer MySQL, créez dans Postman un **Mock Server** simulant les deux routes de l'exercice :
+      * `GET /api/salaires/stats` simulant le retour global :
+        ```json
+        {
+          "nombre_employes": 6,
+          "salaires_bruts": [6500, 8000, 1200, 25000, 100000, 40000],
+          "salaires_tries": [1200, 6500, 8000, 25000, 40000, 100000],
+          "moyenne": 30116.67,
+          "mediane": 16500.0
+        }
+        ```
+      * `GET /api/employees/3/comparaison` simulant la situation de Martin Blank :
+        ```json
+        {
+          "employe": {"id": 3, "name": "Martin Blank", "salary": 8000},
+          "statistiques_globales": {"moyenne": 30116.67, "mediane": 16500.0},
+          "situation": {"par_rapport_a_la_moyenne": "inférieur", "par_rapport_a_la_mediane": "inférieur"}
+        }
+        ```
+  * **2. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
+    * Dans la section Exercice 6 de la page web, connectez les boutons « Charger les statistiques BDD » et « Comparer » vers votre Mock Postman pour valider l'affichage des données dans les blocs de résultats.
+  * **3. Côté Backend (MySQL & Flask - `api/db.py`, `api/app.py`)** :
+    * Dans `db.py`, connectez-vous à la base `CRUD` avec le compte `eleve` / `eleve`.
+    * Implémentez les requêtes SQL réelles (`SELECT salary FROM employees` et requête préparée `SELECT id, name, address, salary FROM employees WHERE id = %s`).
+    * Créez les routes réelles dans Flask (`/api/salaires/stats` et `/api/employees/<id>/comparaison`).
+    * Reconnectez le frontend sur l'API Flask locale.
 * **Données de référence BDD** :
   * 6 employés ($N=6$, pair) : 1200, 6500, 8000, 25000, 40000, 100000.
   * Moyenne attendue : **~30 116.67 €** | Médiane attendue : $(8000 + 25000) / 2$ = **16 500.00 €**.

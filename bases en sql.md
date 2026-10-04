@@ -203,7 +203,7 @@ SELECT name, salary FROM employees ORDER BY salary ASC;
 > 💡 **Observation pour la médiane :**  
 > L'effectif total est $N = 6$ (pair).  
 > Les deux valeurs centrales aux positions 3 et 4 sont **8 000 €** et **25 000 €**.  
-> La médiane vaut donc : $(8000 + 25000) / 2 = 16\ 500\text{ €}$.
+> La médiane vaut donc : $(8000 + 25000) / 2$ = **16 500 €**.
 
 ---
 
