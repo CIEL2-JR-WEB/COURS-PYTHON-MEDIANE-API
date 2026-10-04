@@ -171,9 +171,9 @@ fin procédure
 * **Objectif** : Concevoir une IHM web en JavaScript pour la saisie dynamique de valeurs, valider l'affichage DOM à l'aide d'un serveur Mock Postman, puis exposer le service web réel en Python avec Flask.
 * **Fichiers** : `nginx/html/index.html`, `nginx/html/app.js`, `api/app.py`.
 * **Consignes** :
-  * **1. Simulation avec un serveur Mock Postman (avant le code)** :
-    * Avant de développer, définissez le contrat d'API en créant un **Mock Server** dans Postman simulant la route `GET /api/tri`.
-    * Configurez un exemple de réponse JSON attendue :
+  * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
+    * Avant de développer la page web ou le backend, définissez le contrat d'échange en créant un **Mock Server** dans Postman simulant la route `GET /api/tri`.
+    * Configurez un exemple de réponse JSON de référence conforme au format attendu :
       ```json
       {
         "original": [15, 3, 22, 8],
@@ -181,19 +181,33 @@ fin procédure
         "mediane": 11.5
       }
       ```
-    * Récupérez l'URL générée par le Mock Postman (ex: `https://<mock-id>.mock.pstmn.io/api/tri`).
+    * Copiez l'URL publique générée par le Mock Postman (ex: `https://<mock-id>.mock.pstmn.io/api/tri`).
   * **2. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
-    * Développez l'interface permettant de saisir les données comme illustré dans la vidéo :
-      * **Saisie entier + push** : effectuez le remplissage d'un tableau de valeurs en demandant des entiers à l'utilisateur et en les ajoutant (`push`) tant que la valeur saisie est supérieure à 0 (`valeur > 0`).
-      * **Traitement par le service web** : dès qu'une valeur inférieure ou égale à 0 est saisie, transmettez le tableau de valeurs accumulées via une requête `fetch(...)`.
-      * Pointez d'abord votre `fetch()` vers l'URL de votre Mock Postman pour valider l'affichage dynamique dans le DOM (tableau initial saisi, tableau trié, médiane).
+    * **Comprendre la structure HTML fournie :**  
+      Ouvrez `nginx/html/index.html` (section `sec-tri`). Les éléments interactifs sont déjà créés et identifiés par leur attribut `id` :
+      * **Contrôles de saisie :**
+        * `<input id="input-valeur-tri">` : champ numérique pour saisir un entier.
+        * `<button id="btn-push-tri">` : bouton « Ajouter (push) » déclenchant l'ajout au tableau JavaScript.
+        * `<button id="btn-prompt-tri">` : bouton « Saisie via prompt() » (pour reproduire fidèlement la saisie séquentielle de la vidéo).
+        * `<button id="btn-reset-tri">` : bouton de remise à zéro.
+      * **Zones d'affichage dans le DOM (balises `<span>` et `<pre>`) :**
+        * `<span id="span-saisie-cours">` : balise affichant le tableau en cours de constitution en JavaScript (ex: `[15, 3, 22]`).
+        * `<span id="span-tri-original">` : balise affichant le tableau initial envoyé au service web.
+        * `<span id="span-tri-trie">` : balise affichant le tableau trié reçu dans la réponse JSON (`data.tri`).
+        * `<span id="span-tri-mediane">` : balise affichant la médiane calculée reçue (`data.mediane`).
+        * `<pre id="output-tri">` : zone de texte pour afficher le JSON brut ou les messages d'état.
+    * **Développement dans `nginx/html/app.js` :**
+      * **Saisie entier + push** : demandez des entiers à l'utilisateur et ajoutez-les dans un tableau JavaScript avec `tableau.push(valeur)` tant que la valeur saisie est strictement supérieure à 0 (`valeur > 0`). Mettez à jour le texte de la balise `<span id="span-saisie-cours">` avec `document.getElementById('span-saisie-cours').textContent = ...`.
+      * **Condition d'arrêt et appel réseau** : dès qu'une valeur inférieure ou égale à 0 est saisie ($\le 0$), transmettez le tableau de valeurs accumulées au service web via une requête `fetch(...)`.
+      * **Validation immédiate avec le Mock Postman** : pointez temporairement votre requête `fetch()` vers l'URL générée par votre Mock Postman. Récupérez le JSON avec `await response.json()`, puis injectez les valeurs dans les balises correspondantes avec `document.getElementById('span-tri-original').textContent = ...`, `span-tri-trie` et `span-tri-mediane`.
+      * Vous validez ainsi toute votre interface graphique et la manipulation du DOM sans attendre le backend !
   * **3. Côté Backend (Flask - `app.py`)** :
     * Développez maintenant la route réelle dans l'application Flask :
       * Créez la route `GET /api/tri`.
       * Récupérez la série passée dans la Query String `t` (ex: `/api/tri?t=1500,4500,2200`).
       * Triez le tableau avec votre fonction maison `tri_selection_copie` et calculez la médiane.
       * Renvoyez la réponse JSON structurée : `{"original": [...], "tri": [...], "mediane": 2000.0}`.
-    * Reconnectez votre frontend sur l'API Flask locale (`/api/tri?t=...`).
+    * Dans `nginx/html/app.js`, remplacez l'URL du Mock Postman par l'URL locale `/api/tri?t=...` pour connecter votre interface au backend Flask réel.
 * **Exemple de test curl** :
   ```bash
   curl "http://localhost/api/tri?t=15,3,22,8"
@@ -203,15 +217,21 @@ fin procédure
 ---
 
 ### Exercice 4.3 : Client Web Fetch & Salaires aléatoires
-* **Objectif** : Connecter une interface web cliente à votre API Flask.
-* **Fichiers** : `nginx/html/app.js`.
-* **Consignes** :
-  * Dans le client web, écoutez le clic sur le bouton `btn-random`.
-  * Générez une série de 9 entiers aléatoires compris entre 1200 et 5000.
-  * Émettez une requête HTTP vers l'API Flask `/api/tri?t=...`.
-  * Affichez la série triée et la médiane renvoyées dans le DOM.
+* **Objectif** : Connecter une interface web cliente à votre API Flask pour automatiser l'analyse de salaires aléatoires.
+* **Fichiers** : `nginx/html/index.html`, `nginx/html/app.js`.
+* **Éléments HTML fournis dans `index.html` (section `sec-random`) :**
+  * `<button id="btn-random">` : bouton « Générer & Analyser ».
+  * `<span id="span-brut">` : balise affichant les 9 salaires bruts générés aléatoirement en JavaScript.
+  * `<span id="span-trie">` : balise affichant la liste triée retournée par l'API Flask.
+  * `<span id="span-mediane">` : balise affichant la médiane retournée par l'API Flask.
+* **Consignes dans `nginx/html/app.js` :**
+  * Dans le client web, écoutez le clic sur le bouton `document.getElementById('btn-random')`.
+  * Générez une série de 9 entiers aléatoires compris entre 1200 et 5000 (représentant des salaires en €).
+  * Affichez la série générée dans `<span id="span-brut">`.
+  * Émettez la requête HTTP vers votre API Flask : `fetch('/api/tri?t=...')`.
+  * À la réception du JSON, injectez la série triée dans `<span id="span-trie">` et la médiane dans `<span id="span-mediane">` sans rechargement de page.
 * **Exemple d'exécution** :
-  * Clic sur le bouton $\rightarrow$ Les salaires bruts s'affichent, l'API renvoie le tri et la médiane sans rechargement de page.
+  * Clic sur le bouton $\rightarrow$ Les salaires bruts s'affichent, l'API renvoie le tri et la médiane dans le DOM.
 * **Amélioration** : Animez ou mettez en surbrillance la médiane dans la liste reçue.
 
 ---
@@ -223,9 +243,9 @@ fin procédure
 * **Objectif** : Traiter plusieurs paramètres de requêtes, manipuler la concaténation de listes avec l'opérateur `+`, et connecter une interface web dynamique pour la saisie et l'affichage.
 * **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
 * **Consignes** :
-  * **1. Simulation avec un serveur Mock Postman (avant le code)** :
-    * Avant de coder, créez dans Postman un **Mock Server** simulant la route `GET /api/fusion?t1=12,18,5&t2=20,8,14`.
-    * Configurez la réponse JSON de référence conforme au cahier des charges :
+  * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
+    * Avant de coder l'interface ou le backend, créez dans Postman un **Mock Server** simulant la route `GET /api/fusion?t1=12,18,5&t2=20,8,14`.
+    * Configurez la réponse JSON de référence conforme au cahier des charges de la vidéo :
       ```json
       {
         "t1": [12, 18, 5],
@@ -235,19 +255,46 @@ fin procédure
         "mediane": 13.0
       }
       ```
-    * Récupérez l'URL du Mock Server.
+    * Copiez l'URL générée par le Mock Server.
   * **2. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
-    * Développez l'interface web (`index.html` et `app.js`) pour répondre fidèlement au cahier des charges de la vidéo : saisie des deux tableaux dans le formulaire, transmission via `fetch` dans l'URL.
-    * Pointez temporairement votre `fetch()` sur le Mock Postman pour vérifier que l'ensemble des éléments (`span-t1`, `span-t2`, `span-fusion`, `span-fusion-tri`, `span-fusion-mediane`) s'affichent correctement dans le DOM.
+    * **Comprendre la structure HTML fournie :**  
+      Ouvrez `nginx/html/index.html` (section `sec-fusion`). Les balises suivantes sont déjà prêtes :
+      * **Champs de saisie & bouton d'action :**
+        * `<input id="input-t1">` : champ texte pour saisir le premier tableau (ex: `12, 18, 5`).
+        * `<input id="input-t2">` : champ texte pour saisir le second tableau (ex: `20, 8, 14`).
+        * `<button id="btn-fusion">` : bouton « Envoyer, Fusionner & Afficher dans le DOM ».
+      * **Zones d'affichage du résultat dans le DOM (balises `<span>` et `<pre>`) :**
+        * `<span id="span-t1">` : balise affichant le premier tableau saisi.
+        * `<span id="span-t2">` : balise affichant le second tableau saisi.
+        * `<span id="span-fusion">` : balise affichant la concaténation brute reçue (`data.fusion`).
+        * `<span id="span-fusion-tri">` : balise affichant la liste fusionnée et triée reçue (`data.tri`).
+        * `<span id="span-fusion-mediane">` : balise affichant la médiane globale calculée (`data.mediane`).
+        * `<pre id="output-fusion">` : zone affichant la réponse JSON brute pour vérifier l'exactitude des données.
+    * **Développement dans `nginx/html/app.js` :**
+      * Écoutez l'événement `click` sur le bouton `<button id="btn-fusion">`.
+      * Récupérez les valeurs saisies avec `document.getElementById('input-t1').value` et `document.getElementById('input-t2').value`.
+      * Pointez temporairement votre requête `fetch()` vers l'URL de votre Mock Server Postman (`https://<mock-id>.mock.pstmn.io/api/fusion?t1=12,18,5&t2=20,8,14`).
+      * À la réception du JSON, mettez à jour le contenu textuel (`.textContent`) de chaque balise cible du DOM :
+        * `document.getElementById('span-t1').textContent = ...`
+        * `document.getElementById('span-t2').textContent = ...`
+        * `document.getElementById('span-fusion').textContent = ...`
+        * `document.getElementById('span-fusion-tri').textContent = ...`
+        * `document.getElementById('span-fusion-mediane').textContent = ...`
+        * `document.getElementById('output-fusion').textContent = JSON.stringify(data, null, 2)`
+      * Vérifiez dans votre navigateur que tous les éléments s'actualisent fidèlement à la vidéo de démonstration.
   * **3. Côté Backend (Flask - `app.py`)** :
-    * Développez la route réelle `GET /api/fusion?t1=...&t2=...` dans Flask qui concatène les deux séries reçues avec l'opérateur `+`, effectue le tri et calcule la médiane globale.
-    * Renvoyez la réponse JSON structurée.
-    * Reconnectez votre interface web sur l'API Flask locale (`/api/fusion?t1=...&t2=...`).
+    * Développez la route réelle `GET /api/fusion?t1=...&t2=...` dans Flask :
+      * Récupérez les deux paramètres `t1` et `t2` depuis la Query String (`request.args.get`).
+      * Découpez les chaînes avec `.split(',')` et convertissez les morceaux en entiers.
+      * Concaténez les deux listes avec l'opérateur Python `+` : `fusion = liste1 + liste2`.
+      * Triez la liste fusionnée et calculez sa médiane.
+      * Renvoyez la réponse JSON structurée avec les clés `"t1"`, `"t2"`, `"fusion"`, `"tri"`, `"mediane"`.
+    * Dans `nginx/html/app.js`, remplacez l'URL du Mock par l'URL locale `/api/fusion?t1=...&t2=...`.
 * **Question théorique (à consigner dans votre compte-rendu)** :
   * *Quelle URI et structure de requête devez-vous adopter pour transmettre et fusionner 3 tableaux t1, t2 et t3 ?*
 * **Exemple d'exécution** :
   * Requête : `GET /api/fusion?t1=12,18,5&t2=20,8,14`
-  * Réponse JSON : `{"fusion": [12, 18, 5, 20, 8, 14], "tri": [5, 8, 12, 14, 18, 20], "mediane": 13.0}`
+  * Réponse JSON : `{"t1": [12, 18, 5], "t2": [20, 8, 14], "fusion": [12, 18, 5, 20, 8, 14], "tri": [5, 8, 12, 14, 18, 20], "mediane": 13.0}`
 * **Amélioration** : Rendez votre route capable d'accepter une infinité de tableaux grâce à `request.args.getlist('t')`.
 
 ---
@@ -263,9 +310,9 @@ fin procédure
 
 ### Exercice 6 : Connexion MySQL & Comparaison de salaire
 * **Objectif** : Interagir avec une base de données MySQL dans un bloc `try/except` et implémenter des routes métier.
-* **Fichiers** : `api/db.py`, `api/app.py`.
+* **Fichiers** : `api/db.py`, `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
 * **Consignes** :
-  * **1. Simulation avec un serveur Mock Postman (avant le code)** :
+  * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
     * Avant d'interfacer MySQL, créez dans Postman un **Mock Server** simulant les deux routes de l'exercice :
       * `GET /api/salaires/stats` simulant le retour global :
         ```json
@@ -286,12 +333,23 @@ fin procédure
         }
         ```
   * **2. Côté Frontend (IHM Web & JavaScript - `index.html`, `app.js`)** :
-    * Dans la section Exercice 6 de la page web, connectez les boutons « Charger les statistiques BDD » et « Comparer » vers votre Mock Postman pour valider l'affichage des données dans les blocs de résultats.
+    * **Comprendre la structure HTML fournie :**  
+      Ouvrez `nginx/html/index.html` (section `sec-db`). Les éléments suivants sont mis à disposition :
+      * **Partie 1 : Statistiques globales BDD :**
+        * `<button id="btn-db-stats">` : bouton « Charger les statistiques BDD ».
+        * `<pre id="output-db-stats">` : zone d'affichage pour la réponse JSON des statistiques.
+      * **Partie 2 : Comparaison d'un employé par son ID :**
+        * `<input id="input-emp-id">` : champ numérique pour saisir l'ID de l'employé (ex: `3`).
+        * `<button id="btn-db-emp">` : bouton « Comparer ».
+        * `<pre id="output-db-emp">` : zone d'affichage pour le résultat comparatif de l'employé.
+    * **Développement dans `nginx/html/app.js` :**
+      * Câblez les écouteurs d'événements `click` sur `btn-db-stats` et `btn-db-emp`.
+      * Connectez temporairement vos requêtes `fetch()` vers votre Mock Postman pour valider que le JSON s'affiche proprement dans `<pre id="output-db-stats">` et `<pre id="output-db-emp">` via `output.textContent = JSON.stringify(data, null, 2)`.
   * **3. Côté Backend (MySQL & Flask - `api/db.py`, `api/app.py`)** :
     * Dans `db.py`, connectez-vous à la base `CRUD` avec le compte `eleve` / `eleve`.
     * Implémentez les requêtes SQL réelles (`SELECT salary FROM employees` et requête préparée `SELECT id, name, address, salary FROM employees WHERE id = %s`).
     * Créez les routes réelles dans Flask (`/api/salaires/stats` et `/api/employees/<id>/comparaison`).
-    * Reconnectez le frontend sur l'API Flask locale.
+    * Dans `app.js`, reconnectez les appels `fetch()` sur l'API Flask locale.
 * **Données de référence BDD** :
   * 6 employés ($N=6$, pair) : 1200, 6500, 8000, 25000, 40000, 100000.
   * Moyenne attendue : **~30 116.67 €** | Médiane attendue : $(8000 + 25000) / 2$ = **16 500.00 €**.
@@ -301,3 +359,4 @@ fin procédure
   # Martin Blank (8000 €) -> Inférieur à la moyenne et inférieur à la médiane.
   ```
 * **Amélioration** : Renvoyez une réponse JSON avec code d'état HTTP 404 si l'employé demandé n'existe pas en BDD.
+
