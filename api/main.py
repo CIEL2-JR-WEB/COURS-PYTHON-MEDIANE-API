@@ -12,7 +12,7 @@ def run_introduction():
 
 
 def run_exercice_0():
-    print("=== EXERCICE 0.6 & 0.7 : Statistiques et Problème de Nicolas ===")
+    print("=== EXERCICE 0.7 : Statistiques élémentaires et Problème de Nicolas ===")
     
     # Données officielles fournies
     salaires_nicolas = [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]

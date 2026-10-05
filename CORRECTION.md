@@ -16,7 +16,7 @@ docker compose up -d
 
 ### Exercice 0 : Fondamentaux Python, Cybersécurité & Statistiques (0.1 à 0.7)
 
-#### Exercices 0.1 à 0.5 : Cybersécurité & Défi Anti-IA CIEL-Guard
+#### Exercices 0.1 à 0.6 : Fondamentaux du langage, Cybersécurité & Défi CIEL-Guard
 ```bash
 docker compose exec api python intro_cyber.py
 # ou alternativement :
@@ -24,45 +24,58 @@ docker compose exec api python main.py intro
 ```
 **Sortie attendue :**
 ```text
-========================================================================
-BTS CIEL // INTRODUCTION À PYTHON : FONDAMENTAUX & CYBERSÉCURITÉ
-========================================================================
+============================================================================
+BTS CIEL // EXERCICE 0 : FONDAMENTAUX DE PYTHON & CYBERSÉCURITÉ
+============================================================================
 
---- [Exercice 0.1] Chaînes de caractères & Chiffrement de César ---
-Original : ALERTE INTRUSION 2026 !
-Chiffré  : EPIVXI MRXVYWMSR 2026 ! (décalage = 4)
-Restauré : ALERTE INTRUSION 2026 !
+--- [Exercice 0.1] Fonctions, Variables & Types fondamentaux ---
+Port    22 -> Catégorie : Privilégié / Système
+Port  5000 -> Catégorie : Enregistré / Utilisateur
+Port 55000 -> Catégorie : Dynamique / Privé
+Port 99999 -> Catégorie : Invalide
+Débit calculé pour 10 Mo en 2.5s : 4000000.0 octets/s (4.00 Mo/s)
 
---- [Exercice 0.2] Chiffrement par clé XOR & Opérateur binaire ---
-Secret   : PASSWORD_SECRET
-Clé      : CYBER
-Octets   : [19, 24, 17, 22, 5, 12, 11, 6, 26, 1, 6, 26, 16, 0, 6]
-Restauré : PASSWORD_SECRET
+--- [Exercice 0.2] Les Chaînes de caractères (str) ---
+Login normalisé      : 'admin_reseau_2026'
+Mot de passe masqué  : S******************!
+Champs de log extraits: ['2026-10-05 14:30:00', '192.168.1.50', 'AUTH_SUCCESS', 'SSH']
 
---- [Exercice 0.3] Tuples vs Listes (Immutabilité & Données scellées) ---
-Identifiant scellé (tuple) : ('admin_root', 1001, 'SUPERADMIN')
+--- [Exercice 0.3] Les Listes (list) ---
+Ports bruts          : [22, -1, 80, 0, 443, -8080, 3306]
+Ports actifs filtrés : [22, 80, 443, 3306]
+Pings analysés       : [12.4, 8.1, 15.6, 9.8, 22.0]
+Statistiques ping    : Min = 8.1 ms | Max = 22.0 ms | Moyenne = 13.58 ms
+Occurrences de 192.168.1.1 : 3 fois
+
+--- [Exercice 0.4] Tuples & Dictionnaires (tuple, dict) ---
+Socket scellé (tuple): ('192.168.1.1', 443, 'TCP')
 Tentative d'altération en mémoire bloquée : True (TypeError capturé)
+Fiche d'incident     : {'id': 101, 'source': '198.51.100.42', 'criticite': 'CRITIQUE', 'resolu': False}
+Fréquences alertes   : {'BRUTE_FORCE': 3, 'SQLI': 2, 'XSS': 1}
 
---- [Exercice 0.4] Mutation en place vs Copie de liste (Le piège des références) ---
-Liste originale (intacte)   : ['192.168.1.1', '10.0.0.99', '192.168.1.50'] (id: ...)
-Liste filtrée (nouvel objet): ['192.168.1.1', '192.168.1.50'] (id: ...)
+--- [Exercice 0.5] Références en mémoire & Copie défensive (.copy) ---
+Liste source (intacte)      : ['192.168.1.10', '10.0.0.99', '192.168.1.20'] (id: ...)
+Liste filtrée (nouvel objet): ['192.168.1.10', '192.168.1.20'] (id: ...)
+Déduplication défensive     : [80, 443, 22, 8080] (source intacte : True)
 
---- [Exercice 0.5] Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard) ---
+--- [Exercice 0.6] Algorithmes de Chiffrement & Défi Anti-IA ---
+César chiffré (+4)   : 'EPIVXI MRXVYWMSR 2026 !' -> Restauré : 'ALERTE INTRUSION 2026 !'
+XOR chiffré          : [19, 24, 17, 22, 5, 12, 11, 6, 26, 1, 6, 26, 16, 0, 6] -> Restauré : 'PASSWORD_SECRET'
 Artefact 'mystere.payload' lu avec succès (44 octets, checksum=3419)
 -> MESSAGE SECRET DÉCODÉ : FLAG{ciel_python_2026_investigation_reussie}
--> Validation du Défi : SUCCÈS TOTAL !
-========================================================================
+-> Validation du Défi CIEL-Guard : SUCCÈS TOTAL !
+============================================================================
 ```
 
 ---
 
-#### Exercices 0.6 & 0.7 : Statistiques élémentaires et Problème de Nicolas
+#### Exercice 0.7 : Statistiques élémentaires et Problème de Nicolas
 ```bash
 docker compose exec api python main.py
 ```
 **Sortie attendue :**
 ```text
-=== EXERCICE 0.6 & 0.7 : Statistiques et Problème de Nicolas ===
+=== EXERCICE 0.7 : Statistiques élémentaires et Problème de Nicolas ===
 Salaires de l'entreprise : [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]
 Moyenne des salaires : 2500.00 €
 Salaires triés       : [1500, 1500, 1700, 1800, 2000, 2200, 3300, 4000, 4500]
