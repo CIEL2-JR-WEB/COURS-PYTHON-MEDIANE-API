@@ -1,8 +1,15 @@
 """
 Point d'entrée principal - Démonstration et validation console complète - CORRIGÉ.
 """
+import sys
 from statistique import moyenne, mediane
 from tri_selection import tri_selection_copie
+import intro_cyber
+
+
+def run_introduction():
+    intro_cyber.run_introduction_interactive()
+
 
 def run_exercice_0():
     print("=== EXERCICE 0.1 & 0.2 : Statistiques et Problème de Nicolas ===")
@@ -39,5 +46,13 @@ def run_exercice_0():
     else:
         print("-> Analyse : Nicolas gagne exactement le salaire médian.")
 
+
 if __name__ == '__main__':
-    run_exercice_0()
+    if len(sys.argv) > 1 and sys.argv[1].lower() in ['intro', 'introduction', 'cyber']:
+        run_introduction()
+    elif len(sys.argv) > 1 and sys.argv[1].lower() in ['all', 'tout']:
+        run_introduction()
+        print("\n")
+        run_exercice_0()
+    else:
+        run_exercice_0()

@@ -24,6 +24,173 @@ docker compose exec api python main.py
 
 ---
 
+## Introduction à Python : Fondamentaux, Algorithmique & Cybersécurité
+
+Avant d'aborder les statistiques, le tri et l'architecture web Flask/MySQL, cette séquence d'introduction propose **5 exercices progressifs**. Ils mobilisent les notions fondamentales de Python (**chaînes, fonctions, tuples, listes, dictionnaires, références en mémoire**) appliquées à des scénarios concrets de **cybersécurité** (chiffrement historique, cryptographie symétrique, analyse d'incidents, intégrité forensique).
+
+```bash
+# Pour exécuter et tester l'ensemble des exercices d'introduction dans Docker :
+docker compose exec api python intro_cyber.py
+```
+
+---
+
+### Exercice I.1 : Chaînes de caractères & Audit de mot de passe (Strings, Fonctions & Tuples)
+
+* **Objectif pédagogique** :  
+  Définir une fonction avec typage de retour (`tuple`), parcourir une chaîne de caractères, exploiter les méthodes de validation de caractères (`.isupper()`, `.islower()`, `.isdigit()`) et manipuler les **tuples** pour renvoyer un statut immuable.
+* **Mise en situation Cybersécurité** :  
+  La politique de sécurité de l'ANSSI impose des critères minimaux de robustesse pour les mots de passe utilisateurs. Vous devez concevoir la fonction d'audit intégrée au formulaire d'authentification.
+* **Fichiers** : `api/intro_cyber.py`.
+* **Ressources vidéo recommandées** :  
+  * 📺 [TUTO Python : Manipulation de chaînes de caractères](https://www.youtube.com/watch?v=DFcCc3zWrU0) *(Indexation, méthodes utiles, découpage et parcours de chaînes)*.
+* **💡 Notions clés & syntaxe Python** :
+  ```python
+  def auditer_mot_de_passe(mdp: str) -> tuple[bool, int, list[str]]:
+      # Une chaîne est itérable caractère par caractère :
+      for car in mdp:
+          if car.isupper():   # Vérifie si le caractère est en majuscule
+              ...
+      # Un tuple regroupe plusieurs valeurs de façon immuable :
+      return (est_valide, score, liste_erreurs)
+  ```
+* **Consignes** :
+  1. Écrivez la fonction `auditer_mot_de_passe(mdp: str) -> tuple[bool, int, list[str]]`.
+  2. Vérifiez les 5 critères :
+     * Longueur $\ge 8$ caractères.
+     * Au moins 1 majuscule.
+     * Au moins 1 minuscule.
+     * Au moins 1 chiffre.
+     * Au moins 1 caractère spécial parmi `!@#$%^&*_-+=`.
+  3. Chaque critère respecté rapporte 1 point (score sur 5).
+  4. La fonction retourne un **tuple** : `(est_conforme, score, anomalies)`.
+* **Exemple d'exécution** :
+  ```text
+  Test 'Admin@2026' -> Score : 5/5 | Conforme : True | Anomalies : []
+  Test 'azerty'     -> Score : 1/5 | Conforme : False | Anomalies : ['Au moins 8 caractères', 'Au moins 1 majuscule', 'Au moins 1 chiffre', 'Au moins 1 caractère spécial']
+  ```
+
+---
+
+### Exercice I.2 : Chiffrement par décalage de César & Cryptanalyse (Codes ASCII & Arithmétique modulaire)
+
+* **Objectif pédagogique** :  
+  Comprendre l'encodage des caractères en mémoire via les fonctions `ord()` et `chr()`, appliquer l'arithmétique modulaire (opérateur `% 26`), construire dynamiquement une chaîne de sortie et implémenter une attaque par force brute.
+* **Mise en situation Cybersécurité** :  
+  Le chiffrement de Jules César est l'ancêtre historique de la cryptographie symétrique. Une communication confidentielle a été interceptée par vos équipes (`DWWDTXH GX VHUYHXU D PLQXLW !`). Vous devez fournir l'outil de chiffrement/déchiffrement et concevoir un script de cryptanalyse par force brute capable de retrouver le message sans connaître le décalage.
+* **Fichiers** : `api/intro_cyber.py`.
+* **Ressources vidéo recommandées** :  
+  * 📺 [Python - Le chiffrement César avec ASCII (niveau débutant / intermédiaire)](https://www.youtube.com/watch?v=B5TOZY1oBy0) *(Explication claire des fonctions `ord()` et `chr()`, du décalage avec modulo et de la mise en œuvre en Python)*.
+* **💡 Notions clés & syntaxe Python** :
+  ```python
+  # Code ASCII vers caractère et inversement :
+  ord('A')  # -> 65
+  chr(65)   # -> 'A'
+
+  # Décalage circulaire dans l'alphabet de 26 lettres :
+  nouveau_char = chr(ord('A') + (ord(c) - ord('A') + decalage) % 26)
+  ```
+* **Consignes** :
+  1. Écrivez `chiffrer_cesar(texte: str, decalage: int) -> str` en préservant la casse (majuscules/minuscules) et en laissant les espaces et la ponctuation intacts.
+  2. Écrivez `dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str` (astuce : déchiffrer revient à chiffrer avec `-decalage`).
+  3. Écrivez `casser_cesar_force_brute(texte_chiffre: str) -> list[tuple[int, str]]` qui teste l'ensemble des 25 décalages possibles et renvoie la liste des candidats.
+* **Exemple d'exécution** :
+  ```text
+  Clair     : ATTAQUE DU SERVEUR A MINUIT !
+  Chiffré   : DWWDTXH GX VHUYHXU D PLQXLW !  (décalage = 3)
+  Déchiffré : ATTAQUE DU SERVEUR A MINUIT !
+  
+  Force brute sur 'KHOOR' :
+    k=1 -> JGNNQ
+    k=2 -> IFMMP
+    k=3 -> HELLO   <-- Message clair identifié !
+  ```
+
+---
+
+### Exercice I.3 : Chiffrement par clé XOR & Masque jetable (Opérateur binaire & Listes d'octets)
+
+* **Objectif pédagogique** :  
+  Manipuler des listes d'entiers (`list[int]`), utiliser l'opérateur binaire XOR (`^`), répéter cycliquement une clé avec l'opérateur modulo (`i % len(cle)`), et vérifier la propriété fondamentale de symétrie du XOR.
+* **Mise en situation Cybersécurité** :  
+  L'opération OU exclusif (XOR) est la pierre angulaire des chiffrements symétriques modernes (AES, ChaCha20) et du masque jetable de Vernam (*One-Time Pad*). Elle possède une propriété mathématique remarquable : $(A \oplus K) \oplus K = A$. Chiffrer et déchiffrer utilisent exactement le même algorithme.
+* **Fichiers** : `api/intro_cyber.py`.
+* **Ressources vidéo recommandées** :  
+  * 📺 [Qu'est-ce que la cryptographie symétrique ? (XOR et Masque jetable)](https://www.youtube.com/watch?v=EHCds8De34Q) *(Le rôle fondamental de l'opérateur XOR et du masque de Vernam en cryptographie)*.
+* **💡 Notions clés & syntaxe Python** :
+  ```python
+  # Opérateur binaire XOR en Python :
+  valeur = ord('F') ^ ord('K')  # Produit un entier représentant l'octet chiffré
+  
+  # Répétition cyclique de la clé sur une chaîne longue :
+  char_cle = cle[i % len(cle)]
+  ```
+* **Consignes** :
+  1. Écrivez `chiffrer_xor(texte: str, cle: str) -> list[int]` qui transforme chaque caractère du texte en octet chiffré par XOR avec le caractère correspondant de la clé.
+  2. Écrivez `dechiffrer_xor(octets: list[int], cle: str) -> str` qui réapplique la même clé pour reconstituer fidèlement la chaîne originale.
+* **Exemple d'exécution** :
+  ```text
+  Texte secret   : FLAG{ciel_python_2026}
+  Clé secrète    : 'CYBER'
+  Octets chiffrés: [5, 21, 3, 2, 41, 32, 48, 39, 41, 13, 51, 32, 54, 45, 61, 45, 6, 112, 117, 96, 117, 36]
+  Déchiffré      : FLAG{ciel_python_2026}
+  ```
+
+---
+
+### Exercice I.4 : Mutation en place vs Copie défensive & Tuples (Intégrité Forensique)
+
+* **Objectif pédagogique** :  
+  Comprendre la différence vitale entre types **mutables** (`list`) et types **immuables** (`tuple`, `str`), identifier le piège du passage par référence en Python (`t2 = t1`), et implémenter une copie défensive (`t.copy()`, `list(t)`).
+* **Mise en situation Cybersécurité** :  
+  En investigation numérique légale (*Forensics* / *Incident Response*), la préservation de la chaîne de preuve (*Chain of Custody*) est absolue. Lors de la rédaction d'un rapport public d'incident, un analyste doit masquer les adresses IP internes. Si la fonction modifie les données **en place**, la preuve originale en mémoire est altérée et devient juridiquement caduque !
+* **Fichiers** : `api/intro_cyber.py`.
+* **Ressources vidéo recommandées** :  
+  * 📺 [Maîtriser les LISTES avec Python](https://www.youtube.com/watch?v=yK4CTsEP_B0) *(Comprendre la manipulation des listes, les méthodes de mutation et les bonnes pratiques)*.
+* **⚠️ Le piège classique en Python** :
+  ```python
+  a = [10, 20, 30]
+  b = a            # ATTENTION : 'b' pointe vers le MÊME objet en mémoire !
+  b.append(40)     # 'a' est également modifié à votre insu : [10, 20, 30, 40]
+  
+  # La solution (Copie défensive) :
+  b = a.copy()     # ou b = list(a) -> crée un objet distinct et indépendant
+  ```
+* **Consignes** :
+  1. Observez l'effet destructeur de `masquer_ip_en_place(logs)` qui modifie directement la liste fournie.
+  2. Implémentez `masquer_ip_copie_defensive(logs: list[tuple]) -> list[tuple]` qui :
+     * Préserve la liste originale intacte.
+     * Encapsule chaque enregistrement dans un **tuple** `(horodatage, ip_masquee, statut)` garantissant l'immuabilité des enregistrements individuels.
+* **Lien avec la suite du TP** :  
+  Cette distinction est le cœur technique de l'**Exercice 4.1** (`tri_selection_copie()` vs `tri_selection_en_place()`).
+
+---
+
+### Exercice I.5 : Dictionnaires & Détection d'intrusions (Structures de données & IOCs)
+
+* **Objectif pédagogique** :  
+  Manipuler des structures clé-valeur (`dict`), utiliser `.get()` pour initialiser et incrémenter des compteurs sans erreur `KeyError`, et filtrer une liste de dictionnaires pour générer un rapport de sécurité.
+* **Mise en situation Cybersécurité** :  
+  Un SIEM (Security Information and Event Management) reçoit un flux d'événements réseau au format structuré. Vous devez analyser ce flux pour repérer les adresses IP suspectes réalisant une attaque par force brute ou un déni de service.
+* **Fichiers** : `api/intro_cyber.py`.
+* **Ressources vidéo recommandées** :  
+  * 📺 [Python : Les dictionnaires - Docstring](https://www.youtube.com/watch?v=a10AeJ_o-44) *(Structure clé-valeur indispensable pour structurer les données et manipuler le JSON)*.
+* **💡 Notions clés & syntaxe Python** :
+  ```python
+  compteur = {}
+  # Incrémenter proprement une clé sans lever d'erreur :
+  compteur[ip] = compteur.get(ip, 0) + 1
+  ```
+* **Consignes** :
+  1. Écrivez `analyser_connexions_suspectes(logs: list[dict]) -> dict`.
+  2. Calculez le volume total d'octets transférés par adresse IP.
+  3. Comptez le nombre de tentatives bloquées par IP.
+  4. Détectez les IP ayant cumulé $\ge 3$ blocages et classez-les dans `alertes_critiques`.
+* **Lien avec la suite du TP** :  
+  Les dictionnaires Python sont la représentation exacte des lignes de données extraites de **MySQL** (Exercice 6 & 7) et des objets **JSON** échangés avec l'API Flask.
+
+---
+
 ## 📋 Progression des exercices
 
 ### Exercice 0.1 : Moyenne et import de module

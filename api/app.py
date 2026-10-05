@@ -249,6 +249,12 @@ def format_php_var_dump(title: str, array_data: list) -> str:
     return '\n'.join(lines)
 
 
+@app.route('/')
+def route_index():
+    """Redirection par défaut de la racine vers le dashboard de démonstration."""
+    return redirect(url_for('demo_dashboard'))
+
+
 @app.route('/demo')
 @app.route('/demo/mediane')
 def demo_mediane():
