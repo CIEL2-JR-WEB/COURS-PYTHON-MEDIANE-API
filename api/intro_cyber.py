@@ -1,89 +1,27 @@
 """
-Introduction à Python : Fondamentaux, Algorithmique & Cybersécurité - CORRIGÉ.
+Introduction à Python : Fondamentaux & Premiers Pas en Cybersécurité - CORRIGÉ.
 BTS CIEL // Informatique, Réseaux & Cybersécurité.
 
-Ce module regroupe les exercices préliminaires indispensables :
-- I.1 : Chaînes de caractères, conditions & audit de mot de passe (tuples & strings)
-- I.2 : Chiffrement de César, codes ASCII (ord/chr) et cryptanalyse par force brute
-- I.3 : Chiffrement par clé XOR & Masque jetable (listes d'octets et symétrie)
-- I.4 : Tuples vs Listes, passage par référence, mutation en place vs copie défensive
-- I.5 : Dictionnaires & structures : analyse de journaux de sécurité (IOCs)
+Ateliers progressifs :
+- 0.A : Chaînes de caractères & Chiffrement de César
+- 0.B : Chiffrement par clé XOR & Opérateur binaire
+- 0.C : Tuples vs Listes (Immutabilité & Données scellées)
+- 0.D : Mutation en place vs Copie de liste (Le piège des références)
+- 0.E : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
 """
 
-from typing import List, Tuple, Dict
+import os
+from typing import List, Tuple
 
 
 # =============================================================================
-# EXERCICE I.1 : Chaînes de caractères & Audit de mot de passe
-# =============================================================================
-
-def auditer_mot_de_passe(mdp: str) -> Tuple[bool, int, List[str]]:
-    """
-    Vérifie la robustesse d'un mot de passe selon la politique de sécurité.
-    
-    Critères :
-    1. Longueur minimale de 8 caractères (+1 pt si >= 12)
-    2. Au moins une lettre majuscule
-    3. Au moins une lettre minuscule
-    4. Au moins un chiffre
-    5. Au moins un caractère spécial parmi : !@#$%^&*_-+=
-    
-    Retourne un tuple immuable :
-    (est_conforme: bool, score: int sur 5, anomalies: list[str])
-    """
-    anomalies: List[str] = []
-    score = 0
-    caracteres_speciaux = set("!@#$%^&*_-+=")
-
-    # 1. Vérification de longueur
-    if len(mdp) < 8:
-        anomalies.append("Le mot de passe doit comporter au moins 8 caractères.")
-    else:
-        score += 1
-
-    # 2, 3, 4, 5. Détection des catégories de caractères
-    a_maj = any(c.isupper() for c in mdp)
-    a_min = any(c.islower() for c in mdp)
-    a_chiffre = any(c.isdigit() for c in mdp)
-    a_special = any(c in caracteres_speciaux for c in mdp)
-
-    if not a_maj:
-        anomalies.append("Au moins une majuscule requise.")
-    else:
-        score += 1
-
-    if not a_min:
-        anomalies.append("Au moins une minuscule requise.")
-    else:
-        score += 1
-
-    if not a_chiffre:
-        anomalies.append("Au moins un chiffre requis.")
-    else:
-        score += 1
-
-    if not a_special:
-        anomalies.append("Au moins un caractère spécial requis (!@#$%^&*_-+=).")
-    else:
-        score += 1
-
-    # Bonus longueur
-    if len(mdp) >= 12 and score == 5:
-        # Score parfait
-        pass
-
-    est_conforme = (len(anomalies) == 0)
-    return (est_conforme, score, anomalies)
-
-
-# =============================================================================
-# EXERCICE I.2 : Chiffrement par décalage (César) & Cryptanalyse
+# ATELIER 0.A : Chaînes de caractères & Chiffrement de César
 # =============================================================================
 
 def chiffrer_cesar(texte: str, decalage: int) -> str:
     """
-    Chiffre une chaîne selon l'algorithme de César en appliquant un décalage modulaire.
-    Conserve la casse (majuscule / minuscule) et laisse intacts les caractères non alphabétiques.
+    Chiffre une chaîne en décalant chaque lettre dans l'alphabet (modulo 26).
+    Conserve la casse (majuscule / minuscule) et préserve les autres caractères (espaces, ponctuation).
     """
     resultat = []
     decalage_normalise = decalage % 26
@@ -91,14 +29,13 @@ def chiffrer_cesar(texte: str, decalage: int) -> str:
     for char in texte:
         if 'A' <= char <= 'Z':
             base = ord('A')
-            nouveau_char = chr(base + (ord(char) - base + decalage_normalise) % 26)
-            resultat.append(nouveau_char)
+            nouveau = chr(base + (ord(char) - base + decalage_normalise) % 26)
+            resultat.append(nouveau)
         elif 'a' <= char <= 'z':
             base = ord('a')
-            nouveau_char = chr(base + (ord(char) - base + decalage_normalise) % 26)
-            resultat.append(nouveau_char)
+            nouveau = chr(base + (ord(char) - base + decalage_normalise) % 26)
+            resultat.append(nouveau)
         else:
-            # Ponctuation, espaces, chiffres laissés en clair
             resultat.append(char)
 
     return "".join(resultat)
@@ -106,217 +43,207 @@ def chiffrer_cesar(texte: str, decalage: int) -> str:
 
 def dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str:
     """
-    Déchiffre un message en appliquant le décalage inverse.
+    Déchiffre un message chiffré par César en appliquant le décalage opposé.
     """
     return chiffrer_cesar(texte_chiffre, -decalage)
 
 
-def casser_cesar_force_brute(texte_chiffre: str) -> List[Tuple[int, str]]:
-    """
-    Génère la liste des 25 déchiffrements possibles pour casser le chiffrement
-    sans connaître la clé initiale (cryptanalyse par force brute).
-    """
-    candidats = []
-    for k in range(1, 26):
-        candidats.append((k, dechiffrer_cesar(texte_chiffre, k)))
-    return candidats
-
-
 # =============================================================================
-# EXERCICE I.3 : Chiffrement par clé XOR & Masque jetable
+# ATELIER 0.B : Chiffrement par clé XOR & Listes
 # =============================================================================
 
 def chiffrer_xor(texte: str, cle: str) -> List[int]:
     """
     Chiffre un texte avec une clé secrète via l'opérateur bit-à-bit XOR (^).
     Chaque caractère du texte est combiné avec le caractère correspondant de la clé
-    (la clé est répétée cycliquement via l'opérateur modulo).
+    (répétée cycliquement via l'opérateur modulo).
     
-    Retourne la liste des entiers (valeurs d'octets chiffrés).
+    Retourne la liste des entiers (octets chiffrés).
     """
     if not cle:
-        raise ValueError("La clé de chiffrement ne peut pas être vide.")
+        raise ValueError("La clé ne peut pas être vide.")
 
-    octets_chiffres: List[int] = []
-    for i, char in enumerate(texte):
-        char_cle = cle[i % len(cle)]
-        valeur_xor = ord(char) ^ ord(char_cle)
-        octets_chiffres.append(valeur_xor)
+    octets = []
+    for i in range(len(texte)):
+        caractere = texte[i]
+        caractere_cle = cle[i % len(cle)]
+        valeur_xor = ord(caractere) ^ ord(caractere_cle)
+        octets.append(valeur_xor)
 
-    return octets_chiffres
+    return octets
 
 
-def dechiffrer_xor(octets_chiffres: List[int], cle: str) -> str:
+def dechiffrer_xor(octets: List[int], cle: str) -> str:
     """
-    Déchiffre une liste d'octets XOR avec la même clé.
-    Propriété fondamentale du XOR : (A ^ B) ^ B == A.
+    Déchiffre une liste d'octets XOR en réappliquant la même clé.
+    Propriété fondamentale : (A ^ K) ^ K == A.
     """
     if not cle:
-        raise ValueError("La clé de déchiffrement ne peut pas être vide.")
+        raise ValueError("La clé ne peut pas être vide.")
 
     caracteres = []
-    for i, octet in enumerate(octets_chiffres):
-        char_cle = cle[i % len(cle)]
-        valeur_originale = octet ^ ord(char_cle)
+    for i in range(len(octets)):
+        valeur_octet = octets[i]
+        caractere_cle = cle[i % len(cle)]
+        valeur_originale = valeur_octet ^ ord(caractere_cle)
         caracteres.append(chr(valeur_originale))
 
     return "".join(caracteres)
 
 
 # =============================================================================
-# EXERCICE I.4 : Mutation en place vs Copie défensive & Tuples (Forensics)
+# ATELIER 0.C : Tuples vs Listes (Immutabilité & Données scellées)
 # =============================================================================
 
-def masquer_ip_en_place(evenements: List[List]) -> None:
+def creer_identifiant_scelle(login: str, uid: int, privilege: str) -> Tuple[str, int, str]:
     """
-    PIÈGE PÉDAGOGIQUE : Modifie DIRECTEMENT la liste originale reçue en argument.
-    Dans un contexte forensic (investigation numérique), cela détruit la preuve d'origine !
+    Crée un enregistrement d'utilisateur sous forme de TUPLE immuable.
+    Contrairement à une liste, un tuple garantit qu'aucun élément ne peut être altéré en mémoire.
     """
-    for evt in evenements:
-        # Supposons la structure [timestamp, ip, statut]
-        ip = evt[1]
-        segments = ip.split('.')
-        if len(segments) == 4:
-            evt[1] = f"{segments[0]}.{segments[1]}.xxx.xxx"
+    return (login, uid, privilege)
 
 
-def masquer_ip_copie_defensive(evenements: List[Tuple[str, str, str]]) -> List[Tuple[str, str, str]]:
+def tenter_modification_tuple(identifiant: Tuple) -> bool:
     """
-    APPROCHE SÉCURISÉE : Préserve l'intégrité absolue de la liste d'origine.
-    1. Crée une nouvelle liste indépendante.
-    2. Utilise des TUPLES immuables (timestamp, ip_masquee, statut) garantissant 
-       qu'aucune modification ultérieure ne pourra altérer les enregistrements.
+    Démontre la sécurité du tuple : toute tentative d'affectation (identifiant[0] = ...)
+    lève une exception TypeError.
+    Retourne True si l'immutabilité a bien protégé l'objet.
     """
-    nouveaux_evenements = []
-    for horodatage, ip, statut in evenements:
-        segments = ip.split('.')
-        if len(segments) == 4:
-            ip_masquee = f"{segments[0]}.{segments[1]}.xxx.xxx"
+    try:
+        # En Python, cette ligne est formellement interdite sur un tuple :
+        identifiant[0] = "pirate"  # type: ignore
+        return False
+    except TypeError:
+        return True
+
+
+# =============================================================================
+# ATELIER 0.D : Mutation en place vs Copie de liste (Le piège des références)
+# =============================================================================
+
+def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
+    """
+    Filtre une liste d'adresses IP SANS modifier la liste d'origine.
+    1. Crée une copie indépendante avec .copy() ou une compréhension de liste.
+    2. Garantit que la liste initiale passée par l'appelant conserve son intégrité.
+    """
+    copie_securisee = [ip for ip in liste_ips if ip != ip_bannie]
+    return copie_securisee
+
+
+# =============================================================================
+# PROJET DÉFI 0.E (Anti-IA Copy-Paste) : Le Décodeur d'Artefact Réseau CIEL-Guard
+# =============================================================================
+
+def dechiffrer_sequence_ciel_guard(octets: List[int], cle: str, decalage: int) -> str:
+    """
+    Moteur de déchiffrement propriétaire du protocole CIEL-Guard :
+    - Indice pair   : Déchiffrement XOR avec le caractère de la clé à la position (i // 2) % len(cle)
+    - Indice impair : Déchiffrement César inverse avec décalage
+    """
+    caracteres = []
+    for i, val in enumerate(octets):
+        if i % 2 == 0:
+            char_cle = cle[(i // 2) % len(cle)]
+            caracteres.append(chr(val ^ ord(char_cle)))
         else:
-            ip_masquee = ip
-        nouveaux_evenements.append((horodatage, ip_masquee, statut))
+            if 65 <= val <= 90:
+                caracteres.append(chr((val - 65 - decalage) % 26 + 65))
+            elif 97 <= val <= 122:
+                caracteres.append(chr((val - 97 - decalage) % 26 + 97))
+            else:
+                caracteres.append(chr(val))
+    return "".join(caracteres)
 
-    return nouveaux_evenements
 
-
-# =============================================================================
-# EXERCICE I.5 : Dictionnaires & Analyse de sécurité (IOCs / SIEM)
-# =============================================================================
-
-def analyser_connexions_suspectes(logs: List[Dict]) -> Dict:
+def decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> Tuple[str, int, int]:
     """
-    Analyse un flux de logs réseau structurés sous forme de dictionnaires.
-    Détecte les adresses IP effectuant des scans de ports ou du brute-force.
-    
-    Structure d'une entrée :
-    {"ip": "192.168.1.42", "port": 22, "bloque": True, "octets": 128}
-    
-    Retourne une synthèse :
-    - volume_par_ip : dict[str, int] (total octets transférés)
-    - tentatives_bloquees : dict[str, int] (nombre d'échecs/blocages par IP)
-    - alertes_critiques : list[str] (IP ayant plus de 3 blocages)
+    Projet Défi Anti-IA :
+    1. Ouvre et lit le fichier payload physique sur le disque.
+    2. Parse la liste d'entiers séparés par des virgules.
+    3. Calcule la clé dérivée dynamique : 'CIEL' + str(nombre_octets).
+    4. Calcule le décalage César : somme des chiffres de l'année 2026 (2+0+2+6 = 10).
+    5. Déchiffre la séquence et retourne un tuple scellé :
+       (message_restaure, total_octets, checksum_somme)
     """
-    volume_par_ip: Dict[str, int] = {}
-    tentatives_bloquees: Dict[str, int] = {}
+    if not os.path.exists(chemin_fichier):
+        # Chercher également dans le dossier courant ou api/
+        alternatif = os.path.join(os.path.dirname(__file__), chemin_fichier)
+        if os.path.exists(alternatif):
+            chemin_fichier = alternatif
+        else:
+            raise FileNotFoundError(f"Fichier introuvable : {chemin_fichier}")
 
-    for evt in logs:
-        ip = evt.get("ip", "inconnu")
-        octets = evt.get("octets", 0)
-        bloque = evt.get("bloque", False)
+    with open(chemin_fichier, 'r', encoding='utf-8') as f:
+        contenu = f.read().strip()
 
-        # Cumul du volume réseau
-        volume_par_ip[ip] = volume_par_ip.get(ip, 0) + octets
+    octets = [int(x.strip()) for x in contenu.split(',') if x.strip()]
+    nombre_octets = len(octets)
+    cle = f"CIEL{nombre_octets}"
+    decalage = 10
 
-        # Cumul des alertes / blocages
-        if bloque:
-            tentatives_bloquees[ip] = tentatives_bloquees.get(ip, 0) + 1
+    message_restaure = dechiffrer_sequence_ciel_guard(octets, cle, decalage)
+    checksum = sum(octets)
 
-    # Détection des IP dépassant le seuil de 3 tentatives infructueuses
-    alertes_critiques = [
-        ip for ip, count in tentatives_bloquees.items() if count >= 3
-    ]
-
-    return {
-        "volume_par_ip": volume_par_ip,
-        "tentatives_bloquees": tentatives_bloquees,
-        "alertes_critiques": alertes_critiques
-    }
+    return (message_restaure, nombre_octets, checksum)
 
 
 # =============================================================================
-# Démonstration globale exécutable
+# Validation et Démonstration Console
 # =============================================================================
 
-def run_introduction_interactive():
-    print("=" * 70)
+def run_introduction():
+    print("=" * 72)
     print("BTS CIEL // INTRODUCTION À PYTHON : FONDAMENTAUX & CYBERSÉCURITÉ")
-    print("=" * 70)
+    print("=" * 72)
 
-    # I.1 Audit de mot de passe
-    print("\n--- [I.1] Audit de politique de mot de passe ---")
-    test_mdp = "Admin@2026"
-    conforme, score, erreurs = auditer_mot_de_passe(test_mdp)
-    print(f"Mot de passe testé : '{test_mdp}'")
-    print(f"Score : {score}/5 | Conforme : {conforme}")
-    if erreurs:
-        print(f"Anomalies détectées : {erreurs}")
-    else:
-        print("Verdict : Mot de passe conforme aux exigences de sécurité.")
+    # 0.A César
+    print("\n--- [Atelier 0.A] Chaînes de caractères & Chiffrement de César ---")
+    message = "ALERTE INTRUSION 2026 !"
+    k = 4
+    chiffre = chiffrer_cesar(message, k)
+    clair = dechiffrer_cesar(chiffre, k)
+    print(f"Original : {message}")
+    print(f"Chiffré  : {chiffre} (décalage = {k})")
+    print(f"Restauré : {clair}")
 
-    # I.2 Chiffrement de César
-    print("\n--- [I.2] Chiffrement de César & Cryptanalyse ---")
-    clair = "ATTAQUE DU SERVEUR A MINUIT !"
-    cle_cesar = 3
-    chiffre = chiffrer_cesar(clair, cle_cesar)
-    dechiffre = dechiffrer_cesar(chiffre, cle_cesar)
-    print(f"Message clair     : {clair}")
-    print(f"Chiffré (clé={cle_cesar})  : {chiffre}")
-    print(f"Déchiffré inverse : {dechiffre}")
-    
-    # Démonstration force brute sur un extrait
-    flag_chiffre = "KHOOR" # 'HELLO' avec k=3
-    print(f"\nSimulation force brute sur '{flag_chiffre}' :")
-    for k, proposition in casser_cesar_force_brute(flag_chiffre)[:5]:
-        print(f"  Clé k={k:2d} -> {proposition}")
+    # 0.B XOR
+    print("\n--- [Atelier 0.B] Chiffrement par clé XOR & Opérateur binaire ---")
+    secret = "PASSWORD_SECRET"
+    cle = "CYBER"
+    octets = chiffrer_xor(secret, cle)
+    recupere = dechiffrer_xor(octets, cle)
+    print(f"Secret   : {secret}")
+    print(f"Clé      : {cle}")
+    print(f"Octets   : {octets}")
+    print(f"Restauré : {recupere}")
 
-    # I.3 Chiffrement XOR
-    print("\n--- [I.3] Chiffrement par clé XOR & Masque Jetable ---")
-    secret = "FLAG{ciel_python_2026}"
-    cle_xor = "CYBER"
-    octets = chiffrer_xor(secret, cle_xor)
-    recupere = dechiffrer_xor(octets, cle_xor)
-    print(f"Texte secret      : {secret}")
-    print(f"Clé secrète       : '{cle_xor}'")
-    print(f"Flux d'octets XOR : {octets}")
-    print(f"Texte restauré    : {recupere}")
+    # 0.C Tuples
+    print("\n--- [Atelier 0.C] Tuples vs Listes (Immutabilité & Données scellées) ---")
+    user = creer_identifiant_scelle("admin_root", 1001, "SUPERADMIN")
+    print(f"Identifiant scellé (tuple) : {user}")
+    est_protege = tenter_modification_tuple(user)
+    print(f"Tentative d'altération en mémoire bloquée : {est_protege} (TypeError capturé)")
 
-    # I.4 Mutabilité vs Immutabilité
-    print("\n--- [I.4] Manipulation d'objets : En place vs Par copie (Forensics) ---")
-    logs_bruts = [
-        ("10:00:01", "192.168.1.15", "AUTH_FAIL"),
-        ("10:00:03", "192.168.1.15", "AUTH_FAIL"),
-        ("10:00:05", "10.0.0.8", "AUTH_OK")
-    ]
-    logs_anonymes = masquer_ip_copie_defensive(logs_bruts)
-    print(f"Logs originaux (preuve scellée)    : {logs_bruts}")
-    print(f"Logs anonymisés (copie défensive) : {logs_anonymes}")
-    print("Contrôle d'intégrité : La liste originale est restée 100% intacte !")
+    # 0.D Copie vs En place
+    print("\n--- [Atelier 0.D] Mutation en place vs Copie de liste (Le piège des références) ---")
+    ips_originales = ["192.168.1.1", "10.0.0.99", "192.168.1.50"]
+    ips_filtrees = filtrer_ip_copie(ips_originales, "10.0.0.99")
+    print(f"Liste originale (intacte)   : {ips_originales} (id: {id(ips_originales)})")
+    print(f"Liste filtrée (nouvel objet): {ips_filtrees} (id: {id(ips_filtrees)})")
 
-    # I.5 Dictionnaires & IOCs
-    print("\n--- [I.5] Dictionnaires & Détection d'intrusions (SIEM) ---")
-    flux_reseau = [
-        {"ip": "203.0.113.5", "port": 22, "bloque": True, "octets": 64},
-        {"ip": "203.0.113.5", "port": 22, "bloque": True, "octets": 64},
-        {"ip": "203.0.113.5", "port": 22, "bloque": True, "octets": 64},
-        {"ip": "192.168.1.10", "port": 80, "bloque": False, "octets": 1024},
-        {"ip": "203.0.113.5", "port": 22, "bloque": True, "octets": 64},
-    ]
-    rapport = analyser_connexions_suspectes(flux_reseau)
-    print(f"Volume par IP          : {rapport['volume_par_ip']}")
-    print(f"Échecs par IP          : {rapport['tentatives_bloquees']}")
-    print(f"ALERTE IOC CRITIQUE    : {rapport['alertes_critiques']} (Attaque par force brute détectée)")
-    print("=" * 70)
+    # 0.E Projet Défi Anti-IA
+    print("\n--- [Projet Défi 0.E] Le Décodeur d'Artefact Réseau CIEL-Guard (Anti-IA) ---")
+    try:
+        msg_resolu, nb, chk = decoder_ciel_guard("mystere.payload")
+        print(f"Artefact 'mystere.payload' lu avec succès ({nb} octets, checksum={chk})")
+        print(f"-> MESSAGE SECRET DÉCODÉ : \033[92m{msg_resolu}\033[0m")
+        print("-> Validation du Défi : SUCCÈS TOTAL !")
+    except Exception as e:
+        print(f"Erreur lors du décodage du défi : {e}")
+
+    print("=" * 72)
 
 
 if __name__ == '__main__':
-    run_introduction_interactive()
+    run_introduction()

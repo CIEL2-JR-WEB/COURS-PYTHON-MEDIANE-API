@@ -8,7 +8,7 @@ import intro_cyber
 
 
 def run_introduction():
-    intro_cyber.run_introduction_interactive()
+    intro_cyber.run_introduction()
 
 
 def run_exercice_0():

@@ -14,7 +14,7 @@ docker compose up -d
 
 ## 2. Commandes de test par exercice et sorties attendues
 
-### Introduction à Python : Fondamentaux & Cybersécurité (I.1 à I.5)
+### Introduction à Python : Fondamentaux & Cybersécurité (Ateliers 0.A à 0.D & Projet Défi 0.E)
 ```bash
 docker compose exec api python intro_cyber.py
 # ou alternativement :
@@ -22,43 +22,34 @@ docker compose exec api python main.py intro
 ```
 **Sortie attendue :**
 ```text
-======================================================================
+========================================================================
 BTS CIEL // INTRODUCTION À PYTHON : FONDAMENTAUX & CYBERSÉCURITÉ
-======================================================================
+========================================================================
 
---- [I.1] Audit de politique de mot de passe ---
-Mot de passe testé : 'Admin@2026'
-Score : 5/5 | Conforme : True
-Verdict : Mot de passe conforme aux exigences de sécurité.
+--- [Atelier 0.A] Chaînes de caractères & Chiffrement de César ---
+Original : ALERTE INTRUSION 2026 !
+Chiffré  : EPIVXI MRXVYWMSR 2026 ! (décalage = 4)
+Restauré : ALERTE INTRUSION 2026 !
 
---- [I.2] Chiffrement de César & Cryptanalyse ---
-Message clair     : ATTAQUE DU SERVEUR A MINUIT !
-Chiffré (clé=3)  : DWWDTXH GX VHUYHXU D PLQXLW !
-Déchiffré inverse : ATTAQUE DU SERVEUR A MINUIT !
+--- [Atelier 0.B] Chiffrement par clé XOR & Opérateur binaire ---
+Secret   : PASSWORD_SECRET
+Clé      : CYBER
+Octets   : [19, 24, 17, 22, 5, 12, 11, 6, 26, 1, 6, 26, 16, 0, 6]
+Restauré : PASSWORD_SECRET
 
-Simulation force brute sur 'KHOOR' :
-  Clé k= 1 -> JGNNQ
-  Clé k= 2 -> IFMMP
-  Clé k= 3 -> HELLO
-  Clé k= 4 -> GDKKN
-  Clé k= 5 -> FCJJM
+--- [Atelier 0.C] Tuples vs Listes (Immutabilité & Données scellées) ---
+Identifiant scellé (tuple) : ('admin_root', 1001, 'SUPERADMIN')
+Tentative d'altération en mémoire bloquée : True (TypeError capturé)
 
---- [I.3] Chiffrement par clé XOR & Masque Jetable ---
-Texte secret      : FLAG{ciel_python_2026}
-Clé secrète       : 'CYBER'
-Flux d'octets XOR : [5, 21, 3, 2, 41, 32, 48, 39, 41, 13, 51, 32, 54, 45, 61, 45, 6, 112, 117, 96, 117, 36]
-Texte restauré    : FLAG{ciel_python_2026}
+--- [Atelier 0.D] Mutation en place vs Copie de liste (Le piège des références) ---
+Liste originale (intacte)   : ['192.168.1.1', '10.0.0.99', '192.168.1.50'] (id: ...)
+Liste filtrée (nouvel objet): ['192.168.1.1', '192.168.1.50'] (id: ...)
 
---- [I.4] Manipulation d'objets : En place vs Par copie (Forensics) ---
-Logs originaux (preuve scellée)    : [('10:00:01', '192.168.1.15', 'AUTH_FAIL'), ('10:00:03', '192.168.1.15', 'AUTH_FAIL'), ('10:00:05', '10.0.0.8', 'AUTH_OK')]
-Logs anonymisés (copie défensive) : [('10:00:01', '192.168.xxx.xxx', 'AUTH_FAIL'), ('10:00:03', '192.168.xxx.xxx', 'AUTH_FAIL'), ('10:00:05', '10.0.xxx.xxx', 'AUTH_OK')]
-Contrôle d'intégrité : La liste originale est restée 100% intacte !
-
---- [I.5] Dictionnaires & Détection d'intrusions (SIEM) ---
-Volume par IP          : {'203.0.113.5': 256, '192.168.1.10': 1024}
-Échecs par IP          : {'203.0.113.5': 4}
-ALERTE IOC CRITIQUE    : ['203.0.113.5'] (Attaque par force brute détectée)
-======================================================================
+--- [Projet Défi 0.E] Le Décodeur d'Artefact Réseau CIEL-Guard (Anti-IA) ---
+Artefact 'mystere.payload' lu avec succès (44 octets, checksum=3419)
+-> MESSAGE SECRET DÉCODÉ : FLAG{ciel_python_2026_investigation_reussie}
+-> Validation du Défi : SUCCÈS TOTAL !
+========================================================================
 ```
 
 ---
