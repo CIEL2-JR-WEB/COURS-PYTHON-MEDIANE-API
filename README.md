@@ -24,20 +24,17 @@ docker compose exec api python main.py
 
 ---
 
-## Introduction à Python : Fondamentaux & Premiers Pas en Cybersécurité
+## 📋 Progression des exercices
 
-Avant d'aborder les statistiques, le tri et l'architecture web Flask/MySQL, cette séquence d'introduction propose **4 ateliers progressifs très accessibles** suivis d'un **mini-projet défi résistant au copier-coller d'IA**.
+### Exercice 0 : Introduction à Python, Cybersécurité & Statistiques fondamentales
 
-L'objectif est d'assimiler les réflexes fondamentaux de Python (**chaînes, fonctions simples, tuples immuables, listes d'octets, copies d'objets en mémoire**) au travers de cas concrets en cybersécurité.
-
-```bash
-# Pour exécuter et tester l'ensemble de la séquence d'introduction dans Docker :
-docker compose exec api python intro_cyber.py
-```
+L'**Exercice 0** regroupe les prérequis fondamentaux indispensables pour aborder sereinement les exercices suivants du TP. Il est structuré en **deux volets progressifs** :
+1. **Les bases algorithmiques & cybersécurité (0.1 à 0.5)** : manipulation de chaînes, chiffrement de César, opérateur XOR, tuples immuables, copies en mémoire et mini-projet défi anti-IA.
+2. **Les calculs statistiques élémentaires (0.6 et 0.7)** : calcul de moyenne, ordonnancement et résolution du problème de Nicolas sur le salaire médian.
 
 ---
 
-### Atelier 0.A : Chaînes de caractères & Chiffrement de César
+#### Exercice 0.1 : Chaînes de caractères & Chiffrement de César
 
 * **Objectif pédagogique** :  
   Créer sa première fonction (`def`), parcourir une chaîne caractère par caractère avec une boucle `for`, convertir des lettres en codes numériques avec `ord()` et `chr()`, et appliquer l'arithmétique modulaire (`% 26`).
@@ -67,7 +64,7 @@ docker compose exec api python intro_cyber.py
 
 ---
 
-### Atelier 0.B : Chiffrement par clé XOR & Opérateur binaire
+#### Exercice 0.2 : Chiffrement par clé XOR & Opérateur binaire
 
 * **Objectif pédagogique** :  
   Manipuler une liste de nombres entiers (`list[int]`), utiliser l'opérateur bit-à-bit XOR (`^`), répéter cycliquement une clé avec l'opérateur modulo (`i % len(cle)`), et vérifier la propriété fondamentale de réversibilité : $(A \oplus K) \oplus K = A$.
@@ -97,7 +94,7 @@ docker compose exec api python intro_cyber.py
 
 ---
 
-### Atelier 0.C : Tuples vs Listes (Immutabilité & Données scellées)
+#### Exercice 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
 
 * **Objectif pédagogique** :  
   Comprendre la différence vitale entre types **mutables** (`list` entre crochets `[...]`) et types **immuables** (`tuple` entre parenthèses `(...)`).
@@ -123,7 +120,7 @@ docker compose exec api python intro_cyber.py
 
 ---
 
-### Atelier 0.D : Mutation en place vs Copie de liste (Le piège des références)
+#### Exercice 0.4 : Mutation en place vs Copie de liste (Le piège des références)
 
 * **Objectif pédagogique** :  
   Démystifier le piège numéro 1 de Python : l'affectation `b = a` ne duplique PAS les données, elle copie simplement la **référence** (adresse mémoire) ! Apprendre à créer une copie indépendante avec `b = a.copy()`.
@@ -149,12 +146,12 @@ docker compose exec api python intro_cyber.py
 
 ---
 
-### Projet Défi 0.E (Anti-IA Copy-Paste) : Le Décodeur d'Artefact Réseau « CIEL-Guard »
+#### Exercice 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau « CIEL-Guard »)
 
 > [!IMPORTANT]
 > **Pourquoi ce défi est résistant au simple copier-coller d'IA ?**  
 > Une IA générative en ligne (ChatGPT, Claude...) ne peut pas résoudre ce problème par un simple copier-coller de l'énoncé car :
-> 1. **Dépendance à un artefact local réel** : Les données brutes se trouvent dans le fichier physique `api/mystere.payload` présent dans votre conteneur Docker.
+> 1. **Dépendance à un artefact local réel** : Les données brutes se trouvent dans le fichier physique [api/mystere.payload](api/mystere.payload) présent dans votre conteneur Docker.
 > 2. **Protocole composite propriétaire** : Ce n'est pas un chiffrement standardisé trouvé sur Internet, mais une combinaison alternée d'opérations bit-à-bit et modulaires.
 > 3. **Validation dynamique anti-hardcoding** : Le script de test valide votre code sur le fichier réel ET sur un vecteur secret aléatoire généré en mémoire. Un code qui renvoie simplement une réponse statique échouera automatiquement.
 
@@ -172,7 +169,7 @@ docker compose exec api python intro_cyber.py
   2. Ouvrez et lisez le fichier contenant les entiers séparés par des virgules.
   3. Déchiffrez la séquence selon la règle d'alternance CIEL-Guard.
   4. Renvoyez le résultat sous forme d'un **tuple** scellé : `(message_clair, nombre_octets, checksum_somme)`.
-  5. Exécutez le script pour révéler le **FLAG** secret validant l'enquête.
+  5. Exécutez le script (`docker compose exec api python intro_cyber.py`) pour révéler le **FLAG** secret validant l'enquête.
 * **Exemple de sortie attendue** :
   ```text
   Artefact 'mystere.payload' lu avec succès (44 octets, checksum=3419)
@@ -182,9 +179,7 @@ docker compose exec api python intro_cyber.py
 
 ---
 
-## 📋 Progression des exercices
-
-### Exercice 0.1 : Moyenne et import de module
+#### Exercice 0.6 : Moyenne et import de module
 * **Objectif** : Manipuler une liste Python et créer son premier module réutilisable.
 * **Fichiers** : `api/statistique.py`, `api/main.py`.
 * **Consignes** :
@@ -200,7 +195,7 @@ docker compose exec api python intro_cyber.py
 
 ---
 
-### Exercice 0.2 : Médiane et problème de l'employé Nicolas
+#### Exercice 0.7 : Médiane et problème de l'employé Nicolas
 
 ![Médiane d'une série statistique - Problématique de Nicolas](img/mediane_nicolas.png)
 

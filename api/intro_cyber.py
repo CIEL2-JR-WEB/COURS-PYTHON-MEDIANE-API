@@ -2,6 +2,13 @@
 Introduction à Python : Fondamentaux & Premiers Pas en Cybersécurité - ÉNONCÉ ÉLÈVE.
 BTS CIEL // Informatique, Réseaux & Cybersécurité.
 
+Exercice 0 :
+- 0.1 : Chaînes de caractères & Chiffrement de César
+- 0.2 : Chiffrement par clé XOR & Opérateur binaire
+- 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
+- 0.4 : Mutation en place vs Copie de liste (Le piège des références)
+- 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
+
 Complétez les fonctions suivantes conformément aux consignes du README.md.
 """
 
@@ -10,7 +17,7 @@ from typing import List, Tuple
 
 
 # =============================================================================
-# ATELIER 0.A : Chaînes de caractères & Chiffrement de César
+# EXERCICE 0.1 : Chaînes de caractères & Chiffrement de César
 # =============================================================================
 
 def chiffrer_cesar(texte: str, decalage: int) -> str:
@@ -18,7 +25,7 @@ def chiffrer_cesar(texte: str, decalage: int) -> str:
     Chiffre une chaîne en décalant chaque lettre dans l'alphabet (modulo 26).
     Conserve la casse (majuscule / minuscule) et préserve les autres caractères (espaces, ponctuation).
     """
-    # TODO: Atelier 0.A
+    # TODO: Exercice 0.1
     # 1. Normaliser le décalage avec % 26
     # 2. Parcourir chaque caractère du texte
     # 3. Si majuscule ('A' <= c <= 'Z') : décaler à partir de ord('A')
@@ -32,13 +39,13 @@ def dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str:
     """
     Déchiffre un message chiffré par César en appliquant le décalage opposé.
     """
-    # TODO: Atelier 0.A
+    # TODO: Exercice 0.1
     # Astuce : Déchiffrer revient à appeler chiffrer_cesar avec -decalage
     pass
 
 
 # =============================================================================
-# ATELIER 0.B : Chiffrement par clé XOR & Listes
+# EXERCICE 0.2 : Chiffrement par clé XOR & Opérateur binaire
 # =============================================================================
 
 def chiffrer_xor(texte: str, cle: str) -> List[int]:
@@ -49,7 +56,7 @@ def chiffrer_xor(texte: str, cle: str) -> List[int]:
     
     Retourne la liste des entiers (octets chiffrés).
     """
-    # TODO: Atelier 0.B
+    # TODO: Exercice 0.2
     # 1. Vérifier que la clé n'est pas vide
     # 2. Pour chaque indice i de 0 à len(texte) - 1 :
     #    char_cle = cle[i % len(cle)]
@@ -63,7 +70,7 @@ def dechiffrer_xor(octets: List[int], cle: str) -> str:
     Déchiffre une liste d'octets XOR en réappliquant la même clé.
     Propriété fondamentale : (A ^ K) ^ K == A.
     """
-    # TODO: Atelier 0.B
+    # TODO: Exercice 0.2
     # 1. Pour chaque indice i de 0 à len(octets) - 1 :
     #    char_cle = cle[i % len(cle)]
     #    recalculer la valeur avec octets[i] ^ ord(char_cle)
@@ -73,14 +80,14 @@ def dechiffrer_xor(octets: List[int], cle: str) -> str:
 
 
 # =============================================================================
-# ATELIER 0.C : Tuples vs Listes (Immutabilité & Données scellées)
+# EXERCICE 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
 # =============================================================================
 
 def creer_identifiant_scelle(login: str, uid: int, privilege: str) -> Tuple[str, int, str]:
     """
     Crée un enregistrement d'utilisateur sous forme de TUPLE immuable.
     """
-    # TODO: Atelier 0.C
+    # TODO: Exercice 0.3
     # Retourner un tuple contenant (login, uid, privilege)
     pass
 
@@ -91,13 +98,13 @@ def tenter_modification_tuple(identifiant: Tuple) -> bool:
     lève une exception TypeError.
     Retourne True si l'immutabilité a bien levé l'exception TypeError.
     """
-    # TODO: Atelier 0.C
+    # TODO: Exercice 0.3
     # Utiliser try / except TypeError pour intercepter l'affectation interdite
     pass
 
 
 # =============================================================================
-# ATELIER 0.D : Mutation en place vs Copie de liste (Le piège des références)
+# EXERCICE 0.4 : Mutation en place vs Copie de liste (Le piège des références)
 # =============================================================================
 
 def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
@@ -105,14 +112,14 @@ def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
     Filtre une liste d'adresses IP SANS modifier la liste d'origine.
     Garantit que la liste initiale passée par l'appelant conserve son intégrité.
     """
-    # TODO: Atelier 0.D
+    # TODO: Exercice 0.4
     # 1. Créer une nouvelle liste ne contenant pas ip_bannie
     # 2. Ne jamais modifier liste_ips directement
     pass
 
 
 # =============================================================================
-# PROJET DÉFI 0.E (Anti-IA Copy-Paste) : Le Décodeur d'Artefact Réseau CIEL-Guard
+# EXERCICE 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
 # =============================================================================
 
 def decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> Tuple[str, int, int]:
@@ -127,11 +134,11 @@ def decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> Tuple[str, in
        - Indice impair : César inverse (-10)
     6. Retourne un tuple scellé : (message_restaure, total_octets, checksum_somme)
     """
-    # TODO: Défi 0.E
+    # TODO: Exercice 0.5
     # Implémentez la lecture du fichier et le déchiffrement alterné
     pass
 
 
 if __name__ == '__main__':
-    print("BTS CIEL // Tests de l'Introduction à Python")
-    print("Complétez les fonctions ci-dessus pour valider les ateliers et le défi 0.E !")
+    print("BTS CIEL // Tests de l'Introduction à Python (Exercice 0.1 à 0.5)")
+    print("Complétez les fonctions ci-dessus pour valider les exercices et le Défi CIEL-Guard !")

@@ -1,5 +1,5 @@
 """
-Point d'entrée principal pour les tests des exercices console (0.1 à 4.1).
+Point d'entrée principal pour les tests des exercices console.
 """
 import sys
 from statistique import moyenne, mediane
@@ -10,7 +10,7 @@ from read_tab import afficher_tableau
 from tri_selection import tri_selection_copie, tri_selection_en_place
 
 def run_exercice_0():
-    print("=== EXERCICE 0.1 & 0.2 : Statistiques et Problème de Nicolas ===")
+    print("=== EXERCICE 0.6 & 0.7 : Statistiques et Problème de Nicolas ===")
     salaires_nicolas = [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]
     
     # TODO:
