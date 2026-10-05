@@ -1,53 +1,28 @@
 """
-Introduction à Python : Fondamentaux, Algorithmique & Cybersécurité - ÉNONCÉ ÉLÈVE.
+Introduction à Python : Fondamentaux & Premiers Pas en Cybersécurité - ÉNONCÉ ÉLÈVE.
 BTS CIEL // Informatique, Réseaux & Cybersécurité.
 
 Complétez les fonctions suivantes conformément aux consignes du README.md.
 """
 
-from typing import List, Tuple, Dict
+import os
+from typing import List, Tuple
 
 
 # =============================================================================
-# EXERCICE I.1 : Chaînes de caractères & Audit de mot de passe
-# =============================================================================
-
-def auditer_mot_de_passe(mdp: str) -> Tuple[bool, int, List[str]]:
-    """
-    Vérifie la robustesse d'un mot de passe selon la politique de sécurité.
-    
-    Critères :
-    1. Longueur minimale de 8 caractères (+1 pt)
-    2. Au moins une lettre majuscule (+1 pt)
-    3. Au moins une lettre minuscule (+1 pt)
-    4. Au moins un chiffre (+1 pt)
-    5. Au moins un caractère spécial parmi : !@#$%^&*_-+= (+1 pt)
-    
-    Retourne un tuple immuable :
-    (est_conforme: bool, score: int sur 5, anomalies: list[str])
-    """
-    # TODO: Exercice I.1
-    # 1. Initialiser une liste vide pour les anomalies et un score à 0
-    # 2. Vérifier la longueur de mdp
-    # 3. Parcourir mdp ou utiliser any() pour détecter majuscules, minuscules, chiffres et caractères spéciaux
-    # 4. Retourner le tuple (len(anomalies) == 0, score, anomalies)
-    pass
-
-
-# =============================================================================
-# EXERCICE I.2 : Chiffrement par décalage (César) & Cryptanalyse
+# ATELIER 0.A : Chaînes de caractères & Chiffrement de César
 # =============================================================================
 
 def chiffrer_cesar(texte: str, decalage: int) -> str:
     """
-    Chiffre une chaîne selon l'algorithme de César en appliquant un décalage modulaire.
-    Conserve la casse (majuscule / minuscule) et laisse intacts les caractères non alphabétiques.
+    Chiffre une chaîne en décalant chaque lettre dans l'alphabet (modulo 26).
+    Conserve la casse (majuscule / minuscule) et préserve les autres caractères (espaces, ponctuation).
     """
-    # TODO: Exercice I.2
+    # TODO: Atelier 0.A
     # 1. Normaliser le décalage avec % 26
     # 2. Parcourir chaque caractère du texte
-    # 3. Si majuscule ('A' <= c <= 'Z') : décaler avec ord() et chr() à partir de ord('A')
-    # 4. Si minuscule ('a' <= c <= 'z') : décaler avec ord() et chr() à partir de ord('a')
+    # 3. Si majuscule ('A' <= c <= 'Z') : décaler à partir de ord('A')
+    # 4. Si minuscule ('a' <= c <= 'z') : décaler à partir de ord('a')
     # 5. Sinon : conserver le caractère tel quel
     # 6. Retourner la chaîne chiffrée
     pass
@@ -55,110 +30,108 @@ def chiffrer_cesar(texte: str, decalage: int) -> str:
 
 def dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str:
     """
-    Déchiffre un message en appliquant le décalage inverse.
+    Déchiffre un message chiffré par César en appliquant le décalage opposé.
     """
-    # TODO: Exercice I.2
-    # Astuce : Déchiffrer revient à chiffrer avec le décalage négatif (-decalage)
-    pass
-
-
-def casser_cesar_force_brute(texte_chiffre: str) -> List[Tuple[int, str]]:
-    """
-    Génère la liste des 25 déchiffrements possibles pour casser le chiffrement
-    sans connaître la clé initiale (cryptanalyse par force brute).
-    """
-    # TODO: Exercice I.2
-    # Boucler pour k de 1 à 25 et stocker le couple (k, dechiffrer_cesar(texte_chiffre, k))
+    # TODO: Atelier 0.A
+    # Astuce : Déchiffrer revient à appeler chiffrer_cesar avec -decalage
     pass
 
 
 # =============================================================================
-# EXERCICE I.3 : Chiffrement par clé XOR & Masque jetable
+# ATELIER 0.B : Chiffrement par clé XOR & Listes
 # =============================================================================
 
 def chiffrer_xor(texte: str, cle: str) -> List[int]:
     """
     Chiffre un texte avec une clé secrète via l'opérateur bit-à-bit XOR (^).
     Chaque caractère du texte est combiné avec le caractère correspondant de la clé
-    (la clé est répétée cycliquement via l'opérateur modulo).
+    (répétée cycliquement via l'opérateur modulo).
     
-    Retourne la liste des entiers (valeurs d'octets chiffrés).
+    Retourne la liste des entiers (octets chiffrés).
     """
-    # TODO: Exercice I.3
+    # TODO: Atelier 0.B
     # 1. Vérifier que la clé n'est pas vide
-    # 2. Pour chaque indice i et caractère de texte :
+    # 2. Pour chaque indice i de 0 à len(texte) - 1 :
     #    char_cle = cle[i % len(cle)]
-    #    calculer ord(char) ^ ord(char_cle)
+    #    calculer ord(texte[i]) ^ ord(char_cle)
     # 3. Retourner la liste des entiers
     pass
 
 
-def dechiffrer_xor(octets_chiffres: List[int], cle: str) -> str:
+def dechiffrer_xor(octets: List[int], cle: str) -> str:
     """
-    Déchiffre une liste d'octets XOR avec la même clé.
-    Propriété fondamentale du XOR : (A ^ B) ^ B == A.
+    Déchiffre une liste d'octets XOR en réappliquant la même clé.
+    Propriété fondamentale : (A ^ K) ^ K == A.
     """
-    # TODO: Exercice I.3
-    # 1. Pour chaque indice i et octet :
+    # TODO: Atelier 0.B
+    # 1. Pour chaque indice i de 0 à len(octets) - 1 :
     #    char_cle = cle[i % len(cle)]
-    #    valeur_originale = octet ^ ord(char_cle)
+    #    recalculer la valeur avec octets[i] ^ ord(char_cle)
     #    convertir en caractère avec chr()
     # 2. Retourner la chaîne reconstituée
     pass
 
 
 # =============================================================================
-# EXERCICE I.4 : Mutation en place vs Copie défensive & Tuples (Forensics)
+# ATELIER 0.C : Tuples vs Listes (Immutabilité & Données scellées)
 # =============================================================================
 
-def masquer_ip_en_place(evenements: List[List]) -> None:
+def creer_identifiant_scelle(login: str, uid: int, privilege: str) -> Tuple[str, int, str]:
     """
-    PIÈGE PÉDAGOGIQUE : Modifie DIRECTEMENT la liste originale reçue en argument.
+    Crée un enregistrement d'utilisateur sous forme de TUPLE immuable.
     """
-    # TODO: Exercice I.4
-    # Modifier directement evenements[i][1] pour remplacer les deux derniers octets par xxx.xxx
+    # TODO: Atelier 0.C
+    # Retourner un tuple contenant (login, uid, privilege)
     pass
 
 
-def masquer_ip_copie_defensive(evenements: List[Tuple[str, str, str]]) -> List[Tuple[str, str, str]]:
+def tenter_modification_tuple(identifiant: Tuple) -> bool:
     """
-    APPROCHE SÉCURISÉE : Préserve l'intégrité absolue de la liste d'origine.
-    1. Crée une nouvelle liste indépendante.
-    2. Utilise des TUPLES immuables (timestamp, ip_masquee, statut).
+    Démontre la sécurité du tuple : toute tentative d'affectation (identifiant[0] = ...)
+    lève une exception TypeError.
+    Retourne True si l'immutabilité a bien levé l'exception TypeError.
     """
-    # TODO: Exercice I.4
-    # 1. Créer une nouvelle liste
-    # 2. Pour chaque tuple (horodatage, ip, statut), créer l'ip masquée
-    # 3. Ajouter le nouveau tuple scellé dans la nouvelle liste
-    # 4. Retourner la nouvelle liste sans toucher à 'evenements'
+    # TODO: Atelier 0.C
+    # Utiliser try / except TypeError pour intercepter l'affectation interdite
     pass
 
 
 # =============================================================================
-# EXERCICE I.5 : Dictionnaires & Analyse de sécurité (IOCs / SIEM)
+# ATELIER 0.D : Mutation en place vs Copie de liste (Le piège des références)
 # =============================================================================
 
-def analyser_connexions_suspectes(logs: List[Dict]) -> Dict:
+def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
     """
-    Analyse un flux de logs réseau structurés sous forme de dictionnaires.
-    Détecte les adresses IP effectuant des scans de ports ou du brute-force.
-    
-    Structure d'une entrée :
-    {"ip": "192.168.1.42", "port": 22, "bloque": True, "octets": 128}
-    
-    Retourne une synthèse :
-    - volume_par_ip : dict[str, int] (total octets transférés)
-    - tentatives_bloquees : dict[str, int] (nombre d'échecs/blocages par IP)
-    - alertes_critiques : list[str] (IP ayant plus de 3 blocages)
+    Filtre une liste d'adresses IP SANS modifier la liste d'origine.
+    Garantit que la liste initiale passée par l'appelant conserve son intégrité.
     """
-    # TODO: Exercice I.5
-    # 1. Initialiser les dictionnaires volume_par_ip et tentatives_bloquees
-    # 2. Parcourir logs et accumuler avec .get()
-    # 3. Filtrer les IP avec >= 3 tentatives bloquées pour remplir alertes_critiques
-    # 4. Retourner le dictionnaire récapitulatif
+    # TODO: Atelier 0.D
+    # 1. Créer une nouvelle liste ne contenant pas ip_bannie
+    # 2. Ne jamais modifier liste_ips directement
+    pass
+
+
+# =============================================================================
+# PROJET DÉFI 0.E (Anti-IA Copy-Paste) : Le Décodeur d'Artefact Réseau CIEL-Guard
+# =============================================================================
+
+def decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> Tuple[str, int, int]:
+    """
+    Projet Défi Anti-IA :
+    1. Ouvre et lit le fichier payload physique sur le disque.
+    2. Parse la liste d'entiers séparés par des virgules.
+    3. Calcule la clé dérivée dynamique : 'CIEL' + str(nombre_octets).
+    4. Calcule le décalage César : somme des chiffres de l'année 2026 (10).
+    5. Déchiffre la séquence selon la règle d'alternance :
+       - Indice pair : XOR avec le caractère de la clé à la position (i // 2) % len(cle)
+       - Indice impair : César inverse (-10)
+    6. Retourne un tuple scellé : (message_restaure, total_octets, checksum_somme)
+    """
+    # TODO: Défi 0.E
+    # Implémentez la lecture du fichier et le déchiffrement alterné
     pass
 
 
 if __name__ == '__main__':
     print("BTS CIEL // Tests de l'Introduction à Python")
-    print("Exécutez vos fonctions pour valider vos développements.")
+    print("Complétez les fonctions ci-dessus pour valider les ateliers et le défi 0.E !")
