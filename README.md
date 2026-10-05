@@ -28,174 +28,224 @@ docker compose exec api python main.py
 
 ### Exercice 0 : Introduction à Python, Cybersécurité & Statistiques fondamentales
 
-L'**Exercice 0** regroupe les prérequis fondamentaux indispensables pour aborder sereinement les exercices suivants du TP. Il est structuré en **deux volets progressifs** :
-1. **Les bases algorithmiques & cybersécurité (0.1 à 0.5)** : manipulation de chaînes, chiffrement de César, opérateur XOR, tuples immuables, copies en mémoire et mini-projet défi anti-IA.
-2. **Les calculs statistiques élémentaires (0.6 et 0.7)** : calcul de moyenne, ordonnancement et résolution du problème de Nicolas sur le salaire médian.
+L'**Exercice 0** est le socle d'apprentissage indispensable pour maîtriser la syntaxe et les structures de données de **Python 3**. Conçu de façon **strictement progressive**, il permet à tout étudiant (même débutant absolu) d'acquérir les réflexes fondamentaux avant d'aborder les exercices avancés du TP.
+
+Il se compose de **7 étapes ordonnées** :
+1. **0.1 : Fonctions, Variables & Types de base** (`def`, `return`, `int`, `float`, `bool`, `if / elif / else`)
+2. **0.2 : Les Chaînes de caractères** (`str`, indexation, slicing, `.strip()`, `.lower()`, `.replace()`, `.split()`)
+3. **0.3 : Les Listes** (`list`, création, boucle `for`, `.append()`, fonctions natives `len`, `sum`, `min`, `max`)
+4. **0.4 : Tuples & Dictionnaires** (`tuple` immuable, unpacking, `dict` clés-valeurs, `.get()`)
+5. **0.5 : Références en mémoire & Copie défensive** (alias `b = a` vs `b = a.copy()`, fonction `id()`)
+6. **0.6 : Algorithmes de Chiffrement & Mini-Projet Défi Anti-IA** (César, XOR binaire, décodeur CIEL-Guard)
+7. **0.7 : Statistiques élémentaires & Problème de Nicolas** (Moyenne, Médiane, analyse d'entreprise)
 
 ---
 
-#### Exercice 0.1 : Chaînes de caractères & Chiffrement de César
+#### Exercice 0.1 : Fonctions, Variables & Types fondamentaux
 
 * **Objectif pédagogique** :  
-  Créer sa première fonction (`def`), parcourir une chaîne caractère par caractère avec une boucle `for`, convertir des lettres en codes numériques avec `ord()` et `chr()`, et appliquer l'arithmétique modulaire (`% 26`).
+  Comprendre l'anatomie d'une fonction Python (`def nom(param: type) -> type_retour:`), l'obligation de l'indentation (4 espaces), le rôle de l'instruction `return`, et manipuler les types primitifs (`int`, `float`, `bool`, `str`) et les structures conditionnelles (`if / elif / else`).
 * **Mise en situation Cybersécurité** :  
-  Le chiffrement de Jules César est le premier système de chiffrement symétrique de l'histoire. Vous devez concevoir la fonction qui décale chaque lettre de l'alphabet d'un nombre fixe $k$ de positions.
+  En sécurité des réseaux, un pare-feu catégorise chaque paquet selon son numéro de port (ports réservés aux services d'administration, ports utilisateurs, ports éphémères).
 * **Fichiers** : `api/intro_cyber.py`.
-* **Ressources vidéo recommandées** :  
-  * 📺 [Python - Le chiffrement César avec ASCII (niveau débutant / intermédiaire)](https://www.youtube.com/watch?v=B5TOZY1oBy0) *(Explication lumineuse des fonctions `ord()` et `chr()`, du décalage avec modulo et de la mise en œuvre en Python)*.
+* **Ressource vidéo recommandée** :  
+  * 📺 [Apprendre les Fonctions en Python - Graven](https://www.youtube.com/watch?v=kqtD5dpn9C8) *(Comprendre `def`, le passage d'arguments et l'instruction `return`)*.
 * **💡 Notions clés & syntaxe Python** :
   ```python
-  # Code ASCII vers caractère et inversement :
-  ord('A')  # -> 65
-  chr(65)   # -> 'A'
-
-  # Décalage circulaire dans l'alphabet de 26 lettres :
-  nouveau_char = chr(ord('A') + (ord(c) - ord('A') + decalage) % 26)
+  # Déclaration d'une fonction avec typage optionnel (type hints) :
+  def evaluer_etat(temperature: float) -> str:
+      if temperature > 80.0:
+          return "ALERTE SURCHAUFFE"
+      elif temperature >= 50.0:
+          return "NORMAL"
+      else:
+          return "FAIBLE"
   ```
 * **Consignes** :
-  1. Écrivez `chiffrer_cesar(texte: str, decalage: int) -> str` en préservant la casse (majuscules/minuscules) et en laissant les espaces et la ponctuation intacts.
-  2. Écrivez `dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str` (astuce : déchiffrer revient à chiffrer avec `-decalage`).
+  1. Écrivez `analyser_port(port: int) -> str` :
+     * Si `port` n'est pas un entier ou s'il est hors de l'intervalle $[0, 65535]$, retournez `"Invalide"`.
+     * Entre $0$ et $1023$ : retournez `"Privilégié / Système"` *(Well-known ports : SSH 22, HTTP 80...)*.
+     * Entre $1024$ et $49151$ : retournez `"Enregistré / Utilisateur"` *(MySQL 3306, Flask 5000...)*.
+     * Entre $49152$ et $65535$ : retournez `"Dynamique / Privé"` *(Ports éphémères clients)*.
+  2. Écrivez `calculer_debit(octets: int, duree_secondes: float) -> float` :
+     * Calculez le débit en octets par seconde : $\text{débit} = \frac{\text{octets}}{\text{durée}}$.
+     * Protégez le calcul contre une division par zéro ou une durée négative en retournant `0.0`. Arrondissez à 2 décimales avec `round(..., 2)`.
 * **Exemple d'exécution** :
   ```text
-  Original : ALERTE INTRUSION 2026 !
-  Chiffré  : EPIVXI MRXVYWMSR 2026 !  (décalage = 4)
-  Restauré : ALERTE INTRUSION 2026 !
+  Port    22 -> Catégorie : Privilégié / Système
+  Port  5000 -> Catégorie : Enregistré / Utilisateur
+  Port 55000 -> Catégorie : Dynamique / Privé
+  Port 99999 -> Catégorie : Invalide
+  Débit calculé pour 10 Mo en 2.5s : 4000000.0 octets/s (4.00 Mo/s)
   ```
 
 ---
 
-#### Exercice 0.2 : Chiffrement par clé XOR & Opérateur binaire
+#### Exercice 0.2 : Les Chaînes de caractères (`str`)
 
 * **Objectif pédagogique** :  
-  Manipuler une liste de nombres entiers (`list[int]`), utiliser l'opérateur bit-à-bit XOR (`^`), répéter cycliquement une clé avec l'opérateur modulo (`i % len(cle)`), et vérifier la propriété fondamentale de réversibilité : $(A \oplus K) \oplus K = A$.
+  Comprendre qu'en Python une chaîne de caractères est une séquence immuable ordonnée. Maîtriser l'indexation directe (`s[0]`, `s[-1]`), le découpage (*slicing* `s[debut:fin]`), la longueur `len(s)` et les méthodes de transformation essentielles.
 * **Mise en situation Cybersécurité** :  
-  L'opération OU exclusif (XOR) est au cœur de la cryptographie moderne (masque jetable de Vernam, protocoles réseau, Wi-Fi WPA). Chiffrer et déchiffrer utilisent la même opération logique.
+  L'analyse de journaux d'événements (logs) nécessite de normaliser les saisies utilisateurs et de masquer les secrets avant archivage.
 * **Fichiers** : `api/intro_cyber.py`.
-* **Ressources vidéo recommandées** :  
-  * 📺 [Qu'est-ce que la cryptographie symétrique ? (XOR et Masque jetable)](https://www.youtube.com/watch?v=EHCds8De34Q) *(Le rôle fondamental de l'opérateur XOR et du masque de Vernam en cryptographie)*.
+* **Ressource vidéo recommandée** :  
+  * 📺 [TUTO Python : Manipulation de chaînes de caractères et tuples](https://www.youtube.com/watch?v=DFcCc3zWrU0) *(Indexation, extraction de sous-chaînes et découpage)*.
 * **💡 Notions clés & syntaxe Python** :
   ```python
-  # Opérateur binaire XOR en Python :
-  octet_chiffre = ord('A') ^ ord('K')  # Produit un entier (code de l'octet chiffré)
+  s = "  Python 2026  "
+  s.strip()            # Supprime les espaces en début et fin -> "Python 2026"
+  s.lower()            # Passe tout en minuscules -> "  python 2026  "
+  s.replace(" ", "_")  # Remplace les espaces -> "__Python_2026__"
+  s[0]                 # Premier caractère
+  s[-1]                # Dernier caractère
+  "a,b,c".split(",")   # Découpe en liste -> ['a', 'b', 'c']
+  ```
+* **Consignes** :
+  1. Écrivez `normaliser_identifiant(login_brut: str) -> str` : retirez les espaces périphériques (`.strip()`), mettez le texte en minuscules (`.lower()`) et remplacez les espaces restants par des tirets bas (`.replace(" ", "_")`).
+  2. Écrivez `masquer_mot_de_passe(mdp: str) -> str` : si le mot de passe a une longueur $\le 2$, retournez `'*' * len(mdp)`. Sinon, conservez le premier et le dernier caractère, et remplacez tous les caractères intermédiaires par autant d'étoiles `*`.
+  3. Écrivez `extraire_champs_log(ligne_log: str, separateur: str = "|") -> list[str]` : découpez la ligne de journal selon le séparateur fourni et retournez la liste de chaque champ débarrassé de ses espaces inutiles.
+* **Exemple d'exécution** :
+  ```text
+  Login normalisé       : 'admin_reseau_2026'
+  Mot de passe masqué   : S******************!
+  Champs de log extraits: ['2026-10-05 14:30:00', '192.168.1.50', 'AUTH_SUCCESS', 'SSH']
+  ```
+
+---
+
+#### Exercice 0.3 : Les Listes (`list`)
+
+* **Objectif pédagogique** :  
+  Maîtriser la structure de données la plus importante de Python : création avec `[]`, modification d'éléments, ajout dynamique avec `.append()`, parcours itératif avec une boucle `for`, test d'appartenance avec `in`, et fonctions d'agrégation (`len()`, `sum()`, `min()`, `max()`).
+* **Mise en situation Cybersécurité** :  
+  Collecter et filtrer des mesures réseau (pings, tentatives de connexion, listes blanches de ports).
+* **Fichiers** : `api/intro_cyber.py`.
+* **Ressource vidéo recommandée** :  
+  * 📺 [Maîtriser les LISTES avec Python - Docstring](https://www.youtube.com/watch?v=yK4CTsEP_B0) *(Les listes en détail : création, méthodes d'ajout et parcours)*.
+* **💡 Notions clés & syntaxe Python** :
+  ```python
+  nombres = [10, 20, 30]
+  nombres.append(40)     # Ajoute 40 à la fin -> [10, 20, 30, 40]
+  len(nombres)           # 4 éléments
+  sum(nombres)           # Somme totale : 100
+  min(nombres)           # Minimum : 10
   
-  # Répétition cyclique de la clé :
-  char_cle = cle[i % len(cle)]
+  # Parcours avec boucle for :
+  resultat = []
+  for n in nombres:
+      if n > 15:
+          resultat.append(n)
   ```
 * **Consignes** :
-  1. Écrivez `chiffrer_xor(texte: str, cle: str) -> list[int]` qui transforme chaque caractère du texte en entier chiffré par XOR avec le caractère correspondant de la clé.
-  2. Écrivez `dechiffrer_xor(octets: list[int], cle: str) -> str` qui réapplique la même clé pour retrouver le texte d'origine.
+  1. Écrivez `filtrer_ports_actifs(ports: list[int]) -> list[int]` : créez une nouvelle liste vide et ajoutez-y uniquement les ports dont la valeur est strictement supérieure à 0.
+  2. Écrivez `statistiques_latences(pings: list[float]) -> tuple[float, float, float]` : calculez et retournez `(min, max, moyenne)` des latences sans utiliser de module externe. Si la liste est vide, renvoyez `(0.0, 0.0, 0.0)`.
+  3. Écrivez `compter_occurrences(historique: list[str], cible: str) -> int` : parcourez la liste avec une boucle `for` et comptez manuellement combien de fois `cible` est présente.
 * **Exemple d'exécution** :
   ```text
-  Secret   : PASSWORD_SECRET
-  Clé      : CYBER
-  Octets   : [19, 24, 17, 22, 5, 12, 11, 6, 26, 1, 6, 26, 16, 0, 6]
-  Restauré : PASSWORD_SECRET
+  Ports bruts          : [22, -1, 80, 0, 443, -8080, 3306]
+  Ports actifs filtrés : [22, 80, 443, 3306]
+  Pings analysés       : [12.4, 8.1, 15.6, 9.8, 22.0]
+  Statistiques ping    : Min = 8.1 ms | Max = 22.0 ms | Moyenne = 13.58 ms
+  Occurrences de 192.168.1.1 : 3 fois
   ```
 
 ---
 
-#### Exercice 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
+#### Exercice 0.4 : Tuples & Dictionnaires (`tuple`, `dict`)
 
 * **Objectif pédagogique** :  
-  Comprendre la différence vitale entre types **mutables** (`list` entre crochets `[...]`) et types **immuables** (`tuple` entre parenthèses `(...)`).
+  1. **Les Tuples** `(...)` : comprendre l'immutabilité (impossible d'altérer un tuple après sa création), le déballage (*unpacking*), et son intérêt pour sceller des données sensibles.
+  2. **Les Dictionnaires** `{...}` : comprendre les paires clé-valeur (structure fondamentale équivalente aux objets JSON des API REST Flask).
 * **Mise en situation Cybersécurité** :  
-  En sécurité des systèmes, des identifiants système ou des clés d'authentification (`admin_root`, `UID=1001`, `SUPERADMIN`) ne doivent jamais pouvoir être corrompus ou écrasés par un script tiers en cours d'exécution. Les stocker dans un **tuple** scelle les données en mémoire.
+  Un enregistrement de socket réseau ne doit pas pouvoir être corrompu en mémoire par un script tiers. Les fiches d'incidents SIEM sont stockées sous forme de dictionnaires.
 * **Fichiers** : `api/intro_cyber.py`.
-* **Ressources vidéo recommandées** :  
-  * 📺 [TUTO Python : Manipulation de chaînes de caractères et tuples](https://www.youtube.com/watch?v=DFcCc3zWrU0) *(Comprendre les structures de base et l'immuabilité)*.
+* **Ressource vidéo recommandée** :  
+  * 📺 [Apprendre les Dictionnaires en Python - Graven](https://www.youtube.com/watch?v=y2qIe9w61f8) *(Manipuler les paires clés-valeurs, `.get()` et les boucles)*.
 * **💡 Notions clés & syntaxe Python** :
   ```python
-  mon_tuple = ("admin", 1001, "RO")
-  # Tenter de faire : mon_tuple[0] = "pirate"
-  # Déclenche immédiatement : TypeError: 'tuple' object does not support item assignment
+  # 1. Tuple immuable :
+  socket_info = ("192.168.1.1", 443)
+  # socket_info[0] = "10.0.0.1" -> DÉCLENCHE UN TypeError !
+  ip, port = socket_info  # Unpacking direct
+
+  # 2. Dictionnaire clé-valeur :
+  incident = {"id": 1, "niveau": "CRITIQUE"}
+  incident["niveau"]            # Accès direct -> "CRITIQUE"
+  incident.get("resolu", False) # Accès sécurisé avec valeur par défaut si absente
+  incident["resolu"] = True     # Ajout/mise à jour d'un champ
   ```
 * **Consignes** :
-  1. Écrivez `creer_identifiant_scelle(login: str, uid: int, privilege: str) -> tuple`.
-  2. Écrivez `tenter_modification_tuple(identifiant: tuple) -> bool` utilisant un bloc `try / except TypeError` démontrant que Python interdit toute altération du tuple.
+  1. Écrivez `creer_enregistrement_scelle(ip: str, port: int, protocole: str) -> tuple[str, int, str]`.
+  2. Écrivez `verifier_immutabilite_tuple(donnees: tuple) -> bool` utilisant un bloc `try / except TypeError` prouvant que Python interdit l'affectation `donnees[0] = ...`.
+  3. Écrivez `creer_rapport_incident(id_incident: int, source_ip: str, criticite: str) -> dict` créant un dictionnaire avec le statut `"resolu": False`.
+  4. Écrivez `analyser_frequence_alertes(journal_alertes: list[str]) -> dict[str, int]` comptant le nombre d'occurrences de chaque alerte à l'aide d'un dictionnaire.
 * **Exemple d'exécution** :
   ```text
-  Identifiant scellé (tuple) : ('admin_root', 1001, 'SUPERADMIN')
-  Tentative d'altération en mémoire bloquée : True (TypeError capturé avec succès)
+  Socket scellé (tuple): ('192.168.1.1', 443, 'TCP')
+  Tentative d'altération en mémoire bloquée : True (TypeError capturé)
+  Fiche d'incident     : {'id': 101, 'source': '198.51.100.42', 'criticite': 'CRITIQUE', 'resolu': False}
+  Fréquences alertes   : {'BRUTE_FORCE': 3, 'SQLI': 2, 'XSS': 1}
   ```
 
 ---
 
-#### Exercice 0.4 : Mutation en place vs Copie de liste (Le piège des références)
+#### Exercice 0.5 : Références en mémoire & Copie défensive (`.copy()`)
 
 * **Objectif pédagogique** :  
-  Démystifier le piège numéro 1 de Python : l'affectation `b = a` ne duplique PAS les données, elle copie simplement la **référence** (adresse mémoire) ! Apprendre à créer une copie indépendante avec `b = a.copy()`.
+  Comprendre le piège numéro 1 de Python : l'affectation `b = a` ne duplique PAS une liste, elle copie simplement la **référence** (adresse mémoire commune vérifiable via `id(a) == id(b)`). Apprendre à créer une copie indépendante avec `.copy()`.
 * **Mise en situation Cybersécurité** :  
-  Lors du filtrage d'adresses IP suspectes pour un rapport d'audit, modifier la liste originale détruit la preuve d'origine. Vous devez garantir l'intégrité de la liste source.
+  Lors d'une investigation légale (Forensics), modifier la liste originale détruit la preuve numérique. Vous devez impérativement travailler sur une copie isolée.
 * **Fichiers** : `api/intro_cyber.py`.
-* **Ressources vidéo recommandées** :  
-  * 📺 [Maîtriser les LISTES avec Python](https://www.youtube.com/watch?v=yK4CTsEP_B0) *(Comprendre la manipulation des listes, les méthodes de mutation et les bonnes pratiques)*.
 * **⚠️ Le piège classique en Python** :
   ```python
   a = [10, 20, 30]
-  b = a            # ATTENTION : 'b' et 'a' partagent le MÊME id en mémoire !
-  b.append(40)     # 'a' est également altéré à votre insu : [10, 20, 30, 40]
-  
+  b = a            # ATTENTION : 'b' et 'a' pointent vers le MÊME espace mémoire !
+  b.append(40)     # 'a' est également modifié à votre insu : [10, 20, 30, 40]
+
   # La bonne pratique (Copie défensive) :
   b = a.copy()     # 'b' possède son propre espace mémoire indépendant
   ```
 * **Consignes** :
-  1. Écrivez `filtrer_ip_copie(liste_ips: list, ip_bannie: str) -> list`.
-  2. Assurez-vous que la liste retournée est un **nouvel objet** et que la liste passée en argument reste rigoureusement identique.
+  1. Écrivez `filtrer_ip_copie(liste_ips: list[str], ip_bannie: str) -> list[str]` : retournez une nouvelle liste sans modifier `liste_ips`.
+  2. Écrivez `dupliquer_et_nettoyer(ports: list[int]) -> tuple[list[int], list[int]]` : partez d'une copie défensive `.copy()`, supprimez les doublons en conservant l'ordre, et retournez `(ports_originaux, ports_sans_doublons)`.
 * **Lien avec la suite du TP** :  
-  Cette maîtrise est le prérequis direct de l'**Exercice 4.1** (`tri_selection_copie()` vs `tri_selection_en_place()`).
+  Cette notion est le prérequis direct de l'**Exercice 4.1** (`tri_selection_copie()` vs `tri_selection_en_place()`).
 
 ---
 
-#### Exercice 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau « CIEL-Guard »)
+#### Exercice 0.6 : Algorithmes de Chiffrement & Mini-Projet Défi Anti-IA (CIEL-Guard)
 
-> [!IMPORTANT]
-> **Pourquoi ce défi est résistant au simple copier-coller d'IA ?**  
-> Une IA générative en ligne (ChatGPT, Claude...) ne peut pas résoudre ce problème par un simple copier-coller de l'énoncé car :
-> 1. **Dépendance à un artefact local réel** : Les données brutes se trouvent dans le fichier physique [api/mystere.payload](api/mystere.payload) présent dans votre conteneur Docker.
-> 2. **Protocole composite propriétaire** : Ce n'est pas un chiffrement standardisé trouvé sur Internet, mais une combinaison alternée d'opérations bit-à-bit et modulaires.
-> 3. **Validation dynamique anti-hardcoding** : Le script de test valide votre code sur le fichier réel ET sur un vecteur secret aléatoire généré en mémoire. Un code qui renvoie simplement une réponse statique échouera automatiquement.
-
-* **Contexte de la mission (SOC Analyst)** :  
-  Votre équipe a intercepté une transmission clandestine lors d'une attaque simulée. Les octets capturés ont été exportés dans le fichier [api/mystere.payload](api/mystere.payload).
-  D'après l'analyse des rétro-ingénieurs, l'attaquant a employé le protocole **CIEL-Guard v1** :
-  * La clé secrète est dérivée dynamiquement : la chaîne `"CIEL"` concaténée avec le nombre total d'octets du fichier (ex: `"CIEL44"`).
-  * Le décalage de César est la somme des chiffres de l'année `2026` ($2 + 0 + 2 + 6 = 10$).
-  * **Règle d'alternance** :
-    * Les octets à **indice pair** ($0, 2, 4, \dots$) ont été chiffrés par XOR avec le caractère de la clé à l'indice $(i // 2) \pmod{\text{longueur clé}}$.
-    * Les octets à **indice impair** ($1, 3, 5, \dots$) ont été chiffrés par décalage de César ($+10$).
+* **Objectif pédagogique** :  
+  Mobiliser toutes les notions acquises (fonctions, chaînes, listes, boucles, tuples, lecture de fichier) au sein d'algorithmes concrets de cryptographie symétrique et d'un projet d'investigation.
+* **Mise en situation Cybersécurité** :  
+  1. **Chiffrement de César** : décalage circulaire dans l'alphabet avec conversion de code ASCII (`ord()` et `chr()`) et modulo 26.
+  2. **Chiffrement XOR** : opérateur bit-à-bit `^` et répétition cyclique de clé via l'opérateur modulo (`cle[i % len(cle)]`).
+  3. **Défi Anti-IA (CIEL-Guard)** : analyse d'un artefact réseau réel [api/mystere.payload](api/mystere.payload) capturé dans le conteneur.
 * **Fichiers** : `api/mystere.payload`, `api/intro_cyber.py`.
+* **Ressources vidéo recommandées** :  
+  * 📺 [Python - Le chiffrement César avec ASCII](https://www.youtube.com/watch?v=B5TOZY1oBy0) *(Fonctions `ord()` et `chr()`, décalage avec modulo)*.
+  * 📺 [Qu'est-ce que la cryptographie symétrique ? (XOR et Masque jetable)](https://www.youtube.com/watch?v=EHCds8De34Q) *(Le rôle fondamental de l'opérateur XOR)*.
 * **Consignes** :
-  1. Écrivez la fonction `decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> tuple[str, int, int]`.
-  2. Ouvrez et lisez le fichier contenant les entiers séparés par des virgules.
-  3. Déchiffrez la séquence selon la règle d'alternance CIEL-Guard.
-  4. Renvoyez le résultat sous forme d'un **tuple** scellé : `(message_clair, nombre_octets, checksum_somme)`.
-  5. Exécutez le script (`docker compose exec api python intro_cyber.py`) pour révéler le **FLAG** secret validant l'enquête.
+  1. Écrivez `chiffrer_cesar(texte: str, decalage: int) -> str` et `dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str`.
+  2. Écrivez `chiffrer_xor(texte: str, cle: str) -> list[int]` et `dechiffrer_xor(octets: list[int], cle: str) -> str`.
+  3. Écrivez `decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> tuple[str, int, int]` :
+     * Ouvrez et lisez [api/mystere.payload](api/mystere.payload).
+     * Calculez la clé dynamique `"CIEL" + str(nombre_octets)` et le décalage 10 (somme des chiffres de 2026).
+     * Déchiffrez en alternant : indices pairs par XOR, indices impairs par César inverse (-10).
+     * Retournez un tuple scellé `(message_restaure, total_octets, checksum)`.
+  4. Exécutez le script (`docker compose exec api python intro_cyber.py`) pour valider la chaîne et révéler le **FLAG** secret !
 * **Exemple de sortie attendue** :
   ```text
+  César chiffré (+4)   : 'EPIVXI MRXVYWMSR 2026 !' -> Restauré : 'ALERTE INTRUSION 2026 !'
+  XOR chiffré          : [19, 24, 17, 22, 5, 12, 11, 6, 26, 1, 6, 26, 16, 0, 6] -> Restauré : 'PASSWORD_SECRET'
   Artefact 'mystere.payload' lu avec succès (44 octets, checksum=3419)
   -> MESSAGE SECRET DÉCODÉ : FLAG{ciel_python_2026_investigation_reussie}
-  -> Validation du Défi : SUCCÈS TOTAL !
+  -> Validation du Défi CIEL-Guard : SUCCÈS TOTAL !
   ```
 
 ---
 
-#### Exercice 0.6 : Moyenne et import de module
-* **Objectif** : Manipuler une liste Python et créer son premier module réutilisable.
-* **Fichiers** : `api/statistique.py`, `api/main.py`.
-* **Consignes** :
-  * Dans `statistique.py`, codez la fonction `moyenne(tab)`.
-  * Ne pas utiliser le module `statistics` : calculez la somme et divisez par le nombre d'éléments.
-  * Dans `main.py`, importez `moyenne` et testez-la avec la liste `notes = [12, 15, 8, 19, 10, 14]`.
-* **Exemple d'exécution** :
-  ```text
-  Entrée : [12, 15, 8, 19, 10, 14]
-  Sortie attendue : Moyenne = 13.0
-  ```
-* **Amélioration** : Gérez le cas où la liste passée en paramètre est vide (renvoyez `0.0` sans provoquer de division par zéro).
-
----
-
-#### Exercice 0.7 : Médiane et problème de l'employé Nicolas
+#### Exercice 0.7 : Statistiques élémentaires et Problème de Nicolas
 
 ![Médiane d'une série statistique - Problématique de Nicolas](img/mediane_nicolas.png)
 
@@ -206,22 +256,29 @@ L'**Exercice 0** regroupe les prérequis fondamentaux indispensables pour aborde
 >
 > *Élément d'analyse* : Nicolas commet la confusion fréquente entre **salaire moyen** et **salaire médian**. Quelques très hauts salaires suffisent à tirer la moyenne vers le haut. Pour savoir s'il est réellement dans la tranche inférieure ou supérieure de l'entreprise, il faut ordonner la série et trouver la **médiane** qui sépare l'effectif en deux moitiés égales.
 
-* **Objectif** : Implémenter le calcul de la médiane sur une liste triée et résoudre ce cas concret.
+* **Objectif** : Implémenter manuellement le calcul de la moyenne et de la médiane sur une liste, puis résoudre ce cas d'entreprise.
 * **Fichiers** : `api/statistique.py`, `api/main.py`.
 * **Consignes** :
-  * Dans `statistique.py`, codez la fonction `mediane(tab)` sur une série **supposée triée**.
-  * Si $N$ est impair, retournez l'élément central à l'indice $N // 2$ ; si $N$ est pair, retournez la moyenne des deux éléments centraux.
+  * Dans `statistique.py`, codez la fonction `moyenne(tab)` sans module externe (calculer la somme et diviser par `len(tab)`).
+  * Dans `statistique.py`, codez la fonction `mediane(tab)` sur une série **supposée triée** :
+    * Si $N$ est impair : élément central à l'indice $N // 2$.
+    * Si $N$ est pair : moyenne des deux éléments centraux.
   * Dans `main.py`, appliquez le calcul sur les salaires de l'entreprise : `[1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]`.
-  * Répondez par affichage console : concluez formellement sur la validité de l'affirmation de Nicolas en comparant son salaire à la médiane.
-* **Rappel du calcul** :
-  * $N = 9$ (impair), série triée : `1500, 1500, 1700, 1800, [2000], 2200, 3300, 4000, 4500` $\rightarrow$ médiane = **2000 €**.
-  * $N = 8$ (pair), série triée : `1500, 1700, 1800, [2000 | 2200], 3300, 4000, 4500` $\rightarrow$ médiane = $(2000 + 2200) / 2$ = **2100 €**.
+  * Concluez formellement dans la console sur l'affirmation de Nicolas en comparant son salaire à la médiane.
 * **Exemple d'exécution** :
   ```text
-  Moyenne = 2500.0 € | Médiane = 2000.0 €
-  Conclusion : Affirmation fausse (Nicolas gagne 2200 €, soit plus que la médiane de 2000 € ; il fait partie des 50 % les mieux payés).
+  Salaires de l'entreprise : [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]
+  Moyenne des salaires : 2500.00 €
+  Salaires triés       : [1500, 1500, 1700, 1800, 2000, 2200, 3300, 4000, 4500]
+  Médiane des salaires : 2000.00 €
+  Salaire de Nicolas   : 2200.00 €
+  -> Problématique : Nicolas gagne 2 200 € alors que le salaire moyen est de 2 500 €.
+     Il affirme : "Je suis dans les moins bien payés de l'entreprise !"
+  -> Analyse : FAUX. Nicolas confond salaire moyen et salaire médian.
+     La médiane réelle est de 2000.00 €. Avec 2200.00 €, Nicolas se situe
+     au-dessus de la médiane (6e sur 9). Il fait partie des salariés les mieux rémunérés.
+     La moyenne est tirée vers le haut par les salaires extrêmes (4000 € et 4500 €).
   ```
-* **Amélioration** : Ajoutez une assertion vérifiant que le résultat est identique que la médiane soit calculée sur des entiers ou des flottants.
 
 ---
 

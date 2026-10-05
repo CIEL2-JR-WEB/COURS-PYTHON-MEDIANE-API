@@ -1,144 +1,238 @@
 """
-Introduction à Python : Fondamentaux & Premiers Pas en Cybersécurité - ÉNONCÉ ÉLÈVE.
-BTS CIEL // Informatique, Réseaux & Cybersécurité.
+BTS CIEL // Introduction à Python : Fondamentaux & Cybersécurité - ÉNONCÉ ÉLÈVE.
+Architecture pédagogique progressive (Exercice 0 : 0.1 à 0.6).
 
-Exercice 0 :
-- 0.1 : Chaînes de caractères & Chiffrement de César
-- 0.2 : Chiffrement par clé XOR & Opérateur binaire
-- 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
-- 0.4 : Mutation en place vs Copie de liste (Le piège des références)
-- 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
+Complétez les fonctions ci-dessous conformément aux consignes détaillées dans le README.md.
 
-Complétez les fonctions suivantes conformément aux consignes du README.md.
+Sommaire :
+- 0.1 : Fonctions, Variables & Types de base (def, return, int, float, bool, if/else)
+- 0.2 : Chaînes de caractères (str : indexation, slicing, strip, split, replace)
+- 0.3 : Listes (list : création, parcours for, append, calculs sum/len/min/max)
+- 0.4 : Tuples & Dictionnaires (tuple immuable, unpacking, dict clé-valeur)
+- 0.5 : Références en mémoire & Copie défensive (alias vs copy)
+- 0.6 : Algorithmes de Chiffrement & Défi Anti-IA (César, XOR, Décodeur CIEL-Guard)
 """
 
 import os
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 
 # =============================================================================
-# EXERCICE 0.1 : Chaînes de caractères & Chiffrement de César
+# EXERCICE 0.1 : Fonctions, Variables & Types fondamentaux
+# =============================================================================
+
+def analyser_port(port: int) -> str:
+    """
+    Catégorise un numéro de port réseau selon les standards IANA :
+    - < 0 ou > 65535 : "Invalide"
+    - 0 à 1023      : "Privilégié / Système" (ex: SSH 22, HTTP 80, HTTPS 443)
+    - 1024 à 49151  : "Enregistré / Utilisateur" (ex: MySQL 3306, Flask 5000)
+    - 49152 à 65535 : "Dynamique / Privé" (ports éphémères de connexion cliente)
+    """
+    # TODO: Exercice 0.1
+    # 1. Vérifier si port n'est pas un entier ou s'il est en dehors de [0, 65535] -> "Invalide"
+    # 2. Si port <= 1023 -> "Privilégié / Système"
+    # 3. Si port <= 49151 -> "Enregistré / Utilisateur"
+    # 4. Sinon -> "Dynamique / Privé"
+    pass
+
+
+def calculer_debit(octets: int, duree_secondes: float) -> float:
+    """
+    Calcule le débit réseau en octets par seconde (octets / s).
+    Gère la division par zéro et les entrées négatives en retournant 0.0.
+    """
+    # TODO: Exercice 0.1
+    # 1. Si duree_secondes <= 0 ou octets < 0 -> retourner 0.0
+    # 2. Sinon, retourner round(octets / duree_secondes, 2)
+    pass
+
+
+# =============================================================================
+# EXERCICE 0.2 : Les Chaînes de caractères (str)
+# =============================================================================
+
+def normaliser_identifiant(login_brut: str) -> str:
+    """
+    Nettoie et normalise un login utilisateur :
+    - Retire les espaces en début/fin avec .strip()
+    - Convertit en minuscules avec .lower()
+    - Remplace les espaces internes par des tirets bas avec .replace()
+    """
+    # TODO: Exercice 0.2
+    pass
+
+
+def masquer_mot_de_passe(mdp: str) -> str:
+    """
+    Masque un mot de passe pour affichage sécurisé dans un journal :
+    - Longueur <= 2 : retourne autant d'étoiles que de caractères
+    - Longueur > 2  : conserve le 1er et le dernier caractère, masque l'intérieur avec '*'
+    Démontre l'indexation s[0], s[-1], len() et le slicing / répétition de chaînes.
+    """
+    # TODO: Exercice 0.2
+    pass
+
+
+def extraire_champs_log(ligne_log: str, separateur: str = "|") -> List[str]:
+    """
+    Découpe une ligne de journal selon un séparateur et nettoie chaque segment.
+    Démontre l'usage de .split() et de la compréhension de liste avec .strip().
+    """
+    # TODO: Exercice 0.2
+    pass
+
+
+# =============================================================================
+# EXERCICE 0.3 : Les Listes (list)
+# =============================================================================
+
+def filtrer_ports_actifs(ports: List[int]) -> List[int]:
+    """
+    Filtre une liste de ports pour ne conserver que les ports strictement positifs (> 0).
+    Démontre la création d'une liste vide, la boucle for et la méthode .append().
+    """
+    # TODO: Exercice 0.3
+    pass
+
+
+def statistiques_latences(pings: List[float]) -> Tuple[float, float, float]:
+    """
+    Calcule sans module externe le minimum, le maximum et la moyenne des latences ping.
+    Retourne un tuple : (min, max, moyenne). Si vide, retourne (0.0, 0.0, 0.0).
+    """
+    # TODO: Exercice 0.3
+    # Astuce : sum(), min(), max(), len() et round(..., 2)
+    pass
+
+
+def compter_occurrences(historique: List[str], cible: str) -> int:
+    """
+    Compte manuellement le nombre d'occurrences d'une valeur dans une liste.
+    Démontre une boucle for avec accumulateur.
+    """
+    # TODO: Exercice 0.3
+    pass
+
+
+# =============================================================================
+# EXERCICE 0.4 : Tuples & Dictionnaires (tuple, dict)
+# =============================================================================
+
+def creer_enregistrement_scelle(ip: str, port: int, protocole: str) -> Tuple[str, int, str]:
+    """
+    Crée un enregistrement réseau sous forme de TUPLE immuable.
+    """
+    # TODO: Exercice 0.4
+    pass
+
+
+def verifier_immutabilite_tuple(donnees: Tuple) -> bool:
+    """
+    Démontre l'immutabilité du tuple : toute tentative d'affectation lève TypeError.
+    Retourne True si l'immutabilité a protégé l'objet.
+    """
+    # TODO: Exercice 0.4
+    # Utiliser un bloc try / except TypeError pour tester : donnees[0] = "pirate"
+    pass
+
+
+def creer_rapport_incident(id_incident: int, source_ip: str, criticite: str) -> Dict:
+    """
+    Construit une fiche d'incident de sécurité sous forme de DICTIONNAIRE clé-valeur.
+    Initialise la clé 'resolu' à False.
+    """
+    # TODO: Exercice 0.4
+    pass
+
+
+def analyser_frequence_alertes(journal_alertes: List[str]) -> Dict[str, int]:
+    """
+    Compte la fréquence d'apparition de chaque type d'alerte via un dictionnaire.
+    Démontre l'utilisation de .get() pour accumuler les valeurs.
+    """
+    # TODO: Exercice 0.4
+    pass
+
+
+# =============================================================================
+# EXERCICE 0.5 : Références en mémoire & Copie défensive (.copy)
+# =============================================================================
+
+def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
+    """
+    Filtre une liste d'adresses IP SANS modifier la liste originale.
+    Garantit l'intégrité de la liste passée par l'appelant.
+    """
+    # TODO: Exercice 0.5
+    pass
+
+
+def dupliquer_et_nettoyer(ports: List[int]) -> Tuple[List[int], List[int]]:
+    """
+    Démontre la copie défensive et l'élimination des doublons :
+    - Conserve la liste originale strictement intacte
+    - Retourne (liste_originale_intacte, copie_sans_doublons)
+    """
+    # TODO: Exercice 0.5
+    pass
+
+
+# =============================================================================
+# EXERCICE 0.6 : Algorithmes de Chiffrement & Défi Anti-IA (CIEL-Guard)
 # =============================================================================
 
 def chiffrer_cesar(texte: str, decalage: int) -> str:
     """
     Chiffre une chaîne en décalant chaque lettre dans l'alphabet (modulo 26).
-    Conserve la casse (majuscule / minuscule) et préserve les autres caractères (espaces, ponctuation).
+    Conserve la casse et préserve les autres caractères (espaces, ponctuation).
     """
-    # TODO: Exercice 0.1
-    # 1. Normaliser le décalage avec % 26
-    # 2. Parcourir chaque caractère du texte
-    # 3. Si majuscule ('A' <= c <= 'Z') : décaler à partir de ord('A')
-    # 4. Si minuscule ('a' <= c <= 'z') : décaler à partir de ord('a')
-    # 5. Sinon : conserver le caractère tel quel
-    # 6. Retourner la chaîne chiffrée
+    # TODO: Exercice 0.6
     pass
 
 
 def dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str:
     """
-    Déchiffre un message chiffré par César en appliquant le décalage opposé.
+    Déchiffre un message César en appliquant le décalage opposé.
     """
-    # TODO: Exercice 0.1
-    # Astuce : Déchiffrer revient à appeler chiffrer_cesar avec -decalage
+    # TODO: Exercice 0.6
     pass
 
 
-# =============================================================================
-# EXERCICE 0.2 : Chiffrement par clé XOR & Opérateur binaire
-# =============================================================================
-
 def chiffrer_xor(texte: str, cle: str) -> List[int]:
     """
-    Chiffre un texte avec une clé secrète via l'opérateur bit-à-bit XOR (^).
-    Chaque caractère du texte est combiné avec le caractère correspondant de la clé
-    (répétée cycliquement via l'opérateur modulo).
-    
-    Retourne la liste des entiers (octets chiffrés).
+    Chiffre un texte avec une clé secrète via l'opérateur XOR (^).
+    Chaque caractère est combiné avec le caractère correspondant de la clé cyclique.
     """
-    # TODO: Exercice 0.2
-    # 1. Vérifier que la clé n'est pas vide
-    # 2. Pour chaque indice i de 0 à len(texte) - 1 :
-    #    char_cle = cle[i % len(cle)]
-    #    calculer ord(texte[i]) ^ ord(char_cle)
-    # 3. Retourner la liste des entiers
+    # TODO: Exercice 0.6
     pass
 
 
 def dechiffrer_xor(octets: List[int], cle: str) -> str:
     """
     Déchiffre une liste d'octets XOR en réappliquant la même clé.
-    Propriété fondamentale : (A ^ K) ^ K == A.
+    Propriété : (A ^ K) ^ K == A.
     """
-    # TODO: Exercice 0.2
-    # 1. Pour chaque indice i de 0 à len(octets) - 1 :
-    #    char_cle = cle[i % len(cle)]
-    #    recalculer la valeur avec octets[i] ^ ord(char_cle)
-    #    convertir en caractère avec chr()
-    # 2. Retourner la chaîne reconstituée
+    # TODO: Exercice 0.6
     pass
 
-
-# =============================================================================
-# EXERCICE 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
-# =============================================================================
-
-def creer_identifiant_scelle(login: str, uid: int, privilege: str) -> Tuple[str, int, str]:
-    """
-    Crée un enregistrement d'utilisateur sous forme de TUPLE immuable.
-    """
-    # TODO: Exercice 0.3
-    # Retourner un tuple contenant (login, uid, privilege)
-    pass
-
-
-def tenter_modification_tuple(identifiant: Tuple) -> bool:
-    """
-    Démontre la sécurité du tuple : toute tentative d'affectation (identifiant[0] = ...)
-    lève une exception TypeError.
-    Retourne True si l'immutabilité a bien levé l'exception TypeError.
-    """
-    # TODO: Exercice 0.3
-    # Utiliser try / except TypeError pour intercepter l'affectation interdite
-    pass
-
-
-# =============================================================================
-# EXERCICE 0.4 : Mutation en place vs Copie de liste (Le piège des références)
-# =============================================================================
-
-def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
-    """
-    Filtre une liste d'adresses IP SANS modifier la liste d'origine.
-    Garantit que la liste initiale passée par l'appelant conserve son intégrité.
-    """
-    # TODO: Exercice 0.4
-    # 1. Créer une nouvelle liste ne contenant pas ip_bannie
-    # 2. Ne jamais modifier liste_ips directement
-    pass
-
-
-# =============================================================================
-# EXERCICE 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
-# =============================================================================
 
 def decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> Tuple[str, int, int]:
     """
-    Projet Défi Anti-IA :
-    1. Ouvre et lit le fichier payload physique sur le disque.
-    2. Parse la liste d'entiers séparés par des virgules.
-    3. Calcule la clé dérivée dynamique : 'CIEL' + str(nombre_octets).
-    4. Calcule le décalage César : somme des chiffres de l'année 2026 (10).
-    5. Déchiffre la séquence selon la règle d'alternance :
-       - Indice pair : XOR avec le caractère de la clé à la position (i // 2) % len(cle)
-       - Indice impair : César inverse (-10)
-    6. Retourne un tuple scellé : (message_restaure, total_octets, checksum_somme)
+    Projet Défi Anti-IA CIEL-Guard :
+    1. Lit le fichier physique sur disque.
+    2. Dérive la clé dynamique : 'CIEL' + str(nombre_octets).
+    3. Décalage César : somme des chiffres de 2026 (10).
+    4. Déchiffre selon la règle d'alternance (indices pairs : XOR, impairs : César -10).
+    5. Retourne un tuple scellé : (message_restaure, nombre_octets, checksum).
     """
-    # TODO: Exercice 0.5
-    # Implémentez la lecture du fichier et le déchiffrement alterné
+    # TODO: Exercice 0.6
     pass
 
 
 if __name__ == '__main__':
-    print("BTS CIEL // Tests de l'Introduction à Python (Exercice 0.1 à 0.5)")
-    print("Complétez les fonctions ci-dessus pour valider les exercices et le Défi CIEL-Guard !")
+    print("=" * 76)
+    print("BTS CIEL // EXERCICE 0 : FONDAMENTAUX DE PYTHON (ÉNONCÉ ÉLÈVE)")
+    print("=" * 76)
+    print("Complétez les fonctions des exercices 0.1 à 0.6 pour valider les tests !")
+    print("Consultez le fichier README.md pour les explications détaillées et consignes.")
