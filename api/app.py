@@ -1,7 +1,7 @@
 """
 API REST Flask Complète - CORRIGÉ.
 """
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from statistique import moyenne, mediane
 from tri_selection import tri_selection_copie
 import db
@@ -234,6 +234,145 @@ def route_salaires_periode():
             "moyennes_individuelles": moyennes_triees,
             "mediane_des_moyennes": valeur_mediane
         }), 200
+
+
+# =========================================================================
+# Démonstration Flask interactive (équivalent du site PHP historique)
+# =========================================================================
+
+def format_php_var_dump(title: str, array_data: list) -> str:
+    """Produit un formatage texte fidèle au var_dump() de PHP."""
+    lines = [f'string({len(title)}) "{title}"', f'array({len(array_data)}) {{']
+    for idx, val in enumerate(array_data):
+        lines.append(f'  [{idx}]=>\n  int({val})')
+    lines.append('}')
+    return '\n'.join(lines)
+
+
+@app.route('/demo')
+@app.route('/demo/mediane')
+def demo_mediane():
+    """Page de démonstration du calcul de la médiane (réplique de 1_MEDIANE_ET_MOYENNE)."""
+    salaires = db.get_all_salaries()
+    salaires_tries = tri_selection_copie(salaires)
+    moy = moyenne(salaires) if salaires else 0.0
+    med = mediane(salaires_tries) if salaires_tries else 0.0
+
+    dump_brut = format_php_var_dump("serie non triées", salaires)
+    dump_trie = format_php_var_dump("serie  triées", salaires_tries)
+
+    return render_template(
+        'demo/mediane.html',
+        dump_brut=dump_brut,
+        dump_trie=dump_trie,
+        mediane=med,
+        moyenne=round(moy, 2),
+        total_salaires=len(salaires)
+    )
+
+
+@app.route('/demo/dashboard')
+def demo_dashboard():
+    """Dashboard CRUD complet des employés (réplique de DASHBOARD EMPLOYES)."""
+    employees = db.get_all_employees()
+    salaires = [emp['salary'] for emp in employees] if employees else []
+    moy = moyenne(salaires) if salaires else 0.0
+    med = mediane(tri_selection_copie(salaires)) if salaires else 0.0
+
+    return render_template(
+        'demo/dashboard.html',
+        employees=employees,
+        stats={"moyenne": round(moy, 2), "mediane": med}
+    )
+
+
+@app.route('/demo/employees/<int:emp_id>')
+def demo_employee_view(emp_id):
+    """Fiche détaillée d'un employé avec comparaison moyenne et médiane (Exercice 6)."""
+    employe = db.get_employee_by_id(emp_id)
+    if not employe:
+        return redirect(url_for('demo_dashboard'))
+
+    salaires = db.get_all_salaries()
+    salaires_tries = tri_selection_copie(salaires)
+    moy = moyenne(salaires) if salaires else 0.0
+    med = mediane(salaires_tries) if salaires_tries else 0.0
+
+    salaire_emp = employe['salary']
+    situation_moyenne = "égal"
+    if salaire_emp > moy:
+        situation_moyenne = "supérieur"
+    elif salaire_emp < moy:
+        situation_moyenne = "inférieur"
+
+    situation_mediane = "égal"
+    if salaire_emp > med:
+        situation_mediane = "supérieur"
+    elif salaire_emp < med:
+        situation_mediane = "inférieur"
+
+    return render_template(
+        'demo/read.html',
+        emp=employe,
+        stats={"moyenne": round(moy, 2), "mediane": med},
+        situation={"moyenne": situation_moyenne, "mediane": situation_mediane}
+    )
+
+
+@app.route('/demo/create', methods=['GET', 'POST'])
+def demo_create():
+    """Création d'un nouvel employé."""
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        address = request.form.get('address', '').strip()
+        raw_salary = request.form.get('salary', '').strip()
+        try:
+            salary = int(raw_salary)
+            if not name or not address:
+                raise ValueError("Nom et adresse obligatoires.")
+            db.create_employee(name, address, salary)
+            return redirect(url_for('demo_dashboard'))
+        except ValueError:
+            return render_template('demo/create.html', error="Veuillez saisir des informations valides (salaire entier).", name=name, address=address, salary=raw_salary)
+
+    return render_template('demo/create.html')
+
+
+@app.route('/demo/update/<int:emp_id>', methods=['GET', 'POST'])
+def demo_update(emp_id):
+    """Mise à jour d'un employé."""
+    employe = db.get_employee_by_id(emp_id)
+    if not employe:
+        return redirect(url_for('demo_dashboard'))
+
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        address = request.form.get('address', '').strip()
+        raw_salary = request.form.get('salary', '').strip()
+        try:
+            salary = int(raw_salary)
+            if not name or not address:
+                raise ValueError("Nom et adresse obligatoires.")
+            db.update_employee(emp_id, name, address, salary)
+            return redirect(url_for('demo_dashboard'))
+        except ValueError:
+            return render_template('demo/update.html', emp={"id": emp_id, "name": name, "address": address, "salary": raw_salary}, error="Veuillez saisir un montant de salaire valide (entier).")
+
+    return render_template('demo/update.html', emp=employe)
+
+
+@app.route('/demo/delete/<int:emp_id>', methods=['GET', 'POST'])
+def demo_delete(emp_id):
+    """Suppression d'un employé."""
+    employe = db.get_employee_by_id(emp_id)
+    if not employe:
+        return redirect(url_for('demo_dashboard'))
+
+    if request.method == 'POST':
+        db.delete_employee(emp_id)
+        return redirect(url_for('demo_dashboard'))
+
+    return render_template('demo/delete.html', emp=employe)
 
 
 if __name__ == '__main__':

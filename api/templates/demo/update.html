@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Record</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding: 30px 0; background-color: #f8f9fa; }
+        .wrapper { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="mt-2 mb-3 pb-2 border-bottom">Update Record</h2>
+                    <p class="text-muted">Please edit the input values and submit to update the employee record.</p>
+                    {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+                    <form action="/demo/update/{{ emp.id }}" method="post">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" required value="{{ emp.name }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Address</label>
+                            <textarea name="address" class="form-control" required>{{ emp.address }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Salary (€)</label>
+                            <input type="number" name="salary" class="form-control" required value="{{ emp.salary }}">
+                        </div>
+                        <input type="hidden" name="id" value="{{ emp.id }}"/>
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <a href="/demo/dashboard" class="btn btn-secondary ml-2">Cancel</a>
+                    </form>
+                </div>
+            </div>        
+        </div>
+    </div>
+</body>
+</html>

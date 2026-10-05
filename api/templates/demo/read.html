@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>View Record - {{ emp.name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            padding: 30px 0;
+            background-color: #f8f9fa;
+        }
+        .wrapper {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="h3 mt-2 mb-3 pb-2 border-bottom">View Record & Comparaison Salariale</h1>
+                    
+                    <div class="form-group">
+                        <label class="text-muted mb-0">Identifiant</label>
+                        <p class="font-weight-bold">#{{ emp.id }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-muted mb-0">Name</label>
+                        <p class="font-weight-bold lead text-dark">{{ emp.name }}</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-muted mb-0">Address</label>
+                        <p><b>{{ emp.address }}</b></p>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-muted mb-0">Salary</label>
+                        <p><span class="badge badge-success px-3 py-2" style="font-size: 16px;">{{ emp.salary }} €</span></p>
+                    </div>
+
+                    <div class="card bg-light mt-4 mb-4 border-info">
+                        <div class="card-header bg-info text-white font-weight-bold">
+                            <i class="fa fa-balance-scale mr-2"></i>Comparaison Métier (Exercice 6)
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2">
+                                <strong>Salaire moyen de l'entreprise :</strong> {{ stats.moyenne }} €<br>
+                                &rarr; Situation : 
+                                {% if situation.moyenne == 'supérieur' %}
+                                <span class="badge badge-success">Supérieur à la moyenne</span>
+                                {% elif situation.moyenne == 'inférieur' %}
+                                <span class="badge badge-danger">Inférieur à la moyenne</span>
+                                {% else %}
+                                <span class="badge badge-secondary">Égal à la moyenne</span>
+                                {% endif %}
+                            </p>
+                            <p class="mb-2">
+                                <strong>Salaire médian de l'entreprise :</strong> {{ stats.mediane }} €<br>
+                                &rarr; Situation : 
+                                {% if situation.mediane == 'supérieur' %}
+                                <span class="badge badge-success">Supérieur à la médiane</span>
+                                {% elif situation.mediane == 'inférieur' %}
+                                <span class="badge badge-danger">Inférieur à la médiane</span>
+                                {% else %}
+                                <span class="badge badge-secondary">Égal à la médiane</span>
+                                {% endif %}
+                            </p>
+                            <hr>
+                            <p class="mb-0 text-muted font-italic">
+                                <i class="fa fa-info-circle mr-1"></i>
+                                {% if situation.mediane == 'inférieur' %}
+                                {{ emp.name }} fait partie des <strong>50 % les moins bien rémunérés</strong> de l'entreprise.
+                                {% elif situation.mediane == 'supérieur' %}
+                                {{ emp.name }} fait partie des <strong>50 % les mieux rémunérés</strong> de l'entreprise.
+                                {% else %}
+                                {{ emp.name }} se situe exactement au niveau du <strong>salaire médian</strong> de l'entreprise.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <p>
+                        <a href="/demo/dashboard" class="btn btn-primary"><i class="fa fa-arrow-left mr-1"></i>Back to Dashboard</a>
+                        <a href="/demo/mediane" class="btn btn-outline-info ml-2"><i class="fa fa-calculator mr-1"></i>Voir la médiane</a>
+                    </p>
+                </div>
+            </div>        
+        </div>
+    </div>
+</body>
+</html>

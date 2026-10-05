@@ -64,6 +64,81 @@ def get_employee_by_id(emp_id: int):
             conn.close()
 
 
+def get_all_employees() -> list:
+    """Récupère l'intégralité des employés (table employees) sous forme de liste de dictionnaires."""
+    conn = get_db_connection()
+    if not conn:
+        return []
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT id, name, address, salary FROM employees ORDER BY id ASC")
+        return cursor.fetchall()
+    except Error as e:
+        print(f"Erreur SQL get_all_employees : {e}")
+        return []
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
+def create_employee(name: str, address: str, salary: int) -> bool:
+    """Insère un nouvel employé dans la table employees."""
+    conn = get_db_connection()
+    if not conn:
+        return False
+    try:
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO employees (name, address, salary) VALUES (%s, %s, %s)", (name, address, salary))
+        conn.commit()
+        return True
+    except Error as e:
+        print(f"Erreur SQL create_employee : {e}")
+        return False
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
+def update_employee(emp_id: int, name: str, address: str, salary: int) -> bool:
+    """Met à jour un employé dans la table employees."""
+    conn = get_db_connection()
+    if not conn:
+        return False
+    try:
+        cursor = conn.cursor()
+        cursor.execute("UPDATE employees SET name = %s, address = %s, salary = %s WHERE id = %s", (name, address, salary, emp_id))
+        conn.commit()
+        return True
+    except Error as e:
+        print(f"Erreur SQL update_employee : {e}")
+        return False
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
+def delete_employee(emp_id: int) -> bool:
+    """Supprime un employé par son ID dans la table employees."""
+    conn = get_db_connection()
+    if not conn:
+        return False
+    try:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM employees WHERE id = %s", (emp_id,))
+        conn.commit()
+        return True
+    except Error as e:
+        print(f"Erreur SQL delete_employee : {e}")
+        return False
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+
 # =========================================================================
 # Exercice 7 : Requêtes avec jointures sur la base CRUD2
 # =========================================================================
