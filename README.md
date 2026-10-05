@@ -310,6 +310,12 @@ fin procédure
 
 ### Exercice 6 : Connexion MySQL & Comparaison de salaire
 * **Objectif** : Interagir avec une base de données MySQL dans un bloc `try/except` et implémenter des routes métier.
+* **Démonstration en ligne de ce qui est attendu** :  
+  * 🌐 **Lien vers la démonstration en ligne** : [Accéder au site de démonstration (Salaire médian)](http://51.210.151.13/btssnir/demo_cours/SQL/EXERCICES/1_MEDIANE_ET_MOYENNE/)  
+    *(Lien miroir vers le Dashboard des employés : [http://51.210.151.13/btssnir/demo_cours/SQL/DASHBOARD%20EMPLOYES/](http://51.210.151.13/btssnir/demo_cours/SQL/DASHBOARD%20EMPLOYES/))*
+  * **Fonctionnement illustré** :  
+    Le site extrait les salaires de la table MySQL `employees`, affiche la série brute (`[6500, 8000, 1200, 25000, 100000, 40000]`), effectue le tri par sélection (`[1200, 6500, 8000, 25000, 40000, 100000]`), et détermine la médiane (**16 500.00 €**) ainsi que la moyenne (**~30 116.67 €**).  
+    Sur la branche `correction`, une version équivalente développée en **Python avec Flask** a été implémentée et est accessible directement en local sur [`http://localhost/demo/mediane`](http://localhost/demo/mediane) et [`http://localhost/demo/dashboard`](http://localhost/demo/dashboard).
 * **Fichiers** : `api/db.py`, `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
 * **Consignes** :
   * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
