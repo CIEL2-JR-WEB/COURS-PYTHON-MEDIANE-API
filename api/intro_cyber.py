@@ -2,12 +2,12 @@
 Introduction à Python : Fondamentaux & Premiers Pas en Cybersécurité - CORRIGÉ.
 BTS CIEL // Informatique, Réseaux & Cybersécurité.
 
-Ateliers progressifs :
-- 0.A : Chaînes de caractères & Chiffrement de César
-- 0.B : Chiffrement par clé XOR & Opérateur binaire
-- 0.C : Tuples vs Listes (Immutabilité & Données scellées)
-- 0.D : Mutation en place vs Copie de liste (Le piège des références)
-- 0.E : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
+Exercice 0 :
+- 0.1 : Chaînes de caractères & Chiffrement de César
+- 0.2 : Chiffrement par clé XOR & Opérateur binaire
+- 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
+- 0.4 : Mutation en place vs Copie de liste (Le piège des références)
+- 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
 """
 
 import os
@@ -15,7 +15,7 @@ from typing import List, Tuple
 
 
 # =============================================================================
-# ATELIER 0.A : Chaînes de caractères & Chiffrement de César
+# EXERCICE 0.1 : Chaînes de caractères & Chiffrement de César
 # =============================================================================
 
 def chiffrer_cesar(texte: str, decalage: int) -> str:
@@ -49,7 +49,7 @@ def dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str:
 
 
 # =============================================================================
-# ATELIER 0.B : Chiffrement par clé XOR & Listes
+# EXERCICE 0.2 : Chiffrement par clé XOR & Opérateur binaire
 # =============================================================================
 
 def chiffrer_xor(texte: str, cle: str) -> List[int]:
@@ -92,7 +92,7 @@ def dechiffrer_xor(octets: List[int], cle: str) -> str:
 
 
 # =============================================================================
-# ATELIER 0.C : Tuples vs Listes (Immutabilité & Données scellées)
+# EXERCICE 0.3 : Tuples vs Listes (Immutabilité & Données scellées)
 # =============================================================================
 
 def creer_identifiant_scelle(login: str, uid: int, privilege: str) -> Tuple[str, int, str]:
@@ -118,7 +118,7 @@ def tenter_modification_tuple(identifiant: Tuple) -> bool:
 
 
 # =============================================================================
-# ATELIER 0.D : Mutation en place vs Copie de liste (Le piège des références)
+# EXERCICE 0.4 : Mutation en place vs Copie de liste (Le piège des références)
 # =============================================================================
 
 def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
@@ -132,7 +132,7 @@ def filtrer_ip_copie(liste_ips: List[str], ip_bannie: str) -> List[str]:
 
 
 # =============================================================================
-# PROJET DÉFI 0.E (Anti-IA Copy-Paste) : Le Décodeur d'Artefact Réseau CIEL-Guard
+# EXERCICE 0.5 : Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard)
 # =============================================================================
 
 def dechiffrer_sequence_ciel_guard(octets: List[int], cle: str, decalage: int) -> str:
@@ -197,8 +197,8 @@ def run_introduction():
     print("BTS CIEL // INTRODUCTION À PYTHON : FONDAMENTAUX & CYBERSÉCURITÉ")
     print("=" * 72)
 
-    # 0.A César
-    print("\n--- [Atelier 0.A] Chaînes de caractères & Chiffrement de César ---")
+    # 0.1 César
+    print("\n--- [Exercice 0.1] Chaînes de caractères & Chiffrement de César ---")
     message = "ALERTE INTRUSION 2026 !"
     k = 4
     chiffre = chiffrer_cesar(message, k)
@@ -207,8 +207,8 @@ def run_introduction():
     print(f"Chiffré  : {chiffre} (décalage = {k})")
     print(f"Restauré : {clair}")
 
-    # 0.B XOR
-    print("\n--- [Atelier 0.B] Chiffrement par clé XOR & Opérateur binaire ---")
+    # 0.2 XOR
+    print("\n--- [Exercice 0.2] Chiffrement par clé XOR & Opérateur binaire ---")
     secret = "PASSWORD_SECRET"
     cle = "CYBER"
     octets = chiffrer_xor(secret, cle)
@@ -218,22 +218,22 @@ def run_introduction():
     print(f"Octets   : {octets}")
     print(f"Restauré : {recupere}")
 
-    # 0.C Tuples
-    print("\n--- [Atelier 0.C] Tuples vs Listes (Immutabilité & Données scellées) ---")
+    # 0.3 Tuples
+    print("\n--- [Exercice 0.3] Tuples vs Listes (Immutabilité & Données scellées) ---")
     user = creer_identifiant_scelle("admin_root", 1001, "SUPERADMIN")
     print(f"Identifiant scellé (tuple) : {user}")
     est_protege = tenter_modification_tuple(user)
     print(f"Tentative d'altération en mémoire bloquée : {est_protege} (TypeError capturé)")
 
-    # 0.D Copie vs En place
-    print("\n--- [Atelier 0.D] Mutation en place vs Copie de liste (Le piège des références) ---")
+    # 0.4 Copie vs En place
+    print("\n--- [Exercice 0.4] Mutation en place vs Copie de liste (Le piège des références) ---")
     ips_originales = ["192.168.1.1", "10.0.0.99", "192.168.1.50"]
     ips_filtrees = filtrer_ip_copie(ips_originales, "10.0.0.99")
     print(f"Liste originale (intacte)   : {ips_originales} (id: {id(ips_originales)})")
     print(f"Liste filtrée (nouvel objet): {ips_filtrees} (id: {id(ips_filtrees)})")
 
-    # 0.E Projet Défi Anti-IA
-    print("\n--- [Projet Défi 0.E] Le Décodeur d'Artefact Réseau CIEL-Guard (Anti-IA) ---")
+    # 0.5 Projet Défi Anti-IA
+    print("\n--- [Exercice 0.5] Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard) ---")
     try:
         msg_resolu, nb, chk = decoder_ciel_guard("mystere.payload")
         print(f"Artefact 'mystere.payload' lu avec succès ({nb} octets, checksum={chk})")

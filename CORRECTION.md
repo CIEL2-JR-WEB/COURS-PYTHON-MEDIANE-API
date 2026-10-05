@@ -14,7 +14,9 @@ docker compose up -d
 
 ## 2. Commandes de test par exercice et sorties attendues
 
-### Introduction à Python : Fondamentaux & Cybersécurité (Ateliers 0.A à 0.D & Projet Défi 0.E)
+### Exercice 0 : Fondamentaux Python, Cybersécurité & Statistiques (0.1 à 0.7)
+
+#### Exercices 0.1 à 0.5 : Cybersécurité & Défi Anti-IA CIEL-Guard
 ```bash
 docker compose exec api python intro_cyber.py
 # ou alternativement :
@@ -26,26 +28,26 @@ docker compose exec api python main.py intro
 BTS CIEL // INTRODUCTION À PYTHON : FONDAMENTAUX & CYBERSÉCURITÉ
 ========================================================================
 
---- [Atelier 0.A] Chaînes de caractères & Chiffrement de César ---
+--- [Exercice 0.1] Chaînes de caractères & Chiffrement de César ---
 Original : ALERTE INTRUSION 2026 !
 Chiffré  : EPIVXI MRXVYWMSR 2026 ! (décalage = 4)
 Restauré : ALERTE INTRUSION 2026 !
 
---- [Atelier 0.B] Chiffrement par clé XOR & Opérateur binaire ---
+--- [Exercice 0.2] Chiffrement par clé XOR & Opérateur binaire ---
 Secret   : PASSWORD_SECRET
 Clé      : CYBER
 Octets   : [19, 24, 17, 22, 5, 12, 11, 6, 26, 1, 6, 26, 16, 0, 6]
 Restauré : PASSWORD_SECRET
 
---- [Atelier 0.C] Tuples vs Listes (Immutabilité & Données scellées) ---
+--- [Exercice 0.3] Tuples vs Listes (Immutabilité & Données scellées) ---
 Identifiant scellé (tuple) : ('admin_root', 1001, 'SUPERADMIN')
 Tentative d'altération en mémoire bloquée : True (TypeError capturé)
 
---- [Atelier 0.D] Mutation en place vs Copie de liste (Le piège des références) ---
+--- [Exercice 0.4] Mutation en place vs Copie de liste (Le piège des références) ---
 Liste originale (intacte)   : ['192.168.1.1', '10.0.0.99', '192.168.1.50'] (id: ...)
 Liste filtrée (nouvel objet): ['192.168.1.1', '192.168.1.50'] (id: ...)
 
---- [Projet Défi 0.E] Le Décodeur d'Artefact Réseau CIEL-Guard (Anti-IA) ---
+--- [Exercice 0.5] Projet Défi Anti-IA (Le Décodeur d'Artefact Réseau CIEL-Guard) ---
 Artefact 'mystere.payload' lu avec succès (44 octets, checksum=3419)
 -> MESSAGE SECRET DÉCODÉ : FLAG{ciel_python_2026_investigation_reussie}
 -> Validation du Défi : SUCCÈS TOTAL !
@@ -54,13 +56,13 @@ Artefact 'mystere.payload' lu avec succès (44 octets, checksum=3419)
 
 ---
 
-### Exercice 0.1 & 0.2 : Statistiques et Problème de Nicolas
+#### Exercices 0.6 & 0.7 : Statistiques élémentaires et Problème de Nicolas
 ```bash
 docker compose exec api python main.py
 ```
 **Sortie attendue :**
 ```text
-=== EXERCICE 0.1 & 0.2 : Statistiques et Problème de Nicolas ===
+=== EXERCICE 0.6 & 0.7 : Statistiques et Problème de Nicolas ===
 Salaires de l'entreprise : [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]
 Moyenne des salaires : 2500.00 €
 Salaires triés       : [1500, 1500, 1700, 1800, 2000, 2200, 3300, 4000, 4500]
