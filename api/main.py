@@ -22,8 +22,11 @@ def run_exercice_0():
 
 def main():
     print("BTS CIEL - Lancement des tests console")
-    # Pour tester un exercice spécifique, décommentez ou passez des arguments
-    run_exercice_0()
+    if len(sys.argv) > 1 and sys.argv[1].lower() in ['intro', 'introduction', 'cyber']:
+        import intro_cyber
+        print("Pour tester vos fonctions d'introduction, lancez : python intro_cyber.py")
+    else:
+        run_exercice_0()
 
 if __name__ == '__main__':
     main()
