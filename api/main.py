@@ -1,14 +1,14 @@
 """
-Point d'entrée principal - Démonstration et validation console complète - CORRIGÉ.
+Point d'entrée principal - Démonstration et validation console complète.
 """
 import sys
 from statistique import moyenne, mediane
 from tri_selection import tri_selection_copie
-import intro_cyber
+import intro_base
 
 
 def run_introduction():
-    intro_cyber.run_introduction()
+    intro_base.run_introduction()
 
 
 def run_exercice_0():
@@ -48,7 +48,7 @@ def run_exercice_0():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1 and sys.argv[1].lower() in ['intro', 'introduction', 'cyber']:
+    if len(sys.argv) > 1 and sys.argv[1].lower() in ['intro', 'introduction', 'base']:
         run_introduction()
     elif len(sys.argv) > 1 and sys.argv[1].lower() in ['all', 'tout']:
         run_introduction()
