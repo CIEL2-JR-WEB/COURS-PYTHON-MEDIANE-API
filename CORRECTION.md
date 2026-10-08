@@ -31,50 +31,44 @@ BTS CIEL // EXERCICE 0 : FONDAMENTAUX DE PYTHON (ALGORITHMIQUE & DONNÉES)
 --- [Exercice 0.1] Indice du minimum d'une liste ---
 Liste : [15, 3, 22, 8] -> Indice du minimum : 1 (valeur = 3)
 
---- [Exercice 0.2] Recherche dans une liste croissante (Itératif & Récursif) ---
-Liste triée : [2, 5, 8, 12, 19]
-Présence de 8 (itératif) : True
-Présence de 8 (récursif) : True
-Présence de 7 (itératif) : False
-Présence de 7 (récursif) : False
+--- [Exercice 0.2] Somme de 1 à n (Itératif & Récursif) ---
+Somme de 1 à 5 (itératif) : 15
+Somme de 1 à 5 (récursif) : 15
 
---- [Exercice 0.3] Taille totale d'une liste de listes ---
+--- [Exercice 0.3] Puissance x^n (Itératif & Récursif) ---
+2^4 (itératif) : 16
+2^4 (récursif) : 16
+
+--- [Exercice 0.4] Taille totale d'une liste de listes ---
 Liste L : [[2, 5, 4], [3, 6], [4], [2]]
 Taille totale : 7 éléments
 
---- [Exercice 0.4] Somme et Maximum d'une liste de listes ---
+--- [Exercice 0.5] Somme et Maximum d'une liste de listes ---
 Somme de tous les éléments : 26
 Maximum figurant dans L    : 6
 
---- [Exercice 0.5] Matrice régulière 2D & Inversion binaire ---
+--- [Exercice 0.6] Matrice régulière 2D & Inversion binaire ---
 Matrice 3x4 créée avec .append() et modification en [1][2] = 9 :
   [0, 0, 0, 0]
   [0, 0, 9, 0]
   [0, 0, 0, 0]
 Grille binaire inversée : [[1, 0, 1], [0, 0, 1]]
 
---- [Exercice 0.6] Produit cartésien de deux listes (Couples) ---
+--- [Exercice 0.7] Produit cartésien de deux listes (Couples) ---
 L1 = [0, 1], L2 = [1, 4] -> Couples : [(0, 1), (0, 4), (1, 1), (1, 4)]
 
---- [Exercice 0.7] Réorganisation ordonnée selon un pivot ---
+--- [Exercice 0.8] Réorganisation ordonnée selon un pivot ---
 Liste originale : [(2, 3), (1, 0), (2, 1), (3, 5), (3, 4), (3, 0), (2, 5)]
 Pivot choisi à l'indice 4 : (3, 4)
 Liste réorganisée        : [(3, 4), (3, 5), (3, 0), (2, 3), (1, 0), (2, 1), (2, 5)]
 
---- [Exercice 0.8] Figure sablier d'étoiles (n = 6, 11 lignes) ---
-******
-*****
-****
-***
-**
+--- [Exercice 0.9] Triangle d'étoiles simple (n = 4) ---
 *
 **
 ***
 ****
-*****
-******
 
---- [Exercices 0.9 & 0.10] Objets (dict) & Statistiques de promotion ---
+--- [Exercice 0.10] Objets (dict) & Statistiques de promotion ---
 Fiches étudiantes chargées : 4
 Statistiques calculées : Effectif = 4, Moyenne = 11.75/20, Note max = 15.0
 Étudiants admis (>= 10) : ['Alice', 'Nicolas']

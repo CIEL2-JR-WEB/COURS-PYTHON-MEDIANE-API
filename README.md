@@ -137,53 +137,87 @@ for emp in liste_employes:
 
 ---
 
-* **Exercice 0.2 : Recherche dans une liste triée (Itératif & Récursivité facile)**
-  * **Énoncé** : Écrire une fonction prenant en argument une liste $L$ supposée croissante et une valeur quelconque $x$ et déterminant si cette valeur est dans la liste (retourne `True` ou `False`).  
-    *Exemple* : Retourne `True` pour `L = [2, 5, 8, 12, 19]` et $x = 8$. Retourne `False` pour $x = 7$.
+* **Exercice 0.2 : Somme des entiers de 1 à n (Itératif vs Récursif)**
+  * **Énoncé** : Écrire une fonction calculant la somme des entiers de $1$ à $n$ ($1 + 2 + \dots + n$) de deux manières :
+    1. Version itérative `somme_iterative(n)` utilisant une boucle `for` ;
+    2. Version récursive `somme_recursive(n)` utilisant la relation $somme(n) = n + somme(n - 1)$.
+    * *Exemple* : Pour $n = 5$, les deux fonctions retournent `15` ($1+2+3+4+5=15$).
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. *Optimisation grâce au tri (version itérative)* :  
-    >    Si on parcourt la liste ordonnée $[2, 5, 8, 12, 19]$ à la recherche de $x = 7$, à quel moment précis peut-on affirmer avec certitude que $7$ n'est pas dans la liste sans continuer jusqu'à la fin ?  
-    >    *Réponse :* `________________________________________________` *(Dès que l'élément rencontré est strictement supérieur à 7, ici 8 > 7).*
-    > 2. *Déroulé récursif facile* :  
-    >    Complétez les cas d'arrêt et l'appel récursif de `recherche_recursive_triee(L, x)` :
-    >    * **Cas d'arrêt 1 (échec)** : Si la liste $L$ est vide (`len(L) == 0`), alors retourner `______`.
-    >    * **Cas d'arrêt 2 (succès)** : Si le premier élément `L[0] == x`, alors retourner `______`.
-    >    * **Cas d'arrêt 3 (échec précoce)** : Si `L[0] > x`, alors retourner `______`.
-    >    * **Appel récursif** : Sinon, relancer la recherche sur le reste de la liste : `recherche_recursive_triee(____________, x)`.
-    > 3. Tracez les appels récursifs pour chercher $8$ dans $[2, 5, 8, 12, 19]$ :  
-    >    `recherche([2, 5, 8, 12, 19], 8)` $\rightarrow$ `recherche([5, 8, 12, 19], 8)` $\rightarrow$ `recherche([8, 12, 19], 8)` $\rightarrow$ `______`.
+    > 1. Déroulez l'arbre des appels récursifs pour $n = 4$ :
+    >    ```text
+    >    somme(4) = 4 + somme(3)
+    >             = 4 + (3 + somme(2))
+    >             = 4 + (3 + (2 + somme(1)))
+    >             = 4 + 3 + 2 + 1 = 10
+    >    ```
+    > 2. Identifiez les deux éléments fondamentaux de la récursivité :
+    >    * **Cas de base (ou d'arrêt)** : Si $n \le 0$ (ou $n == 1$), la fonction retourne immédiatement $0$ (ou $1$) sans nouvel appel récursif.
+    >    * **Cas récursif** : Pour $n > 1$, la fonction s'appelle elle-même avec un argument strictement décroissant : $n + \text{somme}(n - 1)$.
+    > 3. Que se passerait-il en Python si l'on oubliait le cas de base ?  
+    >    *Réponse :* Une boucle récursive infinie provoquant l'exception `RecursionError: maximum recursion depth exceeded`.
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `recherche_liste_triee(L, x)` et `recherche_recursive_triee(L, x)`.
+    Dans `api/intro_base.py`, codez `somme_iterative(n)` et `somme_recursive(n)`. Testez avec $n = 5$.
 
 ---
 
-* **Exercice 0.3 : Taille totale d'une liste de listes**
-  * **Énoncé** : Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la taille totale de la liste $L$.  
+* **Exercice 0.3 : Puissance $x^n$ (Itératif vs Récursif — Exercice simple de même type)**
+  * **Énoncé** : Écrire une fonction calculant $x^n$ ($x$ élevé à la puissance $n \ge 0$) de deux manières :
+    1. Version itérative `puissance_iterative(x, n)` avec une boucle `for` ;
+    2. Version récursive `puissance_recursive(x, n)` utilisant la relation $x^n = x \times x^{n-1}$.
+    * *Exemple* : Pour $x = 2$ et $n = 4$, les deux fonctions retournent `16` ($2 \times 2 \times 2 \times 2 = 16$).
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Déroulez l'arbre des appels pour $x = 2$ et $n = 3$ ($2^3$) :
+    >    ```text
+    >    puissance(2, 3) = 2 * puissance(2, 2)
+    >                    = 2 * (2 * puissance(2, 1))
+    >                    = 2 * (2 * (2 * puissance(2, 0)))
+    >                    = 2 * 2 * 2 * 1 = 8
+    >    ```
+    > 2. Définissez le cas de base :  
+    >    *Cas d'arrêt :* Pour $n = 0$, $x^0 = 1$ $\rightarrow$ retourner `1`.
+    > 3. Complétez le pseudo-code :
+    >    ```text
+    >    fonction puissance_recursive(x, n)
+    >        si n == 0 alors :
+    >            retourner 1
+    >        sinon :
+    >            retourner x * puissance_recursive(x, n - 1)
+    >    fin fonction
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `puissance_iterative(x, n)` et `puissance_recursive(x, n)`. Testez avec $x = 2, n = 4$.
+
+---
+
+* **Exercice 0.4 : Taille totale d'une liste de listes**
+  * **Énoncé** : Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la taille totale (nombre total d'éléments) de la liste $L$.  
     *Exemple* : La fonction retourne `7` pour la liste de listes `[[2, 5, 4], [3, 6], [4], [2]]`.
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. Schématisez la liste de listes en mémoire (un tableau de références vers 4 sous-listes) :
+    > 1. Schématisez la liste de listes en mémoire (un tableau principal pointant vers 4 sous-listes) :
     >    ```text
-    >    L -> [ [0] -> [2, 5, 4]  (longueur 3)
-    >           [1] -> [3, 6]     (longueur 2)
-    >           [2] -> [4]        (longueur 1)
-    >           [3] -> [2]        (longueur 1) ]
+    >    L -> [ [0] -> [2, 5, 4]  (taille 3)
+    >           [1] -> [3, 6]     (taille 2)
+    >           [2] -> [4]        (taille 1)
+    >           [3] -> [2]        (taille 1) ]
     >    ```
-    > 2. Remplissez le tableau de cumul de taille :
-    >    | Indice de la sous-liste | Contenu | `len(sous_liste)` | Total cumulé |
+    > 2. Tableau de trace du cumul :
+    >    | Indice $k$ | Sous-liste | `len(sous_liste)` | Total cumulé |
     >    | :---: | :---: | :---: | :---: |
     >    | 0 | `[2, 5, 4]` | 3 | 3 |
     >    | 1 | `[3, 6]` | 2 | 5 |
-    >    | 2 | `[4]` | `____` | `____` |
-    >    | 3 | `[2]` | `____` | `____` |
-    > 3. Complétez le pseudo-code :
+    >    | 2 | `[4]` | 1 | 6 |
+    >    | 3 | `[2]` | 1 | 7 |
+    > 3. Pseudo-code officiel :
     >    ```text
     >    total ← 0
     >    Pour chaque sous_liste dans L :
-    >        total ← total + ____________
+    >        total ← total + longueur(sous_liste)
     >    Retourner total
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
@@ -191,7 +225,7 @@ for emp in liste_employes:
 
 ---
 
-* **Exercice 0.4 : Somme et Maximum d'une liste de listes**
+* **Exercice 0.5 : Somme et Maximum d'une liste de listes**
   * **Énoncé** :
     1. Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la somme de tous les nombres dans toutes les listes de $L$.  
        *Exemple* : Retourne `26` pour `[[2, 5, 4], [3, 6], [4], [2]]`.
@@ -202,16 +236,15 @@ for emp in liste_employes:
     > 
     > 1. Déroulez le calcul de la somme sur feuille :  
     >    $\text{Somme} = (2 + 5 + 4) + (3 + 6) + (4) + (2) = 11 + 9 + 4 + 2 = 26$.
-    > 2. Pourquoi ne faut-il **JAMAIS** initialiser la recherche du maximum avec `max_val = 0` ?  
-    >    *Réponse :* `____________________________________________________________________`  
-    >    *(Si la liste ne contient que des nombres négatifs, 0 fausserait entièrement le résultat).*
-    > 3. Complétez le pseudo-code pour le maximum :
+    > 2. Pourquoi ne faut-il jamais initialiser `max_val = 0` ?  
+    >    *Réponse :* Si la liste ne contient que des valeurs négatives (ex: `[[-5], [-2]]`), 0 donnerait un résultat erroné. Il faut initialiser au premier élément ou à `None`.
+    > 3. Pseudo-code :
     >    ```text
     >    max_val ← None
     >    Pour chaque sous_liste dans L :
     >        Pour chaque val dans sous_liste :
     >            Si max_val est None ou val > max_val alors :
-    >                max_val ← ____________
+    >                max_val ← val
     >    Retourner max_val
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
@@ -219,7 +252,7 @@ for emp in liste_employes:
 
 ---
 
-* **Exercice 0.5 : Création de Matrice 2D Régulière & Inversion Binaire**
+* **Exercice 0.6 : Création de Matrice 2D Régulière & Inversion Binaire**
   * **Énoncé** :
     1. Écrire une fonction `creer_matrice(nb_lignes, nb_colonnes, valeur_defaut=0)` qui crée une matrice $N \times P$ avec des lignes indépendantes construites avec `.append()`.
     2. Écrire une fonction `inverser_matrice_binaire(M)` qui prend une matrice de 0 et de 1 et retourne une nouvelle matrice où chaque 0 devient 1 et chaque 1 devient 0.
@@ -227,49 +260,43 @@ for emp in liste_employes:
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
     > 1. *Piège de la référence partagée en Python* :  
-    >    Expliquez pourquoi l'instruction `M = [[0] * 4] * 3` est formellement interdite :  
-    >    *Réponse :* `____________________________________________________________________`  
-    >    *(Toutes les lignes pointent vers la même liste physique en mémoire ; toute modification en affecterait toutes les lignes simultanément).*
-    > 2. Dessinez sur quadrillage une matrice de 3 lignes et 4 colonnes, puis placez la valeur `9` à la coordonnée `M[1][2]` (ligne 1, colonne 2) :
-    >    ```text
-    >    Ligne 0 : [ 0,  0,  0,  0 ]
-    >    Ligne 1 : [ 0,  0,  _,  0 ]
-    >    Ligne 2 : [ 0,  0,  0,  0 ]
-    >    ```
-    > 3. Pour la matrice binaire `M = [[0, 1, 0], [1, 1, 0]]`, écrivez la matrice inversée attendue :  
-    >    *Résultat :* `[[ ____, ____, ____ ], [ ____, ____, ____ ]]`.
+    >    Pourquoi `M = [[0] * 4] * 3` est-il interdit ?  
+    >    *Réponse :* Les 3 lignes partagent la même adresse mémoire physique. Modifier `M[1][2] = 9` modifie les 3 lignes simultanément.
+    > 2. Coordonnées dans la matrice :  
+    >    `M[1][2]` désigne la ligne 1 (2e ligne) et la colonne 2 (3e colonne) en base 0.
+    > 3. Inversion de `M = [[0, 1, 0], [1, 1, 0]]` :  
+    >    *Résultat attendu :* `[[1, 0, 1], [0, 0, 1]]`.
   * **💻 Étape 2 : Implémentation sur machine** :  
     Dans `api/intro_base.py`, codez `creer_matrice(nb_lignes, nb_colonnes, valeur_defaut)` et `inverser_matrice_binaire(M)`.
 
 ---
 
-* **Exercice 0.6 : Produit cartésien de deux listes (Génération de couples)**
+* **Exercice 0.7 : Produit cartésien de deux listes (Génération de couples)**
   * **Énoncé** : Écrire une fonction prenant en entrée deux listes et qui retourne la liste de tous les couples formés d'un élément de la première liste et d'un élément de la deuxième liste.  
     *Exemple* : Pour `L1 = [0, 1]` et `L2 = [1, 4]`, la fonction retourne `[(0, 1), (0, 4), (1, 1), (1, 4)]`.
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. Remplissez le tableau cartésien pour $L_1 = [0, 1]$ et $L_2 = [1, 4]$ :
+    > 1. Tableau cartésien pour $L_1 = [0, 1]$ et $L_2 = [1, 4]$ :
     >    | $a \in L_1 \backslash b \in L_2$ | **1** | **4** |
     >    | :---: | :---: | :---: |
     >    | **0** | `(0, 1)` | `(0, 4)` |
     >    | **1** | `(1, 1)` | `(1, 4)` |
-    > 2. Si $L_1$ possède $n$ éléments et $L_2$ possède $p$ éléments, combien de couples contient la liste résultante ?  
-    >    *Réponse :* $n \times p$ couples.
-    > 3. Complétez le pseudo-code avec double boucle imbriquée :
+    > 2. Cardinalité : Si $|L_1| = n$ et $|L_2| = p$, le résultat contient $n \times p$ couples.
+    > 3. Pseudo-code avec double boucle :
     >    ```text
     >    couples ← []
     >    Pour chaque a dans L1 :
     >        Pour chaque b dans L2 :
-    >            couples.append((____________, ____________))
+    >            couples.append((a, b))
     >    Retourner couples
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `produit_cartesien(L1, L2)`. Validez sur l'exemple.
+    Dans `api/intro_base.py`, codez `produit_cartesien(L1, L2)`.
 
 ---
 
-* **Exercice 0.7 : Réorganisation ordonnée de couples selon un pivot (Permutation)**
+* **Exercice 0.8 : Réorganisation ordonnée de couples selon un pivot (Permutation)**
   * **Énoncé** : Écrire une fonction prenant en entrée une liste `l` de couples et un indice `i` entre 0 (inclus) et la taille de `l` (exclue) et qui retourne une liste formant une permutation de la liste `l`, selon la règle suivante :
     1. D'abord on met le couple à l'indice `i` ;
     2. Puis les couples dans la liste dont le premier élément est égal à celui à l'indice `i` dans l'ordre dans lequel ils figurent dans `l` ;
@@ -279,93 +306,68 @@ for emp in liste_employes:
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. Identifiez le couple pivot pour `l` et `i = 4` :  
-    >    *Pivot :* `l[4] = (3, 4)`. Sa première composante (la clé de comparaison) vaut `3`.
-    > 2. Classez les couples restants de `l` dans leur ordre d'apparition :
-    >    * Couples dont le premier élément vaut 3 (hors pivot) : `[(3, 5), (3, 0)]`.
+    > 1. Pivot à l'indice $i = 4$ : `l[4] = (3, 4)`. Sa clé est `3`.
+    > 2. Partition des couples restants :
+    >    * Couples avec clé 3 : `[(3, 5), (3, 0)]`.
     >    * Autres couples : `[(2, 3), (1, 0), (2, 1), (2, 5)]`.
-    > 3. Écrivez la concaténation ordonnée finale :  
+    > 3. Concaténation finale ordonnée :  
     >    `[(3, 4)] + [(3, 5), (3, 0)] + [(2, 3), (1, 0), (2, 1), (2, 5)]`.
-    > 4. Complétez le pseudo-code de l'algorithme :
+    > 4. Pseudo-code :
     >    ```text
     >    pivot ← l[i]
     >    cle ← pivot[0]
-    >    meme_cle ← []
-    >    autres ← []
+    >    meme_cle ← [] ; autres ← []
     >    Pour k de 0 à longueur(l) - 1 :
     >        Si k ≠ i alors :
-    >            Si l[k][0] == cle alors :
-    >                meme_cle.append(l[k])
-    >            Sinon :
-    >                autres.append(l[k])
+    >            Si l[k][0] == cle alors meme_cle.append(l[k])
+    >            Sinon : autres.append(l[k])
     >    Retourner [pivot] + meme_cle + autres
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `reorganiser_couples(l, i)`. Testez avec la liste de l'énoncé et `i = 4`.
+    Dans `api/intro_base.py`, codez `reorganiser_couples(l, i)`.
 
 ---
 
-* **Exercice 0.8 : Motif console de $2n - 1$ lignes (Figure en sablier / double triangle)**
-  * **Énoncé** : Écrire une fonction prenant en entrée un entier naturel $n$ et imprimant la figure de la forme ci-dessous sur $2n - 1$ lignes (ici pour $n = 6$, soit $11$ lignes) :
+* **Exercice 0.9 : Triangle d'étoiles simple (Boucle & Affichage console)**
+  * **Énoncé** : Écrire une fonction `afficher_triangle_simple(n)` prenant en entrée un entier naturel $n \ge 1$ et imprimant un triangle rectangle simple de hauteur $n$.  
+    Chaque ligne $i$ (pour $i$ allant de $1$ à $n$) contient exactement $i$ étoiles.  
+    *Exemple pour $n = 4$* :
     ```text
-    ******
-    *****
-    ****
-    ***
-    **
     *
     **
     ***
     ****
-    *****
-    ******
     ```
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. Décomposez le problème en deux boucles consécutives :
-    >    * Partie 1 (décroissante) : $n$ lignes, allant de $n$ étoiles à 1 étoile.
-    >    * Partie 2 (croissante) : $n - 1$ lignes, allant de 2 étoiles à $n$ étoiles.  
-    >    * Total de lignes : $n + (n - 1) = 2n - 1$. Pour $n = 6$ : $2 \times 6 - 1 = 11$ lignes.
-    > 2. Complétez le pseudo-code :
+    > 1. Remplissez le tableau de trace pour $n = 4$ :
+    >    | Ligne $i$ | Nombre d'étoiles | Rendu console attendu |
+    >    | :---: | :---: | :--- |
+    >    | 1 | 1 | `*` |
+    >    | 2 | 2 | `**` |
+    >    | 3 | 3 | `***` |
+    >    | 4 | 4 | `****` |
+    > 2. Pseudo-code de la procédure :
     >    ```text
-    >    Pour k de n à 1 (par pas de -1) :
-    >        afficher k fois le caractère '*'
-    >    Pour k de 2 à n (par pas de +1) :
-    >        afficher k fois le caractère '*'
+    >    procédure triangle_simple(entier n)
+    >        pour i de 1 à n :
+    >            afficher i fois le caractère '*'
+    >    fin procédure
     >    ```
-    > 3. En Python, quelle opération concise permet d'obtenir une chaîne de $k$ étoiles sans boucle interne ?  
-    >    *Réponse :* `'*' * k`.
+    > 3. En Python, quelle opération concise sur chaîne permet d'afficher $i$ étoiles sans boucle interne ?  
+    >    *Réponse :* `print("*" * i)`.
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `afficher_figure_etoiles(n)`. Testez avec $n = 6$.
+    Dans `api/intro_base.py`, codez `afficher_triangle_simple(n)`. Testez avec $n = 4$.
 
 ---
 
-* **Exercice 0.9 : Objets & Dictionnaires (`dict`) & Manipulation de propriétés**
+* **Exercice 0.10 : Objets & Dictionnaires (`dict`) & Statistiques de promotion**
   * **Énoncé** :
-    1. Écrire une fonction `creer_fiche_etudiant(nom, note, age=None)` qui retourne un dictionnaire contenant les clés `"nom"`, `"note"`, et `"age"`.
-    2. Écrire une fonction `modifier_note(fiche, nouvelle_note)` qui met à jour la note directement en mémoire.
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > 1. Dessinez la boîte mémoire de la variable `fiche = {"nom": "Alice", "note": 14.5, "age": 19}` associant chaque étiquette clé à sa valeur.
-    > 2. Que se passe-t-il si vous tentez d'exécuter `print(fiche["ville"])` ? Quelle exception Python est levée ?  
-    >    *Réponse :* `________________________________________________` *(KeyError)*.
-    > 3. Quelle méthode permet d'accéder à une propriété en fournissant une valeur par défaut sans provoquer d'erreur ?  
-    >    *Instruction :* `fiche.get("ville", "Non renseignée")`.
-    > 4. Écrivez l'instruction Python pour modifier la note d'Alice à $16.0$ :  
-    >    *Instruction :* `fiche[________] = ________`
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `creer_fiche_etudiant(nom, note, age)` et `modifier_note(fiche, nouvelle_note)`.
-
----
-
-* **Exercice 0.10 : Tableaux d'Objets (Liste de dictionnaires) & Statistiques de promotion**
-  * **Énoncé** : Écrire une fonction `statistiques_promo(etudiants)` prenant en entrée une liste de fiches d'étudiants (dictionnaires avec clés `"nom"` et `"note"`) et qui retourne un dictionnaire de synthèse contenant :
-    * `"effectif"` : nombre total d'étudiants ;
-    * `"moyenne"` : moyenne des notes (arrondie à 2 décimales) ;
-    * `"note_max"` : la meilleure note ;
-    * `"admis"` : la liste des noms des étudiants ayant une note $\ge 10.0$.
+    1. Écrire `creer_fiche_etudiant(nom, note, age=None)` retournant un dictionnaire `{"nom": nom, "note": note, "age": age}`.
+    2. Écrire `modifier_note(fiche, nouvelle_note)` qui modifie la note directement en mémoire.
+    3. Écrire `statistiques_promo(etudiants)` prenant une liste de fiches d'étudiants et retournant un dictionnaire :
+       `{"effectif": ..., "moyenne": ..., "note_max": ..., "admis": [...]}` (admis : note $\ge 10.0$).
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
@@ -379,19 +381,22 @@ for emp in liste_employes:
     > ]
     > ```
     > 1. Calculez les résultats statistiques attendus sur feuille :
-    >    * Effectif = `______`
-    >    * Somme des notes = $14.5 + 8.0 + 15.0 + 9.5 = 47.0$ $\rightarrow$ Moyenne = $47.0 / 4 =$ `______`
-    >    * Note maximale = `______`
-    >    * Liste des admis (note $\ge 10.0$) : `[ ____________, ____________ ]`.
-    > 2. Complétez le pseudo-code pour le filtrage des admis avec `.append()` :
+    >    * Effectif = `4`
+    >    * Somme des notes = $14.5 + 8.0 + 15.0 + 9.5 = 47.0$ $\rightarrow$ Moyenne = $47.0 / 4 = 11.75$
+    >    * Note maximale = `15.0`
+    >    * Liste des admis (note $\ge 10.0$) : `["Alice", "Nicolas"]`.
+    > 2. Pseudo-code pour le calcul et le filtrage :
     >    ```text
     >    admis ← []
-    >    Pour chaque etudiant dans promo :
-    >        Si etudiant["note"] >= 10.0 alors :
-    >            admis.append(____________)
+    >    total ← 0.0
+    >    Pour chaque e dans promo :
+    >        total ← total + e["note"]
+    >        Si e["note"] >= 10.0 alors :
+    >            admis.append(e["nom"])
+    >    moyenne ← total / longueur(promo)
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `statistiques_promo(etudiants)`. Validez avec la promotion de test.
+    Dans `api/intro_base.py`, codez les fonctions associées. Validez avec la promotion de test.
 
 ---
 
