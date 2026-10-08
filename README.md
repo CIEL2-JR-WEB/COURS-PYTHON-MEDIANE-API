@@ -58,89 +58,147 @@ Elle repose sur :
 
 ---
 
-### 🧠 Atelier Fondamental : Parcours de Listes, Slicing & Dictionnaires Approfondis
+### 🟢 Partie 0 : Prise en main Fondamentale de Python (Les Bases Concrètes)
 
-Avant d'aborder les séances orientées BDD et réseau, cet atelier fournit les gammes indispensables à maîtriser.
+Avant d'aborder la programmation web et les bases de données, cette partie introductive pose les gammes indispensables du langage Python. **Aucun concept complexe ou cyber n'est requis** : nous manipulons du texte, des listes, des dictionnaires et une grille d'image dans la console.
 
-#### 1. Fiche Mémo : Les 6 Patrons de Parcours (*Design Patterns*)
+---
+
+#### 1. Fiche Essentielle : Le pont JavaScript $\leftrightarrow$ Python & les Patrons de Base
+
+Pour un étudiant venant du développement web (JavaScript / HTML), les équivalences sont immédiates :
+
+| Concept | En JavaScript | En Python (Strict équivalent) |
+| :--- | :--- | :--- |
+| **Affichage console** | `console.log("Bonjour");` | `print("Bonjour")` |
+| **Ajout en fin de tableau** | `tableau.push(element);` | **`liste.append(element)`** *(capital !)* |
+| **Taille / Longueur** | `tableau.length` ou `chaine.length` | `len(liste)` ou `len(chaine)` |
+| **Objet / Dictionnaire** | `{ nom: "Alice", age: 20 }` | `{"nom": "Alice", "age": 20}` |
+| **Parcours par élément** | `for (const x of liste) { ... }` | `for x in liste:` |
+| **Parcours par indice** | `for (let i = 0; i < tab.length; i++)` | `for i in range(len(liste)):` |
 
 ```python
 # PATRON 1 : Parcours direct par élément
-for s in salaires:
-    print(s)
+for val in salaires:
+    print(val)
 
-# PATRON 2 : Parcours par indice (indispensable pour modifier une liste en place)
+# PATRON 2 : Parcours par indice (pour modifier une liste en place)
 for i in range(len(salaires)):
     salaires[i] = salaires[i] + 100
 
-# PATRON 3 : Parcours avec indice ET élément
-for i, s in enumerate(salaires, start=1):
-    print(f"Employé {i} : {s} €")
-
-# PATRON 4 : Accumulateur & .append() (le plus utilisé en Python)
+# PATRON 3 : Accumulateur avec .append() (l'analogue strict de .push() en JS)
 selection = []
-for s in salaires:
-    if s >= 2000:
-        selection.append(s)
+for val in salaires:
+    if val >= 2000:
+        selection.append(val)
 
-# PATRON 5 : Parcours dictionnaire clés et valeurs
+# PATRON 4 : Parcours dictionnaire clés et valeurs
 for cle, val in fiche_emp.items():
     print(f"{cle} => {val}")
 
-# PATRON 6 : Parcours d'une liste de dictionnaires (le format SQL et JSON)
+# PATRON 5 : Parcours d'une liste de dictionnaires (le format JSON et SQL)
 for emp in liste_employes:
     print(f"{emp['nom']} gagne {emp['salaire']} €")
 ```
 
 ---
 
-#### 2. Entraînement : Boucles, Motifs & Géométrie console
-
-* **Exercice D1 (Triangle console avec `sys.argv`)** :  
-  Écrivez `triangle(n)` traçant un triangle rectangle d'étoiles de hauteur $n$. Récupérez $n$ depuis le terminal via `sys.argv[1]` (avec valeur 4 par défaut).
-* **Exercice D2 (Pyramide centrée & Triangle inversé)** :  
-  Écrivez `pyramide(n)` traçant une pyramide équilatérale en calculant les espaces `(n - 1 - i)` et les étoiles `(2 * i + 1)`. Écrivez `triangle_inverse(n)` traçant un triangle décroissant de $n$ à 1 étoile.
-* **Exercice D3 (Table de multiplication formatée à double entrée)** :  
-  Écrivez `table_multiplication(n, m)` affichant la table complète avec alignement strict de 4 caractères : `print(f"{i * j:4d}", end="")`.
-* **Exercice D4 (Damier alterné 2D)** :  
-  Écrivez `damier(lignes, colonnes)` affichant un quadrillage bicolore alternant `#` et `.` selon la parité de `(i + j) % 2`.
-
----
-
-#### 3. Entraînement : Chaînes de Caractères (`str`) & Slicing Approfondi
+#### 2. Entraînement : Chaînes de Caractères (`str`) & Slicing
 
 ```python
 # Rappel Slicing : chaine[debut:fin:pas]
 s = "PYTHON2026"
-s[:6]    # 'PYTHON' (début à 6 exclu)
-s[6:]    # '2026'   (de l'indice 6 à la fin)
-s[::2]   # 'PTO20'  (un caractère sur deux)
+s[0]     # 'P' (premier caractère)
+s[-1]    # '6' (dernier caractère)
+s[:6]    # 'PYTHON' (du début à l'indice 6 exclu)
+s[6:]    # '2026' (de l'indice 6 à la fin)
 s[::-1]  # '6202NOHTYP' (inversion complète !)
 ```
 
-* **Exercice D5 (Découpage de tranches)** :  
-  À partir de `"RES_BTS_CIEL_2026"`, extrayez sans boucle : les 3 premiers caractères (`"RES"`), les 4 derniers (`"2026"`), le milieu (`"BTS_CIEL"`), et la chaîne inversée.
-* **Exercice D6 (Testeur de Palindrome)** :  
-  Écrivez `est_palindrome(texte)` en une seule ligne grâce au slicing `texte == texte[::-1]`. Adaptez pour ignorer les espaces et la casse (`.replace(" ", "").lower()`).
-* **Exercice D7 (Analyseur d'adresses IP)** :  
-  Écrivez `analyser_ip(ip_str)` : découpez avec `.split('.')`, vérifiez qu'il y a 4 octets, convertissez en `int`, et vérifiez que chaque valeur est entre 0 et 255.
-* **Exercice D8 (Masquage défensif de token / secret)** :  
-  Écrivez `masquer_secret(secret, visible_debut=4, visible_fin=4)` : conservez les 4 premiers et 4 derniers caractères et remplacez l'intérieur par des étoiles `*` (`"API_*****************2026"`).
+* **Exercice 0.1 (Nettoyage & mise en forme de texte)** :  
+  Écrivez une fonction `nettoyer_texte(s)` qui supprime les espaces inutiles au début et à la fin (`.strip()`) et convertit l'ensemble en minuscules (`.lower()`).
+* **Exercice 0.2 (Slicing élémentaire & Palindrome)** :  
+  Écrivez `est_palindrome(mot)` qui retourne `True` si un mot se lit identiquement dans les deux sens (ex: `"radar"`, `"kayak"`) en comparant simplement le mot à son inversion par slicing : `mot == mot[::-1]`.
+* **Exercice 0.3 (Découpage & recomposition avec `.split()` et `.join()`)** :  
+  À partir d'une chaîne `"Paris,Lyon,Marseille,Toulouse"`, découpez les éléments dans une liste Python avec `.split(",")`. Affichez chaque ville sur une ligne, puis recollez-les avec un tiret grâce à `"-".join(liste)`.
 
 ---
 
-#### 4. Entraînement : Dictionnaires (`dict`) Approfondis
+#### 3. Entraînement : Les Listes (`list`) & l'Accumulateur (`append` vs `push`)
 
-* **Exercice D9 (Accès sécurisé `.get()`)** :  
-  Soit `emp = {"id": 3, "nom": "Nicolas", "salaire": 2200}`. Observez l'erreur `KeyError` sur `emp["prime"]`. Sécurisez avec `emp.get("prime", 0.0)`. Ajoutez `"departement": "Reseau"`.
-* **Exercice D10 (Compteur d'occurrences / Fréquences)** :  
-  Soit `codes = [200, 200, 404, 200, 500, 404, 200]`. Construisez un dictionnaire `frequences = {}` et alimentez-le dans une boucle : `frequences[c] = frequences.get(c, 0) + 1`. Affichez avec `.items()`.
-* **Exercice D11 (Dictionnaires imbriqués)** :  
-  Modélisez un employé avec `identite: {"nom": "Dupont", "prenom": "Nicolas"}`, `contrat: {"salaire": 2200, "dept": "Reseau"}` et `competences: ["Linux", "Cisco"]`. Affichez le nom complet, ajoutez `"Docker"` aux compétences.
-* **Exercice D12 (Regroupement par catégorie)** :  
-  À partir d'une liste d'employés contenant un champ `"dept"`, écrivez `grouper_par_departement(liste)` retournant `{"Support": ["Alice", "Chloé"], "Reseau": ["Nicolas", "David"]}`.
-* **Exercice D13 (Recherche ciblée avec `break`)** :  
-  Écrivez `trouver_employe_par_id(liste, id_cible)` qui s'arrête immédiatement dès que l'employé est trouvé sans parcourir le reste de la liste.
+* **Exercice 0.4 (Filtrage avec accumulateur `.append()`)** :  
+  Soit une liste d'entiers `nombres = [12, 5, 8, 21, 14, 3, 30]`. En utilisant une boucle `for` et la méthode `.append()`, construisez une nouvelle liste `pairs` ne contenant que les nombres pairs (`n % 2 == 0`).
+* **Exercice 0.5 (Calculs élémentaires sans fonction magique)** :  
+  À partir d'une liste de notes `[12.5, 14.0, 9.0, 16.5, 11.0]`, écrivez une boucle calculant manuellement la somme totale et déduisez-en la moyenne arrondie à deux décimales avec `round(..., 2)`.
+
+---
+
+#### 4. Entraînement : Les Dictionnaires (`dict`) & Tableaux de Fiches
+
+* **Exercice 0.6 (Fiche d'un étudiant & accès sécurisé `.get()`)** :  
+  Créez un dictionnaire `eleve = {"nom": "Nicolas", "age": 19, "note": 14.5}`.  
+  Ajoutez la clé `"ville": "Toulouse"`. Constatez ce qui se passe si vous demandez une clé inexistante `eleve["option"]` (`KeyError`). Sécurisez l'accès avec `eleve.get("option", "Aucune")`.
+* **Exercice 0.7 (Parcours d'une liste de dictionnaires)** :  
+  Soit la liste de 4 élèves :  
+  ```python
+  classe = [
+      {"nom": "Alice", "note": 14.5},
+      {"nom": "Bob", "note": 8.0},
+      {"nom": "Nicolas", "note": 15.0},
+      {"nom": "Chloé", "note": 9.5}
+  ]
+  ```
+  1. Parcourez la liste pour calculer la moyenne générale de la classe.  
+  2. Construisez avec `.append()` une nouvelle liste contenant uniquement les élèves admis (note $\ge 10.0$).
+
+---
+
+#### 5. Application Visuelle & Concrète : Traitement d'Image & L'Image Cachée
+
+> 💡 **Démystifier une image numérique :**  
+> Une image en noir et blanc n'est rien d'autre qu'une **grille 2D de pixels** (une liste de listes en Python) ! Chaque case contient une valeur lumineuse.
+
+* **Exercice 0.8 (Afficher une image matricielle en console)** :  
+  Soit une grille 2D de pixels $0$ (noir) et $1$ (blanc) :
+  ```python
+  dessin = [
+      [0, 1, 1, 0],
+      [1, 0, 0, 1],
+      [1, 1, 1, 1],
+      [1, 0, 0, 1]
+  ]
+  ```
+  À l'aide d'une double boucle `for ligne in dessin:` et `for pixel in ligne:`, affichez l'image en remplaçant les `1` par le caractère `'#'` et les `0` par un espace `' '`. Vous observez la lettre **A** se dessiner dans la console !
+
+* **Exercice 0.9 (Révéler une Image Cachée dans une Image)** :  
+  Une image apparemment banale (matrice hôte $8 \times 8$) contient des niveaux de gris ordinaires compris entre 100 et 200 :
+  ```python
+  image_hote = [
+      [120, 135, 143, 110, 102, 187, 191, 104],
+      [115, 133, 141, 127, 189, 175, 163, 147],
+      [161, 179, 145, 137, 189, 177, 123, 145],
+      [155, 143, 177, 189, 135, 157, 179, 191],
+      [134, 189, 177, 143, 159, 175, 123, 168],
+      [112, 156, 189, 177, 123, 145, 180, 142],
+      [176, 142, 156, 189, 177, 124, 168, 142],
+      [104, 118, 144, 134, 188, 176, 124, 140]
+  ]
+  ```
+  **Le secret de l'image cachée :**  
+  La forme cachée est dissimulée dans la **parité** de chaque pixel :
+  * Si la valeur du pixel est **impaire** (`pixel % 2 != 0`) : le pixel caché est allumé (`'#'`).
+  * Si la valeur du pixel est **paire** (`pixel % 2 == 0`) : le pixel caché est éteint (`' '`).
+
+  **Travail à réaliser :**  
+  Écrivez la fonction `reveler_image_secrete(image_hote)` qui :
+  1. Parcourt chaque ligne de `image_hote`.
+  2. Initialise une liste vide `ligne_revelee = []`.
+  3. Parcourt chaque pixel de la ligne, teste sa parité et ajoute `'#'` ou `' '` avec **`.append()`**.
+  4. Affiche la ligne reconstituée avec `print("".join(ligne_revelee))`.
+  5. Exécutez le script : admirez le dessin secret (un magnifique cœur) qui apparaît sous vos yeux !
+
+* **Exercice 0.10 (Cacher son propre motif secret)** :  
+  Écrivez la fonction inverse `cacher_motif(image_base, motif_binaire)` qui ajuste la valeur des pixels (en ajoutant ou retirant 1) pour que la parité corresponde exactement à votre propre motif secret.
 
 ---
 
@@ -282,7 +340,7 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 * **Objectif** : L'étudiant est capable de connecter Python à MySQL, d'exécuter des requêtes paramétrées sécurisées (`%s`), et de récupérer les lignes de résultats sous forme de dictionnaires avec `DictCursor`.
 
 * **📝 Travail sur table préalable (15 min — Débranché)** :
-  1. *Injection SQL* : Soit `sql = f"SELECT * FROM employes WHERE id = {id_saisi};"`. Montrez ce qui est exécuté si `id_saisi = "1 OR 1=1"`. Réécrivez avec `%s` et `(id_saisi,)`.
+  1. *Requêtes préparées vs Concaténation de chaînes* : Soit une variable Python `id_saisi = 3`. Pourquoi ne doit-on jamais concaténer de chaînes de caractères avec `f"SELECT * FROM employes WHERE id = {id_saisi}"` ? Réécrivez la requête de façon propre et robuste en utilisant le marqueur de substitution `%s` et le tuple de paramètres `(id_saisi,)`.
   2. *Du tuple SQL au dictionnaire Python* : Reconstituez le dictionnaire créé par `DictCursor` pour la ligne `(3, "Nicolas", 2200.0)`.
 
 * **Exemple de code de cours (19 lignes)** :
