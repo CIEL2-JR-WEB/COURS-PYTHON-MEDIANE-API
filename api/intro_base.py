@@ -96,8 +96,22 @@ def filtrer_admis(eleves: List[Dict[str, Any]], note_seuil: float = 10.0) -> Lis
 
 
 # =============================================================================
-# 4. TRAITEMENT D'IMAGE & IMAGE CACHÉE (STÉGANOGRAPHIE VISUELLE)
+# 4. CRÉATION DE MATRICES 2D & TRAITEMENT D'IMAGE (IMAGE CACHÉE)
 # =============================================================================
+
+def creer_matrice(nb_lignes: int, nb_colonnes: int, valeur_defaut: Any = 0) -> List[List[Any]]:
+    """
+    Crée une matrice 2D de dimensions nb_lignes x nb_colonnes initialisée avec valeur_defaut.
+    Construit chaque ligne indépendamment avec .append() pour éviter tout effet de bord.
+    """
+    matrice = []
+    for _ in range(nb_lignes):
+        ligne = []
+        for _ in range(nb_colonnes):
+            ligne.append(valeur_defaut)
+        matrice.append(ligne)
+    return matrice
+
 
 # Image hôte 8x8 : les valeurs sont des niveaux de gris apparemment aléatoires (100-200),
 # mais les nombres IMPAIRS cachent les pixels d'un coeur secret !
@@ -200,7 +214,14 @@ def run_introduction():
     print(f"Moyenne de classe  : {moy_classe}/20")
     print(f"Élèves admis       : {[e['nom'] for e in admis]}")
 
-    print("\n--- [Exercices 0.4 & 0.5] Traitement d'Image : Image Cachée dans une Image ---")
+    print("\n--- [Exercice 0.4] Création de Matrice 2D & Manipulation d'Indices ---")
+    mat_demo = creer_matrice(3, 4, 0)
+    mat_demo[1][2] = 9  # Modification de la case ligne 1, colonne 2
+    print("Matrice 3x4 générée avec .append() (modification en [1][2] = 9) :")
+    for lig in mat_demo:
+        print(" ", lig)
+
+    print("\n--- [Exercices 0.5 & 0.6] Traitement d'Image : Image Cachée dans une Image ---")
     print("Matrice apparente 8x8 (niveaux de gris) :")
     for lig in IMAGE_MYSTERE[:3]:
         print(" ", lig)

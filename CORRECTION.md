@@ -46,7 +46,13 @@ Nombre d'élèves    : 4
 Moyenne de classe  : 11.75/20
 Élèves admis       : ['Alice', 'Nicolas']
 
---- [Exercices 0.4 & 0.5] Traitement d'Image : Image Cachée dans une Image ---
+--- [Exercice 0.4] Création de Matrice 2D & Manipulation d'Indices ---
+Matrice 3x4 générée avec .append() (modification en [1][2] = 9) :
+  [0, 0, 0, 0]
+  [0, 0, 9, 0]
+  [0, 0, 0, 0]
+
+--- [Exercices 0.5 & 0.6] Traitement d'Image : Image Cachée dans une Image ---
 Matrice apparente 8x8 (niveaux de gris) :
   [120, 135, 143, 110, 102, 187, 191, 104]
   [115, 133, 141, 127, 189, 175, 163, 147]

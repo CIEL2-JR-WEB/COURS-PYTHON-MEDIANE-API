@@ -60,7 +60,7 @@ Elle repose sur :
 
 ### 🟢 Partie 0 : Prise en main Fondamentale de Python (Les Bases Concrètes)
 
-Avant d'aborder la programmation web et les bases de données, cette partie introductive pose les gammes indispensables du langage Python. **Aucun concept complexe ou cyber n'est requis** : nous manipulons du texte, des listes, des dictionnaires et une grille d'image dans la console.
+Avant d'aborder la programmation web et les bases de données, cette partie introductive pose les gammes indispensables du langage Python. **Chaque exercice sur machine est systématiquement précédé d'un exercice écrit sur table**, vous permettant de poser le problème, tracer les variables et concevoir le pseudo-code avant de toucher au clavier.
 
 ---
 
@@ -115,90 +115,299 @@ s[6:]    # '2026' (de l'indice 6 à la fin)
 s[::-1]  # '6202NOHTYP' (inversion complète !)
 ```
 
-* **Exercice 0.1 (Nettoyage & mise en forme de texte)** :  
-  Écrivez une fonction `nettoyer_texte(s)` qui supprime les espaces inutiles au début et à la fin (`.strip()`) et convertit l'ensemble en minuscules (`.lower()`).
-* **Exercice 0.2 (Slicing élémentaire & Palindrome)** :  
-  Écrivez `est_palindrome(mot)` qui retourne `True` si un mot se lit identiquement dans les deux sens (ex: `"radar"`, `"kayak"`) en comparant simplement le mot à son inversion par slicing : `mot == mot[::-1]`.
-* **Exercice 0.3 (Découpage & recomposition avec `.split()` et `.join()`)** :  
-  À partir d'une chaîne `"Paris,Lyon,Marseille,Toulouse"`, découpez les éléments dans une liste Python avec `.split(",")`. Affichez chaque ville sur une ligne, puis recollez-les avec un tiret grâce à `"-".join(liste)`.
+* **Exercice 0.1 : Nettoyage & mise en forme de texte**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Complétez le tableau d'évaluation ci-dessous en prédisant sur feuille la sortie exacte de chaque opération de chaîne :
+    > 
+    > | Chaîne brute `s` | Expression Python | Résultat attendu (entre guillemets) |
+    > | :--- | :--- | :--- |
+    > | `"  BTS CIEL  "` | `s.strip()` | `____________________` |
+    > | `"Alice DUPONT"` | `s.lower()` | `____________________` |
+    > | `"   python 2026   "` | `s.strip().upper()` | `____________________` |
+    > | `"bts-ciel-sn"` | `s.replace("-", "_")` | `____________________` |
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, écrivez la fonction `nettoyer_texte(s: str) -> str` qui supprime les espaces de début/fin (`.strip()`) et convertit la chaîne en minuscules (`.lower()`). Testez avec `python api/intro_base.py`.
+
+* **Exercice 0.2 : Découpage, Slicing & Palindrome**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit le mot `mot = "RADAR"` de longueur 5 :
+    > 1. Remplissez la grille des indices positifs et négatifs :
+    >    | Caractère | R | A | D | A | R |
+    >    | :--- | :---: | :---: | :---: | :---: | :---: |
+    >    | **Indice positif (0 à 4)** | 0 | 1 | 2 | 3 | 4 |
+    >    | **Indice négatif (-5 à -1)** | -5 | -4 | -3 | -2 | -1 |
+    > 2. Quelle expression utilisant le découpage par tranches (*slicing*) permet d'obtenir la chaîne inversée ?  
+    >    *Réponse :* `mot[____ : ____ : ____]`
+    > 3. Écrivez la condition logique complète vérifiant si un mot est un palindrome (sans boucle `for`) :  
+    >    *Condition :* `________________________________________________`
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `est_palindrome(mot: str) -> bool`. Vérifiez que `"radar"` et `"kayak"` retournent `True`, tandis que `"python"` retourne `False`.
+
+* **Exercice 0.3 : Découpage & réassemblage (`.split` et `.join`)**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Soit `texte = "Paris,Lyon,Marseille,Toulouse"`. Que retourne l'instruction `texte.split(",")` ?  
+    >    *Réponse (liste Python) :* `[ ____________________________________________________ ]`
+    > 2. Si `villes = ["Paris", "Lyon", "Marseille"]`, que retourne `"-".join(villes)` ?  
+    >    *Réponse (chaîne) :* `"________________________________________"`
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `decouper_liste_mots(texte, separateur)` retournant la liste des mots nettoyés.
 
 ---
 
 #### 3. Entraînement : Les Listes (`list`) & l'Accumulateur (`append` vs `push`)
 
-* **Exercice 0.4 (Filtrage avec accumulateur `.append()`)** :  
-  Soit une liste d'entiers `nombres = [12, 5, 8, 21, 14, 3, 30]`. En utilisant une boucle `for` et la méthode `.append()`, construisez une nouvelle liste `pairs` ne contenant que les nombres pairs (`n % 2 == 0`).
-* **Exercice 0.5 (Calculs élémentaires sans fonction magique)** :  
-  À partir d'une liste de notes `[12.5, 14.0, 9.0, 16.5, 11.0]`, écrivez une boucle calculant manuellement la somme totale et déduisez-en la moyenne arrondie à deux décimales avec `round(..., 2)`.
+* **Exercice 0.4 : Filtrage avec accumulateur `.append()`**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit la liste `nombres = [12, 5, 8, 21, 14, 3, 30]`. On souhaite extraire les nombres pairs dans une liste `pairs = []`.  
+    > Remplissez le tableau de trace de l'algorithme :
+    > 
+    > | Étape (Tour de boucle) | Variable courante `n` | Condition `n % 2 == 0` | Action sur la liste `pairs` | Contenu de `pairs` après l'étape |
+    > | :---: | :---: | :---: | :--- | :--- |
+    > | Début | - | - | Initialisation | `[]` |
+    > | 1 | 12 | VRAI (12 est pair) | `pairs.append(12)` | `[12]` |
+    > | 2 | 5 | FAUX (5 est impair) | Rien | `[12]` |
+    > | 3 | 8 | `____` | `____________________` | `[____, ____]` |
+    > | 4 | 21 | `____` | `____________________` | `[____, ____]` |
+    > | 5 | 14 | `____` | `____________________` | `[____, ____, ____]` |
+    > | 6 | 3 | `____` | `____________________` | `[____, ____, ____]` |
+    > | 7 | 30 | `____` | `____________________` | `[____, ____, ____, ____]` |
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `filtrer_pairs(nombres: list[int]) -> list[int]`. Validez que le résultat final est exactement `[12, 8, 14, 30]`.
+
+* **Exercice 0.5 : Somme et moyenne manuelles d'une liste**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit la liste de 5 notes `notes = [12.5, 14.0, 9.0, 16.5, 11.0]`.  
+    > 1. Complétez le pseudo-code sans utiliser les fonctions magiques `sum()` ou `len()` :
+    >    ```text
+    >    total ← 0.0
+    >    compteur ← 0
+    >    Pour chaque note dans notes :
+    >        total ← total + ____________
+    >        compteur ← compteur + ____________
+    >    moyenne ← ____________ / ____________
+    >    ```
+    > 2. Calculez la moyenne sur feuille : Somme = `______` | Moyenne = `______`.
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `calculer_somme_et_moyenne(valeurs)` et vérifiez que `Somme = 63.0` et `Moyenne = 12.6`.
 
 ---
 
-#### 4. Entraînement : Les Dictionnaires (`dict`) & Tableaux de Fiches
+#### 4. Entraînement : Les Objets & Dictionnaires (`dict`)
 
-* **Exercice 0.6 (Fiche d'un étudiant & accès sécurisé `.get()`)** :  
-  Créez un dictionnaire `eleve = {"nom": "Nicolas", "age": 19, "note": 14.5}`.  
-  Ajoutez la clé `"ville": "Toulouse"`. Constatez ce qui se passe si vous demandez une clé inexistante `eleve["option"]` (`KeyError`). Sécurisez l'accès avec `eleve.get("option", "Aucune")`.
-* **Exercice 0.7 (Parcours d'une liste de dictionnaires)** :  
-  Soit la liste de 4 élèves :  
-  ```python
-  classe = [
-      {"nom": "Alice", "note": 14.5},
-      {"nom": "Bob", "note": 8.0},
-      {"nom": "Nicolas", "note": 15.0},
-      {"nom": "Chloé", "note": 9.5}
-  ]
-  ```
-  1. Parcourez la liste pour calculer la moyenne générale de la classe.  
-  2. Construisez avec `.append()` une nouvelle liste contenant uniquement les élèves admis (note $\ge 10.0$).
+> 💡 **Comprendre un Objet / Dictionnaire en mémoire :**  
+> En programmation, un dictionnaire (ou objet en JS) modélise une **entité** réelle (un élève, un salarié, un capteur).  
+> En mémoire, c'est une boîte contenant des étiquettes uniques (**clés**) associées à des **valeurs** :  
+> ```text
+> Référence en mémoire -> { "nom": "Alice", "age": 20, "note": 14.5 }
+>                            ^ Clé (str)   ^ Valeur
+> ```
+
+* **Exercice 0.6 : Fiche objet d'un élève & accès sécurisé `.get()`**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit le dictionnaire `eleve = {"nom": "Nicolas", "age": 19, "note": 14.5}` :
+    > 1. Dessinez sur feuille le schéma de la boîte mémoire avec ses 3 paires clé/valeur.
+    > 2. Quelle est la valeur de `eleve["note"]` ? `__________`
+    > 3. Que se passe-t-il si vous tentez d'exécuter `print(eleve["ville"])` ?  
+    >    *Réponse :* `________________________________________________`
+    > 4. Écrivez l'instruction Python permettant d'ajouter la clé `"ville"` avec pour valeur `"Toulouse"` :  
+    >    *Instruction :* `eleve[____________] = ____________`
+    > 5. Quelle méthode permet d'obtenir la valeur d'une clé sans planter si elle n'existe pas, en renvoyant une valeur par défaut ?  
+    >    *Instruction :* `eleve.get("option", ____________)`
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `creer_fiche_eleve(nom, age, note)` et vérifiez l'accès sécurisé avec `.get()`.
+
+* **Exercice 0.7 : Tableaux d'Objets (Liste de dictionnaires) & Calculs**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit la liste de 4 fiches d'élèves :
+    > ```python
+    > classe = [
+    >     {"nom": "Alice", "note": 14.5},
+    >     {"nom": "Bob", "note": 8.0},
+    >     {"nom": "Nicolas", "note": 15.0},
+    >     {"nom": "Chloé", "note": 9.5}
+    > ]
+    > ```
+    > 1. Dessinez la liste `classe` en mémoire : un tableau de 4 cases (`[0]`, `[1]`, `[2]`, `[3]`), chaque case pointant vers son dictionnaire respectif.
+    > 2. Écrivez l'expression Python permettant d'accéder à la note de Nicolas :  
+    >    *Expression :* `classe[______][______]`
+    > 3. Complétez le pseudo-code pour calculer la moyenne de la classe et filtrer les admis ($\ge 10$) :
+    >    ```text
+    >    somme_notes ← 0.0
+    >    admis ← []
+    >    Pour chaque fiche dans classe :
+    >        somme_notes ← somme_notes + fiche["note"]
+    >        Si fiche["note"] >= 10.0 alors :
+    >            admis.append(____________)
+    >    moyenne ← somme_notes / longueur(classe)
+    >    ```
+    > 4. Remplissez à l'écrit : Moyenne de classe = `______ / 20` | Liste des admis = `[ ____________, ____________ ]`.
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `calculer_moyenne_classe(eleves)` et `filtrer_admis(eleves, 10.0)`.
 
 ---
 
-#### 5. Application Visuelle & Concrète : Traitement d'Image & L'Image Cachée
+#### 5. Entraînement : Création de Matrices 2D & Opérations de Base
 
-> 💡 **Démystifier une image numérique :**  
-> Une image en noir et blanc n'est rien d'autre qu'une **grille 2D de pixels** (une liste de listes en Python) ! Chaque case contient une valeur lumineuse.
+> 💡 **Comprendre une Matrice 2D en mémoire :**  
+> Une matrice (ou grille 2D) est un tableau à double entrée composé de **lignes** et de **colonnes**.  
+> En Python, elle est modélisée par une **liste de listes** :  
+> ```text
+> Matrice M (3 lignes, 4 colonnes) :
+>          Col 0   Col 1   Col 2   Col 3
+> Lig 0 : [ (0,0),  (0,1),  (0,2),  (0,3) ]
+> Lig 1 : [ (1,0),  (1,1),  (1,2),  (1,3) ]
+> Lig 2 : [ (2,0),  (2,1),  (2,2),  (2,3) ]
+> ```
+> * **Règle d'or de l'indexation** : `M[i][j]` où :
+>   * `i` est le numéro de **ligne** (indice vertical de `0` à `nb_lignes - 1`).
+>   * `j` est le numéro de **colonne** (indice horizontal de `0` à `nb_colonnes - 1`).
+> * **Dimensions** : `hauteur = len(M)` (lignes) | `largeur = len(M[0])` (colonnes).
 
-* **Exercice 0.8 (Afficher une image matricielle en console)** :  
-  Soit une grille 2D de pixels $0$ (noir) et $1$ (blanc) :
-  ```python
-  dessin = [
-      [0, 1, 1, 0],
-      [1, 0, 0, 1],
-      [1, 1, 1, 1],
-      [1, 0, 0, 1]
-  ]
-  ```
-  À l'aide d'une double boucle `for ligne in dessin:` et `for pixel in ligne:`, affichez l'image en remplaçant les `1` par le caractère `'#'` et les `0` par un espace `' '`. Vous observez la lettre **A** se dessiner dans la console !
+* **Exercice 0.8 : Création et initialisation d'une matrice $N \times P$**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. *Le piège de la référence partagée* :  
+    >    Pourquoi ne faut-il **JAMAIS** écrire `M = [[0] * 4] * 3` pour créer une matrice $3 \times 4$ ?  
+    >    *Réponse :* `____________________________________________________________________`  
+    >    *(Explication : toutes les lignes pointeraient vers la même adresse mémoire ! Modifier `M[0][0]` modifierait toutes les lignes simultanément !)*
+    > 
+    > 2. *Algorithme correct avec boucles imbriquées et `.append()`* :  
+    >    Complétez le pseudo-code pour construire proprement une matrice indépendante :
+    >    ```text
+    >    matrice ← []
+    >    Pour i de 0 à nb_lignes - 1 :
+    >        ligne ← []
+    >        Pour j de 0 à nb_colonnes - 1 :
+    >            ligne.append(____________)
+    >        matrice.append(____________)
+    >    Retourner matrice
+    >    ```
+    > 3. Dessinez sur quadrillage une matrice de 3 lignes et 4 colonnes initialisée avec des zéros.
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez la fonction :
+    ```python
+    def creer_matrice(nb_lignes: int, nb_colonnes: int, valeur_defaut=0) -> list[list]:
+        matrice = []
+        for _ in range(nb_lignes):
+            ligne = []
+            for _ in range(nb_colonnes):
+                ligne.append(valeur_defaut)
+            matrice.append(ligne)
+        return matrice
+    ```
+    Testez `creer_matrice(3, 4, 0)`.
 
-* **Exercice 0.9 (Révéler une Image Cachée dans une Image)** :  
-  Une image apparemment banale (matrice hôte $8 \times 8$) contient des niveaux de gris ordinaires compris entre 100 et 200 :
-  ```python
-  image_hote = [
-      [120, 135, 143, 110, 102, 187, 191, 104],
-      [115, 133, 141, 127, 189, 175, 163, 147],
-      [161, 179, 145, 137, 189, 177, 123, 145],
-      [155, 143, 177, 189, 135, 157, 179, 191],
-      [134, 189, 177, 143, 159, 175, 123, 168],
-      [112, 156, 189, 177, 123, 145, 180, 142],
-      [176, 142, 156, 189, 177, 124, 168, 142],
-      [104, 118, 144, 134, 188, 176, 124, 140]
-  ]
-  ```
-  **Le secret de l'image cachée :**  
-  La forme cachée est dissimulée dans la **parité** de chaque pixel :
-  * Si la valeur du pixel est **impaire** (`pixel % 2 != 0`) : le pixel caché est allumé (`'#'`).
-  * Si la valeur du pixel est **paire** (`pixel % 2 == 0`) : le pixel caché est éteint (`' '`).
+* **Exercice 0.9 : Manipulation et modification de coordonnées dans une matrice 2D**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit `M = creer_matrice(3, 4, 0)`.
+    > 1. Écrivez l'instruction Python pour placer le chiffre `9` à la **ligne 1**, **colonne 2** :  
+    >    *Instruction :* `M[______][______] = 9`
+    > 2. Dessinez l'état de la matrice après cette modification :
+    >    ```text
+    >    [ 0, 0, 0, 0 ]
+    >    [ 0, 0, _, 0 ]
+    >    [ 0, 0, 0, 0 ]
+    >    ```
+    > 3. Écrivez le pseudo-code pour parcourir chaque case et inverser une matrice binaire ($0 \rightarrow 1$ et $1 \rightarrow 0$) :
+    >    ```text
+    >    Pour i de 0 à hauteur - 1 :
+    >        Pour j de 0 à largeur - 1 :
+    >            Si M[i][j] == 0 alors :
+    >                M[i][j] ← 1
+    >            Sinon :
+    >                M[i][j] ← 0
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Appliquez la modification `matrice[1][2] = 9` et affichez la matrice ligne par ligne avec une boucle `for ligne in matrice: print(ligne)`.
 
-  **Travail à réaliser :**  
-  Écrivez la fonction `reveler_image_secrete(image_hote)` qui :
-  1. Parcourt chaque ligne de `image_hote`.
-  2. Initialise une liste vide `ligne_revelee = []`.
-  3. Parcourt chaque pixel de la ligne, teste sa parité et ajoute `'#'` ou `' '` avec **`.append()`**.
-  4. Affiche la ligne reconstituée avec `print("".join(ligne_revelee))`.
-  5. Exécutez le script : admirez le dessin secret (un magnifique cœur) qui apparaît sous vos yeux !
+---
 
-* **Exercice 0.10 (Cacher son propre motif secret)** :  
-  Écrivez la fonction inverse `cacher_motif(image_base, motif_binaire)` qui ajuste la valeur des pixels (en ajoutant ou retirant 1) pour que la parité corresponde exactement à votre propre motif secret.
+#### 6. Application Visuelle & Concrète : Traitement d'Image & L'Image Cachée
+
+> 💡 **Une image numérique n'est rien d'autre qu'une matrice 2D !**  
+> Une image en noir et blanc de dimensions $8 \times 8$ est exactement une liste de 8 listes de 8 entiers.
+
+* **Exercice 0.10 : Affichage d'une matrice de pixels en console**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit le dessin binaire $4 \times 4$ représentant la lettre "A" :
+    > ```python
+    > dessin = [
+    >     [0, 1, 1, 0],
+    >     [1, 0, 0, 1],
+    >     [1, 1, 1, 1],
+    >     [1, 0, 0, 1]
+    > ]
+    > ```
+    > 1. Remplissez sur quadrillage le rendu console attendu en remplaçant chaque `1` par `'#'` et chaque `0` par un espace `' '` :
+    >    ```text
+    >    Ligne 0 : |  ##  |
+    >    Ligne 1 : | #  # |
+    >    Ligne 2 : | #### |
+    >    Ligne 3 : | #  # |
+    >    ```
+    > 2. Écrivez le pseudo-code permettant d'afficher ce motif ligne par ligne dans le terminal.
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `afficher_image_console(grille_caracteres)` et observez la lettre "A" se dessiner dans la console.
+
+* **Exercice 0.11 : Révéler une Image Cachée dans une Image (Stéganographie visuelle)**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > On dispose d'une matrice hôte `image_hote` ($8 \times 8$) dont les pixels contiennent des niveaux de gris apparemment ordinaires entre 100 et 200.  
+    > **Règle de dissimulation** :  
+    > * Si `pixel % 2 != 0` (pixel **impair**) : le pixel secret est **allumé** (`'#'`).  
+    > * Si `pixel % 2 == 0` (pixel **pair**) : le pixel secret est **éteint** (`' '`).  
+    > 
+    > 1. Sur cet extrait de la première ligne `[120, 135, 143, 110, 102, 187, 191, 104]`, calculez la parité de chaque nombre :
+    >    | Valeur pixel | 120 | 135 | 143 | 110 | 102 | 187 | 191 | 104 |
+    >    | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+    >    | Parité (Pair/Impair) | Pair | Impair | Impair | Pair | Pair | Impair | Impair | Pair |
+    >    | Caractère secret (`#` ou espace) | `' '` | `'#'` | `'#'` | `' '` | `' '` | `'#'` | `'#'` | `' '` |
+    > 2. Déduisez le motif de la ligne 0 : `| ##  ## |`.  
+    > 3. Complétez le pseudo-code de la fonction :
+    >    ```text
+    >    image_revelee ← []
+    >    Pour chaque ligne dans image_hote :
+    >        ligne_revelee ← []
+    >        Pour chaque pixel dans ligne :
+    >            Si pixel % 2 != 0 alors :
+    >                ligne_revelee.append("#")
+    >            Sinon :
+    >                ligne_revelee.append(" ")
+    >        image_revelee.append(ligne_revelee)
+    >    Retourner image_revelee
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `reveler_image_secrete(image_hote)`. Exécutez le script et constatez la révélation du cœur pixelisé dans la console !
+
+* **Exercice 0.12 : Cacher son propre motif secret (Encodage)**
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit un pixel de l'image hôte valant `pixel = 120` (pair). On souhaite y cacher un pixel secret valant `1` (allumé, donc nécessitant une valeur impaire).  
+    > Quelle opération simple sur `pixel` permet de le rendre impair sans altérer visuellement l'image ?  
+    > *Réponse :* `pixel = pixel + 1` (donne 121, impair).
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Codez `cacher_motif(image_base, motif_binaire)` et testez avec votre propre motif.
 
 ---
 
@@ -211,9 +420,25 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 * **Objectif** : L'étudiant est capable de modéliser des employés sous forme de liste de dictionnaires en mémoire, de la parcourir avec une boucle `for`, et d'en extraire des données par filtrage conditionnel (`if`).
 
 * **📝 Travail sur table préalable (15 min — Débranché)** :
-  1. *Schéma mémoire* : Dessinez sur feuille la liste `employes` de 3 salariés (Alice 1500, Bob 4500, Nicolas 2200) avec ses cases d'indices `[0]`, `[1]`, `[2]` reliées à leurs dictionnaires respectifs.
-  2. *Accès direct* : Écrivez l'expression Python accédant au salaire de Bob (`employes[1]["salaire"]`).
-  3. *Tableau de trace* : Tracez pas à pas la boucle calculant la masse salariale (`total += emp["salaire"]`) et le filtrage des salaires $> 2\,000\text{ €}$.
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Schéma mémoire d'une liste de dictionnaires* :  
+  >    Dessinez sur feuille la structure de la variable `employes` de 3 salariés (Alice 1500, Bob 4500, Nicolas 2200).  
+  >    ```text
+  >    employes (liste) -> [ [0] -> {"id": 1, "nom": "Alice",   "salaire": 1500},
+  >                          [1] -> {"id": 2, "nom": "Bob",     "salaire": 4500},
+  >                          [2] -> {"id": 3, "nom": "Nicolas", "salaire": 2200} ]
+  >    ```
+  > 2. *Accès direct à une propriété imbriquée* :  
+  >    Écrivez l'expression Python accédant au salaire de Bob :  
+  >    *Réponse :* `employes[______][______]` *(donne 4500)*.
+  > 3. *Tableau de trace de la boucle de calcul et filtrage* :  
+  >    Remplissez le tableau pour la boucle calculant la masse salariale (`total += emp["salaire"]`) et testant `emp["salaire"] > 2000` :
+  >    | Tour | Salarié | Salaire | Total cumulé | Condition `> 2000` | Affichage produit |
+  >    | :---: | :---: | :---: | :---: | :---: | :--- |
+  >    | 1 | Alice | 1500 | 1500 | FAUX | Aucun |
+  >    | 2 | Bob | 4500 | 6000 | VRAI | `"Haut salaire : Bob (4500 €)"` |
+  >    | 3 | Nicolas | 2200 | `____` | `____` | `"______________________________"` |
 
 * **Exemple de code de cours (14 lignes)** :
   ```python
@@ -260,9 +485,20 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
   ```
 
 * **📝 Travail sur table préalable (15 min — Débranché)** :
-  1. *Tableau de trace* : Déroulez l'algorithme sur $t = [15, 3, 8]$ ($n = 3$) en notant pour chaque étape $i$ la valeur de `min_idx`, l'échange effectué, et l'état du tableau.
-  2. *Schéma Référence vs Copie* : Dessinez ce qui se passe en mémoire pour `b = t` (même adresse) vs `b = list(t)` (nouvel espace mémoire).
-  3. *Formule de la médiane* : Calculez les formules d'indices pour $N=9$ (impair, indice $N // 2$) et $N=8$ (pair, moyenne de $N // 2 - 1$ et $N // 2$).
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Tableau de trace complet du Tri par Sélection sur $t = [15, 3, 8]$ ($n = 3$)* :
+  >    | Étape $i$ | Indice $min$ initial | Indice $j$ | Comparaison $t[j] < t[min]$ | Nouveau $min$ | Échange $t[i] \leftrightarrow t[min]$ | État du tableau $t$ |
+  >    | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+  >    | 0 | 0 ($t[0]=15$) | 1 | $3 < 15$ (VRAI) | 1 | - | - |
+  >    | 0 | 1 ($t[1]=3$) | 2 | $8 < 3$ (FAUX) | 1 | $t[0] \leftrightarrow t[1]$ | `[3, 15, 8]` |
+  >    | 1 | 1 ($t[1]=15$) | 2 | $8 < 15$ (VRAI) | 2 | $t[1] \leftrightarrow t[2]$ | `[3, 8, 15]` |
+  > 2. *Schéma mémoire : Passage par Référence vs Copie Défensive* :
+  >    * Si `b = t` : `id(b) == id(t)`. `b` et `t` partagent le même emplacement. Modifier `b[0]` modifie aussi `t[0]`.
+  >    * Si `b = list(t)` : `id(b) != id(t)`. Un clone distinct est créé. `t` reste strictement intact.
+  > 3. *Formule d'indice de la médiane sur série triée de taille $N$* :
+  >    * Si $N$ est impair ($N=9$) : `indice = N // 2` *(indice 4, soit le 5e élément)*.
+  >    * Si $N$ est pair ($N=8$) : `mediane = (t[N // 2 - 1] + t[N // 2]) / 2` *(moyenne des indices 3 et 4)*.
 
 * **Exemple de code de cours (18 lignes)** :
   ```python
@@ -306,9 +542,26 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 * **Objectif** : L'étudiant est capable de sérialiser et désérialiser des listes de dictionnaires dans un fichier `.json` avec le module `json`, en encapsulant les opérations dans des blocs `try / except`.
 
 * **📝 Travail sur table préalable (15 min — Débranché)** :
-  1. *Correspondance des types* : Remplissez la grille (Python `True` $\rightarrow$ JSON `true`, `None` $\rightarrow$ `null`, guillemets doubles stricts `""`).
-  2. *Chasse aux anomalies* : Identifiez les 3 erreurs de syntaxe dans un extrait JSON piégé (apostrophes, virgule finale en trop, majuscule à `True`).
-  3. *Organigramme try/except* : Dessinez l'arbre de décision en cas de fichier introuvable.
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Grille de correspondance de syntaxe Python $\leftrightarrow$ JSON* :
+  >    | Type / Valeur | En Python | En JSON strict |
+  >    | :--- | :--- | :--- |
+  >    | Booléen vrai | `True` | `true` |
+  >    | Booléen faux | `False` | `false` |
+  >    | Absence de valeur | `None` | `null` |
+  >    | Chaîne de texte | `'texte'` ou `"texte"` | `"texte"` (guillemets doubles stricts) |
+  > 2. *Chasse aux anomalies syntaxiques JSON* :  
+  >    Identifiez et corrigez les 3 erreurs dans cet extrait invalide :
+  >    ```json
+  >    { 'nom': "Alice", "actif": True, "salaire": 1500, }
+  >    ```
+  >    *Erreur 1 :* `'nom'` $\rightarrow$ `"nom"` (guillemets simples interdits).  
+  >    *Erreur 2 :* `True` $\rightarrow$ `true` (majuscule interdite).  
+  >    *Erreur 3 :* `1500,` $\rightarrow$ `1500` (virgule finale interdite).
+  > 3. *Organigramme try / except* :  
+  >    Que fait le programme si `open("employes.json")` déclenche une `FileNotFoundError` ?  
+  >    *Réponse :* Le bloc `except` intercepte l'erreur sans planter et retourne une liste vide `[]`.
 
 * **Exemple de code de cours (17 lignes)** :
   ```python
@@ -340,8 +593,17 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 * **Objectif** : L'étudiant est capable de connecter Python à MySQL, d'exécuter des requêtes paramétrées sécurisées (`%s`), et de récupérer les lignes de résultats sous forme de dictionnaires avec `DictCursor`.
 
 * **📝 Travail sur table préalable (15 min — Débranché)** :
-  1. *Requêtes préparées vs Concaténation de chaînes* : Soit une variable Python `id_saisi = 3`. Pourquoi ne doit-on jamais concaténer de chaînes de caractères avec `f"SELECT * FROM employes WHERE id = {id_saisi}"` ? Réécrivez la requête de façon propre et robuste en utilisant le marqueur de substitution `%s` et le tuple de paramètres `(id_saisi,)`.
-  2. *Du tuple SQL au dictionnaire Python* : Reconstituez le dictionnaire créé par `DictCursor` pour la ligne `(3, "Nicolas", 2200.0)`.
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Requêtes préparées vs Concaténation de chaînes* :  
+  >    Soit une variable Python `id_saisi = 3`. Pourquoi ne doit-on jamais concaténer de chaînes avec `f"SELECT * FROM employes WHERE id = {id_saisi}"` ?  
+  >    *Réponse :* La concaténation ouvre la porte aux erreurs de syntaxe et aux corruptions si la saisie contient des caractères spéciaux. Réécriture robuste :
+  >    ```python
+  >    cur.execute("SELECT * FROM employes WHERE id = %s", (id_saisi,))
+  >    ```
+  > 2. *Du tuple SQL au dictionnaire Python avec DictCursor* :  
+  >    Pour la ligne retournée `(3, "Nicolas", 2200.0)`, écrivez le dictionnaire généré par le curseur :  
+  >    *Dictionnaire :* `{"id": 3, "nom": "Nicolas", "salaire": 2200.0}`.
 
 * **Exemple de code de cours (19 lignes)** :
   ```python
@@ -376,9 +638,23 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 * **Objectif** : L'étudiant est capable de déclarer des routes Flask associées à la méthode HTTP `GET`, de formater des réponses avec `jsonify()`, d'associer des codes HTTP (`200`, `404`), et de tester les endpoints avec Postman.
 
 * **📝 Travail sur table préalable (15 min — Débranché)** :
-  1. *Trame de la Requête HTTP Postman* : Remplissez `GET /api/employes/3 HTTP/1.1`, `Host: localhost:5000`, `Accept: application/json`.
-  2. *Trame de la Réponse HTTP Flask* : Remplissez `HTTP/1.1 200 OK`, `Content-Type: application/json`, corps JSON de Nicolas.
-  3. *Gestion d'erreur* : Quel code statut et corps JSON renvoyer pour un employé inconnu (`404`, `{"error": "..."}`) ?
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Trame de la Requête HTTP émise par le client (Postman)* :
+  >    ```http
+  >    GET /api/employes/3 HTTP/1.1
+  >    Host: localhost:5000
+  >    Accept: application/json
+  >    ```
+  > 2. *Trame de la Réponse HTTP renvoyée par Flask* :
+  >    ```http
+  >    HTTP/1.1 200 OK
+  >    Content-Type: application/json
+  >
+  >    { "id": 3, "nom": "Nicolas", "salaire": 2200.0 }
+  >    ```
+  > 3. *Code d'état HTTP en cas d'employé inconnu* :  
+  >    *Code statut :* `404 Not Found` | *Corps JSON :* `{"error": "Employé introuvable"}`.
 
 * **Exemple de code de cours (16 lignes)** :
   ```python
@@ -412,8 +688,18 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 * **Objectif** : L'étudiant est capable de récupérer des filtres dans Flask via `request.args`, et de concevoir une page HTML/JavaScript qui consomme l'API via `fetch()` pour mettre à jour le DOM sans rechargement.
 
 * **📝 Travail sur table préalable (15 min — Débranché)** :
-  1. *Anatomie de l'URL* : Découpez `http://localhost:5000/api/employes/filtre?min=2000`. Complétez l'instruction Flask : `seuil = float(request.args.get("min", 0))`.
-  2. *Chronogramme séquentiel (1 à 5)* : Clic bouton $\rightarrow$ émission `fetch()` $\rightarrow$ réponse JSON Flask/MySQL $\rightarrow$ promesse `.json()` $\rightarrow$ injection DOM.
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Anatomie d'une URL avec Query String* :  
+  >    Soit l'URL `http://localhost:5000/api/employes/filtre?min=2000`.  
+  >    * Paramètre extrait dans Flask : `request.args.get("min", 0)` (renvoie la chaîne `"2000"`).  
+  >    * Conversion obligatoire en Python : `seuil = float(request.args.get("min", 0))`.
+  > 2. *Chronogramme séquentiel (de 1 à 5)* :  
+  >    * Étape 1 : L'utilisateur clique sur le bouton de l'interface web.  
+  >    * Étape 2 : Le JavaScript émet la requête asynchrone `fetch('/api/employes/filtre?min=2000')`.  
+  >    * Étape 3 : Flask exécute la requête SQL et renvoie la réponse HTTP en JSON.  
+  >    * Étape 4 : Le navigateur résout la promesse avec `response.json()`.  
+  >    * Étape 5 : Le script met à jour le DOM sans recharger la page (`innerHTML` ou `textContent`).
 
 * **Exemple de code de cours (19 lignes)** :
   ```python
@@ -456,7 +742,30 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 ### Exercice 1 : Triangle console et arguments CLI
 * **Objectif** : Lire des arguments en ligne de commande et pratiquer les boucles imbriquées ou l'opérateur de chaîne.
 * **Fichiers** : `api/triangle.py`.
-* **Consignes** :
+
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. Pour $n = 4$, combien d'étoiles doit afficher chaque ligne $i$ (pour $i$ allant de $1$ à $n$) ?  
+  >    *Réponse :* La ligne $i$ affiche exactement `i` étoiles.
+  > 2. Remplissez le tableau de trace pour $n = 4$ :
+  >    | Ligne $i$ | Nombre d'étoiles | Rendu console attendu |
+  >    | :---: | :---: | :--- |
+  >    | 1 | 1 | `*` |
+  >    | 2 | 2 | `**` |
+  >    | 3 | 3 | `***` |
+  >    | 4 | 4 | `****` |
+  > 3. Écrivez le pseudo-code officiel de la fonction :
+  >    ```text
+  >    procédure triangle(entier n)
+  >        pour i de 1 à n :
+  >            afficher i fois le caractère '*'
+  >    fin procédure
+  >    ```
+  > 4. Comment accède-t-on au premier argument utilisateur passé dans le terminal via `sys.argv` ?  
+  >    *Réponse :* `int(sys.argv[1])` *(attention, `sys.argv[0]` contient le nom du script lui-même)*.
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * Implémentez la fonction `triangle(n)` qui trace un triangle rectangle d'étoiles de hauteur $n$.
   * Récupérez la valeur de $n$ depuis le terminal via la liste `sys.argv`.
   * Lancez le script via `docker compose exec api python triangle.py 5`.
@@ -476,7 +785,22 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 ### Exercice 2 : Table de multiplication et alignement
 * **Objectif** : Formater l'affichage console sans module tiers à l'aide des f-strings et de `.rjust()` pour aligner les colonnes.
 * **Fichiers** : `api/multiplication.py`.
-* **Consignes** :
+
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. Remplissez la grille des valeurs pour $n = 3$ et $m = 4$ ($i \times j$) :
+  >    | $i \backslash j$ | 1 | 2 | 3 | 4 |
+  >    | :---: | :---: | :---: | :---: | :---: |
+  >    | **1** | 1 | 2 | 3 | 4 |
+  >    | **2** | 2 | 4 | 6 | 8 |
+  >    | **3** | 3 | 6 | 9 | 12 |
+  > 2. Pourquoi l'instruction naïve `print(i * j, end=" ")` produit-elle une grille décalée dès qu'un nombre dépasse 9 ?  
+  >    *Réponse :* `________________________________________________` *(Les nombres à deux chiffres occupent 2 caractères au lieu d'un, ce qui décale les colonnes).*
+  > 3. Donnez la syntaxe f-string pour forcer chaque nombre à occuper exactement 4 caractères de large alignés à droite :  
+  >    *Réponse :* `print(f"{i * j:4d}", end="")`
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * Écrivez `multiplication_n_m(n, m)` qui affiche la table complète de $1 \times 1$ jusqu'à $n \times m$.
   * Alignez chaque nombre sur une largeur constante de 4 caractères pour obtenir une grille propre.
 * **Exemple d'exécution** :
@@ -493,9 +817,30 @@ s[::-1]  # '6202NOHTYP' (inversion complète !)
 ### Exercice 3 : Somme et factorielle (Itératif vs Récursif)
 * **Objectif** : Comprendre le principe de récursivité et l'empilement d'appels en Python.
 * **Fichiers** : `api/recursion.py`.
-* **Consignes** :
+
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. Déroulez l'arbre des appels récursifs pour `somme_recursive(4)` :
+  >    ```text
+  >    somme(4) = 4 + somme(3)
+  >             = 4 + (3 + somme(2))
+  >             = 4 + (3 + (2 + somme(1)))
+  >             = 4 + 3 + 2 + 1 = 10
+  >    ```
+  > 2. Déroulez l'arbre des appels pour `factorielle_recursive(4)` ($4!$) :
+  >    ```text
+  >    fact(4) = 4 * fact(3) = 4 * 6 = 24
+  >    fact(3) = 3 * fact(2) = 3 * 2 = 6
+  >    fact(2) = 2 * fact(1) = 2 * 1 = 2
+  >    fact(1) = 1 (cas de base)
+  >    ```
+  > 3. Quel est le rôle vital du **cas d'arrêt** dans une fonction récursive ? Que se passe-t-il s'il est omis en Python ?  
+  >    *Réponse :* `________________________________________________` *(Une boucle infinie d'appels provoquant l'exception RecursionError).*
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * Codez `somme_iterative(n)` puis `somme_recursive(n)` pour calculer $1 + 2 + \dots + n$.
-  * Codez `factorielle_iterative(n)` puis `factorielle_recursive(n)` ($n! = 1 \times 2 \times \dots \times n$).
+  * Codez `factorielle_iterative(n)` puis `factorielle_recursive(n)` ($n! = 1 \times 2 \dots \times n$).
   * Fixez rigoureusement vos cas d'arrêt pour éviter la `RecursionError`.
 * **Exemple d'exécution** :
   ```text
@@ -522,7 +867,23 @@ procédure tri_selection(tableau t)
     fin pour
 fin procédure
 ```
-* **Consignes** :
+
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > Déroulez manuellement l'algorithme sur le tableau $t = [15, 3, 8]$ ($n = 3$) :
+  > 
+  > | Tour $i$ | Indice $min$ initial | Indice $j$ | Comparaison $t[j] < t[min]$ | Nouveau $min$ | Échange effectué | État du tableau $t$ |
+  > | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+  > | 0 | 0 ($t[0]=15$) | 1 | $3 < 15$ (VRAI) | 1 | - | - |
+  > | 0 | 1 ($t[1]=3$) | 2 | $8 < 3$ (FAUX) | 1 | $t[0] \leftrightarrow t[1]$ | `[3, 15, 8]` |
+  > | 1 | 1 ($t[1]=15$) | 2 | $8 < 15$ (VRAI) | 2 | $t[1] \leftrightarrow t[2]$ | `[3, 8, 15]` |
+  > 
+  > *Schéma mémoire :*
+  > * Passage par référence : `tri_selection_en_place(t)` mute directement l'adresse mémoire de `t`.
+  > * Copie défensive : `tri_selection_copie(t)` instancie `copie = list(t)` pour isoler les mutations.
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * Codez `tri_selection_copie(t)` qui retourne une **nouvelle** liste triée sans modifier la liste d'origine.
   * Codez `tri_selection_en_place(t)` qui modifie **directement** la liste en mémoire (passage par référence d'objet mutable).
   * Utilisez `afficher_tableau(t)` depuis `read_tab.py` pour valider l'absence d'effet de bord sur la version par copie.
@@ -551,7 +912,43 @@ fin procédure
 
 * **Objectif** : Concevoir une IHM web en JavaScript pour la saisie dynamique de valeurs, valider l'affichage DOM à l'aide d'un serveur Mock Postman, puis exposer le service web réel en Python avec Flask.
 * **Fichiers** : `nginx/html/index.html`, `nginx/html/app.js`, `api/app.py`.
-* **Consignes** :
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Extraction et conversion de la Query String dans Flask* :  
+  >    Soit la requête HTTP reçue par Flask : `GET /api/tri?t=15,3,22,8`.  
+  >    * Quel est le type et la valeur retournée par l'instruction `request.args.get("t")` ?  
+  >      *Réponse :* Type `str`, valeur `"15,3,22,8"`.  
+  >    * Écrivez l'instruction Python permettant de convertir cette chaîne en une véritable liste d'entiers `[15, 3, 22, 8]` :  
+  >      *Réponse :* `t_liste = [int(x) for x in request.args.get("t").split(",")]`  
+  > 2. *Calcul manuel de la médiane sur feuille pour $N = 4$ (effectif pair)* :  
+  >    * Série triée par sélection : `[3, 8, 15, 22]`.  
+  >    * Quels sont les deux indices centraux en base 0 pour $N = 4$ ?  
+  >      *Réponse :* Indice `N // 2 - 1 = 1` ($valeur = 8$) et Indice `N // 2 = 2` ($valeur = 15$).  
+  >    * Calculez la médiane exacte :  
+  >      *Réponse :* $(8 + 15) / 2 = 23 / 2 = 11.5$.  
+  > 3. *Contrat d'échange JSON de la réponse HTTP* :  
+  >    Complétez la structure JSON attendue renvoyée par l'API :  
+  >    ```json
+  >    {
+  >      "original": [15, 3, 22, 8],
+  >      "tri": [3, 8, 15, 22],
+  >      "mediane": 11.5
+  >    }
+  >    ```
+  > 4. *Pseudo-code de la saisie séquentielle et condition d'arrêt côté client (JavaScript)* :  
+  >    ```text
+  >    tableau_saisi ← []
+  >    Répéter :
+  >        valeur ← demander_entier("Entrez un nombre (> 0) :")
+  >        Si valeur > 0 alors :
+  >            tableau_saisi.push(valeur)
+  >            mettre_a_jour_affichage(tableau_saisi)
+  >    Jusqu'à ce que valeur <= 0
+  >    envoyer_requete_fetch(tableau_saisi)
+  >    ```
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
     * Avant de développer la page web ou le backend, définissez le contrat d'échange en créant un **Mock Server** dans Postman simulant la route `GET /api/tri`.
     * Configurez un exemple de réponse JSON de référence conforme au format attendu :
@@ -600,17 +997,43 @@ fin procédure
 ### Exercice 4.3 : Client Web Fetch & Salaires aléatoires
 * **Objectif** : Connecter une interface web cliente à votre API Flask pour automatiser l'analyse de salaires aléatoires.
 * **Fichiers** : `nginx/html/index.html`, `nginx/html/app.js`.
-* **Éléments HTML fournis dans `index.html` (section `sec-random`) :**
-  * `<button id="btn-random">` : bouton « Générer & Analyser ».
-  * `<span id="span-brut">` : balise affichant les 9 salaires bruts générés aléatoirement en JavaScript.
-  * `<span id="span-trie">` : balise affichant la liste triée retournée par l'API Flask.
-  * `<span id="span-mediane">` : balise affichant la médiane retournée par l'API Flask.
-* **Consignes dans `nginx/html/app.js` :**
-  * Dans le client web, écoutez le clic sur le bouton `document.getElementById('btn-random')`.
-  * Générez une série de 9 entiers aléatoires compris entre 1200 et 5000 (représentant des salaires en €).
-  * Affichez la série générée dans `<span id="span-brut">`.
-  * Émettez la requête HTTP vers votre API Flask : `fetch('/api/tri?t=...')`.
-  * À la réception du JSON, injectez la série triée dans `<span id="span-trie">` et la médiane dans `<span id="span-mediane">` sans rechargement de page.
+
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Génération aléatoire d'un entier en JavaScript dans $[min, max]$* :  
+  >    * Rappel : `Math.random()` génère un nombre décimal pseudo-aléatoire dans $[0, 1[$.  
+  >    * Complétez la formule JS pour obtenir un entier aléatoire compris entre $1\,200$ et $5\,000$ inclus :  
+  >      *Réponse :* `Math.floor(Math.random() * (5000 - 1200 + 1)) + 1200`  
+  > 2. *Pseudo-code de constitution du tableau de salaires en JavaScript* :  
+  >    ```text
+  >    salaires ← []
+  >    Pour i de 1 à 9 :
+  >        valeur_aleatoire ← Math.floor(Math.random() * (5000 - 1200 + 1)) + 1200
+  >        salaires.push(valeur_aleatoire)
+  >    Fin Pour
+  >    ```
+  > 3. *Préparation de l'URL pour la requête `fetch()`* :  
+  >    Comment convertir le tableau JavaScript `[2200, 1500, 3400]` en chaîne pour le paramètre d'URL `?t=...` ?  
+  >    *Réponse :* `salaires.join(",")` *(produit `"2200,1500,3400"`)*.  
+  > 4. *Chronogramme séquentiel de mise à jour asynchrone du DOM* :  
+  >    * Étape 1 : Clic sur `<button id="btn-random">`.  
+  >    * Étape 2 : Génération des 9 salaires aléatoires et affichage immédiat dans `<span id="span-brut">`.  
+  >    * Étape 3 : Émission de la requête asynchrone `fetch('/api/tri?t=' + salaires.join(','))`.  
+  >    * Étape 4 : Réception du JSON et injection de `data.tri` dans `<span id="span-trie">` et de `data.mediane` dans `<span id="span-mediane">`.
+
+* **💻 Étape 2 : Implémentation sur machine** :
+  * **Éléments HTML fournis dans `index.html` (section `sec-random`) :**
+    * `<button id="btn-random">` : bouton « Générer & Analyser ».
+    * `<span id="span-brut">` : balise affichant les 9 salaires bruts générés aléatoirement en JavaScript.
+    * `<span id="span-trie">` : balise affichant la liste triée retournée par l'API Flask.
+    * `<span id="span-mediane">` : balise affichant la médiane retournée par l'API Flask.
+  * **Consignes de développement dans `nginx/html/app.js` :**
+    * Dans le client web, écoutez le clic sur le bouton `document.getElementById('btn-random')`.
+    * Générez une série de 9 entiers aléatoires compris entre 1200 et 5000 (représentant des salaires en €).
+    * Affichez la série générée dans `<span id="span-brut">`.
+    * Émettez la requête HTTP vers votre API Flask : `fetch('/api/tri?t=...')`.
+    * À la réception du JSON, injectez la série triée dans `<span id="span-trie">` et la médiane dans `<span id="span-mediane">` sans rechargement de page.
 * **Exemple d'exécution** :
   * Clic sur le bouton $\rightarrow$ Les salaires bruts s'affichent, l'API renvoie le tri et la médiane dans le DOM.
 * **Amélioration** : Animez ou mettez en surbrillance la médiane dans la liste reçue.
@@ -623,7 +1046,41 @@ fin procédure
 
 * **Objectif** : Traiter plusieurs paramètres de requêtes, manipuler la concaténation de listes avec l'opérateur `+`, et connecter une interface web dynamique pour la saisie et l'affichage.
 * **Fichiers** : `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
-* **Consignes** :
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Concaténation de listes en Python & Immutabilité relative* :  
+  >    Soit $t_1 = [12, 18, 5]$ et $t_2 = [20, 8, 14]$.  
+  >    * Quelle est la valeur de la liste résultant de l'opération `fusion = t1 + t2` ?  
+  >      *Réponse :* `[12, 18, 5, 20, 8, 14]`.  
+  >    * L'opération `t1 + t2` modifie-t-elle les listes d'origine `t1` ou `t2` en mémoire ?  
+  >      *Réponse :* Non, l'opérateur `+` alloue une nouvelle liste distincte en mémoire sans altérer les listes opérandes.  
+  > 2. *Tri par sélection et Médiane sur table de la liste fusionnée ($N = 6$)* :  
+  >    * Série brute fusionnée : `[12, 18, 5, 20, 8, 14]`  
+  >    * Série ordonnée (après tri par sélection) : `[5, 8, 12, 14, 18, 20]`  
+  >    * Puisque l'effectif $N=6$ est pair, quels sont les indices (base 0) et les valeurs des deux éléments centraux ?  
+  >      * Indice `N // 2 - 1 = 2` $\rightarrow$ Valeur : $12$  
+  >      * Indice `N // 2 = 3` $\rightarrow$ Valeur : $14$  
+  >    * Calculez la médiane globale de la fusion :  
+  >      *Réponse :* $(12 + 14) / 2 = 26 / 2 = 13.0$.  
+  > 3. *Structure d'URL multi-paramètres et Question théorique* :  
+  >    * Quel symbole sépare l'URL des paramètres de requête ? `?`  
+  >    * Quel symbole sépare deux paramètres distincts entre eux ? `&`  
+  >    * **Question théorique obligatoire** : Quelle URI et structure de requête devez-vous adopter pour transmettre et fusionner 3 tableaux $t_1$, $t_2$ et $t_3$ ?  
+  >      *Réponse :* `/api/fusion?t1=12,18,5&t2=20,8,14&t3=1,2,3` *(les paramètres sont cumulés avec le séparateur `&`)*.  
+  > 4. *Contrat d'échange JSON attendu* :  
+  >    Remplissez le JSON que devra renvoyer l'API :  
+  >    ```json
+  >    {
+  >      "t1": [12, 18, 5],
+  >      "t2": [20, 8, 14],
+  >      "fusion": [12, 18, 5, 20, 8, 14],
+  >      "tri": [5, 8, 12, 14, 18, 20],
+  >      "mediane": 13.0
+  >    }
+  >    ```
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
     * Avant de coder l'interface ou le backend, créez dans Postman un **Mock Server** simulant la route `GET /api/fusion?t1=12,18,5&t2=20,8,14`.
     * Configurez la réponse JSON de référence conforme au cahier des charges de la vidéo :
@@ -698,7 +1155,43 @@ fin procédure
     Le site extrait les salaires de la table MySQL `employees`, affiche la série brute (`[6500, 8000, 1200, 25000, 100000, 40000]`), effectue le tri par sélection (`[1200, 6500, 8000, 25000, 40000, 100000]`), et détermine la médiane (**16 500.00 €**) ainsi que la moyenne (**~30 116.67 €**).  
     Sur la branche `correction`, une version équivalente développée en **Python avec Flask** a été implémentée et est accessible directement en local sur [`http://localhost/demo/mediane`](http://localhost/demo/mediane) et [`http://localhost/demo/dashboard`](http://localhost/demo/dashboard).
 * **Fichiers** : `api/db.py`, `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
-* **Consignes** :
+
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Rédaction des requêtes SQL sur la table `employees`* :  
+  >    * Requête pour extraire la colonne des salaires de l'ensemble du personnel :  
+  >      ```sql
+  >      SELECT salary FROM employees;
+  >      ```
+  >    * Requête paramétrée sécurisée pour extraire un employé spécifique selon son `id` :  
+  >      ```sql
+  >      SELECT id, name, address, salary FROM employees WHERE id = %s;
+  >      ```
+  > 2. *Calcul statistique sur table des données réelles de la BDD ($N = 6$)* :  
+  >    * Salaires bruts en base : `[6500, 8000, 1200, 25000, 100000, 40000]`  
+  >    * Ordonnez manuellement la série : `[1200, 6500, 8000, 25000, 40000, 100000]`  
+  >    * Calculez la moyenne arithmétique :  
+  >      $\text{Somme} = 1200 + 6500 + 8000 + 25000 + 40000 + 100000 = 180\,700\text{ €}$  
+  >      $\text{Moyenne} = 180\,700 / 6 \approx 30\,116.67\text{ €}$  
+  >    * Calculez la médiane (effectif pair $N=6$) :  
+  >      Éléments centraux aux indices 2 et 3 ($8\,000$ et $25\,000$).  
+  >      $\text{Médiane} = (8\,000 + 25\,000) / 2 = 33\,000 / 2 = 16\,500.00\text{ €}$.  
+  > 3. *Analyse de situation de Martin Blank (ID 3, salaire 8 000 €)* :  
+  >    * Salaire de Martin Blank : $8\,000\text{ €}$.  
+  >    * Comparaison à la moyenne ($30\,116.67\text{ €}$) : Inférieur ($8\,000 < 30\,116.67$).  
+  >    * Comparaison à la médiane ($16\,500.00\text{ €}$) : Inférieur ($8\,000 < 16\,500$).  
+  >    * Conclusion sociologique : Martin Blank fait partie des $50\,\%$ des employés les moins bien payés de l'entreprise, bien que la moyenne de l'entreprise soit tirée vers le haut par deux salaires atypiques.  
+  > 4. *Contrat d'échange JSON attendu pour Martin Blank* :  
+  >    ```json
+  >    {
+  >      "employe": {"id": 3, "name": "Martin Blank", "salary": 8000},
+  >      "statistiques_globales": {"moyenne": 30116.67, "mediane": 16500.0},
+  >      "situation": {"par_rapport_a_la_moyenne": "inférieur", "par_rapport_a_la_mediane": "inférieur"}
+  >    }
+  >    ```
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
     * Avant d'interfacer MySQL, créez dans Postman un **Mock Server** simulant les deux routes de l'exercice :
       * `GET /api/salaires/stats` simulant le retour global :
@@ -761,7 +1254,59 @@ fin procédure
 ### Exercice 7 : API Flask & Médiane sur une période (Jointures & BDD CRUD2)
 * **Objectif** : Exposer un service web HTTP REST avec Flask interrogeant la base relationnelle `CRUD2` pour calculer des moyennes individuelles en SQL (`INNER JOIN` + `AVG` + `GROUP BY`) et la médiane globale des salaires moyens en Python.
 * **Fichiers** : `api/db.py`, `api/app.py`, `nginx/html/index.html`, `nginx/html/app.js`.
-* **Consignes** :
+
+* **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+  > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+  > 
+  > 1. *Algorithme de décision des 4 cas selon les paramètres URL* :  
+  >    Complétez les conditions en Python dans la vue Flask selon les variables `p`, `d1`, `d2` :  
+  >    ```python
+  >    if p and d1 and d2:
+  >        cas = "employe_periode"
+  >    elif p and (d1 or d2):
+  >        cas = "employe_partir_de"
+  >    elif not p and d1 and d2:
+  >        cas = "mediane_periode"
+  >    else:
+  >        cas = "mediane_globale"
+  >    ```
+  > 2. *Rédaction des requêtes SQL avec Jointure relationnelle (`CRUD2`)* :  
+  >    * *Cas 1 (Moyenne d'un employé entre d1 et d2)* :  
+  >      ```sql
+  >      SELECT e.id, e.name, AVG(s.salary) AS salaire_moyen
+  >      FROM employes e
+  >      INNER JOIN salaires s ON e.id = s.employe_id
+  >      WHERE e.id = %s AND s.date BETWEEN %s AND %s
+  >      GROUP BY e.id, e.name;
+  >      ```
+  >    * *Cas 3 (Moyenne de chaque employé sur période pour calcul médiane)* :  
+  >      ```sql
+  >      SELECT e.id, e.name, AVG(s.salary) AS salaire_moyen
+  >      FROM employes e
+  >      INNER JOIN salaires s ON e.id = s.employe_id
+  >      WHERE s.date BETWEEN %s AND %s
+  >      GROUP BY e.id, e.name
+  >      ORDER BY e.id;
+  >      ```
+  >    * *Cas 4 (Moyenne historique globale de chaque employé)* :  
+  >      ```sql
+  >      SELECT e.id, e.name, AVG(s.salary) AS salaire_moyen
+  >      FROM employes e
+  >      INNER JOIN salaires s ON e.id = s.employe_id
+  >      GROUP BY e.id, e.name
+  >      ORDER BY e.id;
+  >      ```
+  > 3. *Calcul manuel sur table de la médiane des moyennes sur 2022 (`CRUD2`)* :  
+  >    * Moyenne Roland Mendel (id 1) : $5\,300.00\text{ €}$  
+  >    * Moyenne Victoria Ashworth (id 2) : $6\,600.00\text{ €}$  
+  >    * Moyenne Martin Blank (id 3) : $8\,000.00\text{ €}$  
+  >    * Liste ordonnée des moyennes : `[5300.0, 6600.0, 8000.0]` ($N = 3$, effectif impair).  
+  >    * Indice médian : $3 // 2 = 1$.  
+  >    * Médiane des moyennes = **6 600.00 €**.  
+  > 4. *Pourquoi le calcul de la médiane est-il réalisé en Python et non directement en SQL ?* :  
+  >    *Réponse :* SQL (et MySQL en particulier) ne possède pas de fonction d'agrégation native `MEDIAN()`. Les moyennes individuelles sont donc calculées efficacement par le moteur de base de données via `AVG()`, puis Python trie la liste des moyennes avec l'algorithme `tri_selection_copie()` pour en déduire la médiane exacte.
+
+* **💻 Étape 2 : Implémentation sur machine** :
   * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
     * La route à concevoir est `GET /api/salaires/periode`. Elle accepte trois paramètres optionnels dans la Query String :
       * `p` : identifiant entier (`id`) de l'employé.
