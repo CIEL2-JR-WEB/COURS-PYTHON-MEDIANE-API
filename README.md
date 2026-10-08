@@ -26,259 +26,372 @@ docker compose exec api python main.py
 
 ## 📋 Progression des exercices
 
-### Exercice 0 : Introduction à Python, Cybersécurité & Statistiques fondamentales
+### Séquence Préparatoire : Des Fondations de Python au Seuil de l'API Flask
 
-L'**Exercice 0** est le socle d'apprentissage indispensable pour maîtriser la syntaxe et les structures de données de **Python 3**. Conçu de façon **strictement progressive**, il permet à tout étudiant (même débutant absolu) d'acquérir les réflexes fondamentaux avant d'aborder les exercices avancés du TP.
+Cette séquence préparatoire amène tout étudiant (même débutant complet) de zéro en Python jusqu'au seuil de l'**Activité Finale** (API Flask adossée à MySQL avec interface web `fetch`).
 
-Il se compose de **7 étapes ordonnées** :
-1. **0.1 : Fonctions, Variables & Types de base** (`def`, `return`, `int`, `float`, `bool`, `if / elif / else`)
-2. **0.2 : Les Chaînes de caractères** (`str`, indexation, slicing, `.strip()`, `.lower()`, `.replace()`, `.split()`)
-3. **0.3 : Les Listes** (`list`, création, boucle `for`, `.append()`, fonctions natives `len`, `sum`, `min`, `max`)
-4. **0.4 : Tuples & Dictionnaires** (`tuple` immuable, unpacking, `dict` clés-valeurs, `.get()`)
-5. **0.5 : Références en mémoire & Copie défensive** (alias `b = a` vs `b = a.copy()`, fonction `id()`)
-6. **0.6 : Algorithmes de Chiffrement & Mini-Projet Défi Anti-IA** (César, XOR binaire, décodeur CIEL-Guard)
-7. **0.7 : Statistiques élémentaires & Problème de Nicolas** (Moyenne, Médiane, analyse d'entreprise)
+Elle repose sur :
+1. **Un apprentissage intensif des fondamentaux** : boucles, motifs géométriques, chaînes, slicing approfondi, parcours de listes, dictionnaires et listes de dictionnaires.
+2. **Un travail sur table débranché systématique (15 min)** en tout début de chaque séance pour poser les concepts (schémas mémoire, tableaux de trace, trames HTTP) avant de coder sur machine.
+3. **Le tri par sélection impératif obligatoire (sans `sorted()`)** pour comprendre physiquement la mutabilité et la référence mémoire avant de calculer la médiane et de l'exposer en API.
+4. **Un fil rouge unique** : le même jeu de données des 9 salariés de l'entreprise (dont Nicolas).
 
 ---
 
-#### Exercice 0.1 : Fonctions, Variables & Types fondamentaux
+#### 🧵 Le Fil Rouge : Les 9 Salariés de l'Entreprise
+* **Alice** : 1 500 € | **Bob** : 4 500 € | **Nicolas** : 2 200 €
+* **Chloé** : 1 500 € | **David** : 3 300 € | **Emma** : 1 800 €
+* **Frank** : 1 700 € | **Grace** : 2 000 € | **Henri** : 4 000 €
 
-* **Objectif pédagogique** :  
-  Comprendre l'anatomie d'une fonction Python (`def nom(param: type) -> type_retour:`), l'obligation de l'indentation (4 espaces), le rôle de l'instruction `return`, et manipuler les types primitifs (`int`, `float`, `bool`, `str`) et les structures conditionnelles (`if / elif / else`).
-* **Mise en situation Cybersécurité** :  
-  En sécurité des réseaux, un pare-feu catégorise chaque paquet selon son numéro de port (ports réservés aux services d'administration, ports utilisateurs, ports éphémères).
-* **Fichiers** : `api/intro_cyber.py`.
-* **Ressource vidéo recommandée** :  
-  * 📺 [Apprendre les Fonctions en Python - Graven](https://www.youtube.com/watch?v=kqtD5dpn9C8) *(Comprendre `def`, le passage d'arguments et l'instruction `return`)*.
-* **💡 Notions clés & syntaxe Python** :
+---
+
+#### 📊 Tableau de synthèse de la séquence préparatoire
+
+| Séance | Durée | Objectif (« L'étudiant est capable de… ») | Notions clés | Production attendue |
+| :---: | :---: | :--- | :--- | :--- |
+| **S1** | 2 h | Structurer et manipuler des données d'employés en mémoire. | Types primitifs (`int`, `str`, `float`), listes `[]`, dictionnaires `{}`, listes de dictionnaires, boucle `for`, conditions `if`. | `employes.py` : création des 9 salariés, filtrage des salaires $> 2\,000\text{ €}$. |
+| **S2** | 2 h | Coder le tri par sélection impératif (Valeur vs Référence) et calculer la médiane (**Activité 0.7**). | Pseudo-code officiel, boucles imbriquées, permutation `t[i], t[min] = t[min], t[i]`, mutabilité (`list(t)`), calcul de médiane **sans `sorted()`**. | `tri_selection.py`, `read_tab.py`, `statistique.py` : tri par sélection et résolution du cas de Nicolas. |
+| **S3** | 2 h | Sérialiser et désérialiser des données en JSON avec gestion d'erreurs. | Module `json` (`load`, `dump`), gestion de fichier (`with open`), exceptions (`try / except`, `FileNotFoundError`). | `gestion_json.py` : persistance de `employes.json` et gestion des cas d'erreur sans crash. |
+| **S4** | 2 h | Interroger MySQL de façon sécurisée et convertir les résultats. | Connecteur MySQL (`pymysql`), curseur dictionnaire (`DictCursor`), requêtes paramétrées (`%s`), variables d'environnement. | `bdd.py` : extraction sécurisée des employés et salaires depuis la base `CRUD`. |
+| **S5** | 2 h | Créer une API REST avec Flask et tester ses routes sous Postman. | Instance Flask, décorateur `@app.route`, méthodes HTTP (`GET`), `jsonify()`, codes HTTP (`200`, `404`), CORS, Postman. | `app.py` : serveur API exposant `/api/employes` et `/api/employes/<id>` validé avec Postman. |
+| **S6** | 2 h | Filtrer via paramètres d'URL et afficher dans le DOM via `fetch()`. | Paramètres de requête (`request.args`), requête asynchrone JS (`fetch`), injection DOM (`innerHTML`, `textContent`). | `index.html` : interface web interrogeant l'API et affichant dynamiquement la médiane et les filtres. |
+
+---
+
+### 🧠 Atelier Fondamental : Parcours de Listes, Slicing & Dictionnaires Approfondis
+
+Avant d'aborder les séances orientées BDD et réseau, cet atelier fournit les gammes indispensables à maîtriser.
+
+#### 1. Fiche Mémo : Les 6 Patrons de Parcours (*Design Patterns*)
+
+```python
+# PATRON 1 : Parcours direct par élément
+for s in salaires:
+    print(s)
+
+# PATRON 2 : Parcours par indice (indispensable pour modifier une liste en place)
+for i in range(len(salaires)):
+    salaires[i] = salaires[i] + 100
+
+# PATRON 3 : Parcours avec indice ET élément
+for i, s in enumerate(salaires, start=1):
+    print(f"Employé {i} : {s} €")
+
+# PATRON 4 : Accumulateur & .append() (le plus utilisé en Python)
+selection = []
+for s in salaires:
+    if s >= 2000:
+        selection.append(s)
+
+# PATRON 5 : Parcours dictionnaire clés et valeurs
+for cle, val in fiche_emp.items():
+    print(f"{cle} => {val}")
+
+# PATRON 6 : Parcours d'une liste de dictionnaires (le format SQL et JSON)
+for emp in liste_employes:
+    print(f"{emp['nom']} gagne {emp['salaire']} €")
+```
+
+---
+
+#### 2. Entraînement : Boucles, Motifs & Géométrie console
+
+* **Exercice D1 (Triangle console avec `sys.argv`)** :  
+  Écrivez `triangle(n)` traçant un triangle rectangle d'étoiles de hauteur $n$. Récupérez $n$ depuis le terminal via `sys.argv[1]` (avec valeur 4 par défaut).
+* **Exercice D2 (Pyramide centrée & Triangle inversé)** :  
+  Écrivez `pyramide(n)` traçant une pyramide équilatérale en calculant les espaces `(n - 1 - i)` et les étoiles `(2 * i + 1)`. Écrivez `triangle_inverse(n)` traçant un triangle décroissant de $n$ à 1 étoile.
+* **Exercice D3 (Table de multiplication formatée à double entrée)** :  
+  Écrivez `table_multiplication(n, m)` affichant la table complète avec alignement strict de 4 caractères : `print(f"{i * j:4d}", end="")`.
+* **Exercice D4 (Damier alterné 2D)** :  
+  Écrivez `damier(lignes, colonnes)` affichant un quadrillage bicolore alternant `#` et `.` selon la parité de `(i + j) % 2`.
+
+---
+
+#### 3. Entraînement : Chaînes de Caractères (`str`) & Slicing Approfondi
+
+```python
+# Rappel Slicing : chaine[debut:fin:pas]
+s = "PYTHON2026"
+s[:6]    # 'PYTHON' (début à 6 exclu)
+s[6:]    # '2026'   (de l'indice 6 à la fin)
+s[::2]   # 'PTO20'  (un caractère sur deux)
+s[::-1]  # '6202NOHTYP' (inversion complète !)
+```
+
+* **Exercice D5 (Découpage de tranches)** :  
+  À partir de `"RES_BTS_CIEL_2026"`, extrayez sans boucle : les 3 premiers caractères (`"RES"`), les 4 derniers (`"2026"`), le milieu (`"BTS_CIEL"`), et la chaîne inversée.
+* **Exercice D6 (Testeur de Palindrome)** :  
+  Écrivez `est_palindrome(texte)` en une seule ligne grâce au slicing `texte == texte[::-1]`. Adaptez pour ignorer les espaces et la casse (`.replace(" ", "").lower()`).
+* **Exercice D7 (Analyseur d'adresses IP)** :  
+  Écrivez `analyser_ip(ip_str)` : découpez avec `.split('.')`, vérifiez qu'il y a 4 octets, convertissez en `int`, et vérifiez que chaque valeur est entre 0 et 255.
+* **Exercice D8 (Masquage défensif de token / secret)** :  
+  Écrivez `masquer_secret(secret, visible_debut=4, visible_fin=4)` : conservez les 4 premiers et 4 derniers caractères et remplacez l'intérieur par des étoiles `*` (`"API_*****************2026"`).
+
+---
+
+#### 4. Entraînement : Dictionnaires (`dict`) Approfondis
+
+* **Exercice D9 (Accès sécurisé `.get()`)** :  
+  Soit `emp = {"id": 3, "nom": "Nicolas", "salaire": 2200}`. Observez l'erreur `KeyError` sur `emp["prime"]`. Sécurisez avec `emp.get("prime", 0.0)`. Ajoutez `"departement": "Reseau"`.
+* **Exercice D10 (Compteur d'occurrences / Fréquences)** :  
+  Soit `codes = [200, 200, 404, 200, 500, 404, 200]`. Construisez un dictionnaire `frequences = {}` et alimentez-le dans une boucle : `frequences[c] = frequences.get(c, 0) + 1`. Affichez avec `.items()`.
+* **Exercice D11 (Dictionnaires imbriqués)** :  
+  Modélisez un employé avec `identite: {"nom": "Dupont", "prenom": "Nicolas"}`, `contrat: {"salaire": 2200, "dept": "Reseau"}` et `competences: ["Linux", "Cisco"]`. Affichez le nom complet, ajoutez `"Docker"` aux compétences.
+* **Exercice D12 (Regroupement par catégorie)** :  
+  À partir d'une liste d'employés contenant un champ `"dept"`, écrivez `grouper_par_departement(liste)` retournant `{"Support": ["Alice", "Chloé"], "Reseau": ["Nicolas", "David"]}`.
+* **Exercice D13 (Recherche ciblée avec `break`)** :  
+  Écrivez `trouver_employe_par_id(liste, id_cible)` qui s'arrête immédiatement dès que l'employé est trouvé sans parcourir le reste de la liste.
+
+---
+
+### 📍 DÉTAIL DES 6 SÉANCES DE COURS & TP
+
+---
+
+#### 📍 SÉANCE 1 : Fondations Python & Structures de Données (2 h)
+
+* **Objectif** : L'étudiant est capable de modéliser des employés sous forme de liste de dictionnaires en mémoire, de la parcourir avec une boucle `for`, et d'en extraire des données par filtrage conditionnel (`if`).
+
+* **📝 Travail sur table préalable (15 min — Débranché)** :
+  1. *Schéma mémoire* : Dessinez sur feuille la liste `employes` de 3 salariés (Alice 1500, Bob 4500, Nicolas 2200) avec ses cases d'indices `[0]`, `[1]`, `[2]` reliées à leurs dictionnaires respectifs.
+  2. *Accès direct* : Écrivez l'expression Python accédant au salaire de Bob (`employes[1]["salaire"]`).
+  3. *Tableau de trace* : Tracez pas à pas la boucle calculant la masse salariale (`total += emp["salaire"]`) et le filtrage des salaires $> 2\,000\text{ €}$.
+
+* **Exemple de code de cours (14 lignes)** :
   ```python
-  # Déclaration d'une fonction avec typage optionnel (type hints) :
-  def evaluer_etat(temperature: float) -> str:
-      if temperature > 80.0:
-          return "ALERTE SURCHAUFFE"
-      elif temperature >= 50.0:
-          return "NORMAL"
-      else:
-          return "FAIBLE"
+  employes = [
+      {"id": 1, "nom": "Alice", "salaire": 1500},
+      {"id": 2, "nom": "Bob", "salaire": 4500}
+  ]
+  total = 0
+  for emp in employes:
+      total += emp["salaire"]
+      if emp["salaire"] > 2000:
+          print(f"Haut salaire : {emp['nom']} ({emp['salaire']} €)")
+  print(f"Masse salariale totale : {total} €")
   ```
-* **Consignes** :
-  1. Écrivez `analyser_port(port: int) -> str` :
-     * Si `port` n'est pas un entier ou s'il est hors de l'intervalle $[0, 65535]$, retournez `"Invalide"`.
-     * Entre $0$ et $1023$ : retournez `"Privilégié / Système"` *(Well-known ports : SSH 22, HTTP 80...)*.
-     * Entre $1024$ et $49151$ : retournez `"Enregistré / Utilisateur"` *(MySQL 3306, Flask 5000...)*.
-     * Entre $49152$ et $65535$ : retournez `"Dynamique / Privé"` *(Ports éphémères clients)*.
-  2. Écrivez `calculer_debit(octets: int, duree_secondes: float) -> float` :
-     * Calculez le débit en octets par seconde : $\text{débit} = \frac{\text{octets}}{\text{durée}}$.
-     * Protégez le calcul contre une division par zéro ou une durée négative en retournant `0.0`. Arrondissez à 2 décimales avec `round(..., 2)`.
-* **Exemple d'exécution** :
-  ```text
-  Port    22 -> Catégorie : Privilégié / Système
-  Port  5000 -> Catégorie : Enregistré / Utilisateur
-  Port 55000 -> Catégorie : Dynamique / Privé
-  Port 99999 -> Catégorie : Invalide
-  Débit calculé pour 10 Mo en 2.5s : 4000000.0 octets/s (4.00 Mo/s)
-  ```
+
+* **Exercices sur machine** :
+  * *1.1 (Guidé)* : Dans `employes.py`, complétez la liste avec Nicolas (2200) et Chloé (1500). Affichez chaque salarié.
+  * *1.2 (Semi-guidé)* : Définissez les 9 salariés. Utilisez un accumulateur `.append()` pour extraire dans `bas_salaires` ceux qui gagnent $< 2\,000\text{ €}$.
+  * *1.3 (Autonome)* : Demandez un nom avec `input()`, parcourez la liste (insensible à la casse avec `.lower()`) et affichez la fiche complète ou `"Employé introuvable"`.
+
+* **Critère de validation** : Le script affiche exactement 4 employés ayant un salaire $< 2\,000\text{ €}$ (Alice, Chloé, Emma, Frank).
 
 ---
 
-#### Exercice 0.2 : Les Chaînes de caractères (`str`)
+#### 📍 SÉANCE 2 : Tri par Sélection (Valeur vs Référence) & Médiane (2 h)
 
-* **Objectif pédagogique** :  
-  Comprendre qu'en Python une chaîne de caractères est une séquence immuable ordonnée. Maîtriser l'indexation directe (`s[0]`, `s[-1]`), le découpage (*slicing* `s[debut:fin]`), la longueur `len(s)` et les méthodes de transformation essentielles.
-* **Mise en situation Cybersécurité** :  
-  L'analyse de journaux d'événements (logs) nécessite de normaliser les saisies utilisateurs et de masquer les secrets avant archivage.
-* **Fichiers** : `api/intro_cyber.py`.
-* **Ressource vidéo recommandée** :  
-  * 📺 [TUTO Python : Manipulation de chaînes de caractères et tuples](https://www.youtube.com/watch?v=DFcCc3zWrU0) *(Indexation, extraction de sous-chaînes et découpage)*.
-* **💡 Notions clés & syntaxe Python** :
+* **Objectif** : L'étudiant est capable de transcrire le pseudo-code officiel du tri par sélection en Python, de différencier le passage par référence (en place) du passage par valeur (copie défensive), et de calculer la médiane d'une série ordonnée **sans utiliser les fonctions natives `sorted()` ou `.sort()`**.
+
+* **📺 Vidéo support de l'algorithme** :  
+  👉 [Visualiser l'animation et le principe du Tri par Sélection](https://youtu.be/8u3Yq-5DTN8?si=749n7xBfh2mbJTXS) *(Observez comment le plus petit élément restant est recherché puis permuté avec l'élément courant)*.
+
+* **Pseudo-code officiel imposé** :
+  ```text
+  procédure tri_selection(tableau t)
+      n ← longueur(t)
+      pour i de 0 à n - 2
+          min ← i
+          pour j de i + 1 à n - 1
+              si t[j] < t[min], alors min ← j
+          fin pour
+          si min ≠ i, alors échanger t[i] et t[min]
+      fin pour
+  fin procédure
+  ```
+
+* **📝 Travail sur table préalable (15 min — Débranché)** :
+  1. *Tableau de trace* : Déroulez l'algorithme sur $t = [15, 3, 8]$ ($n = 3$) en notant pour chaque étape $i$ la valeur de `min_idx`, l'échange effectué, et l'état du tableau.
+  2. *Schéma Référence vs Copie* : Dessinez ce qui se passe en mémoire pour `b = t` (même adresse) vs `b = list(t)` (nouvel espace mémoire).
+  3. *Formule de la médiane* : Calculez les formules d'indices pour $N=9$ (impair, indice $N // 2$) et $N=8$ (pair, moyenne de $N // 2 - 1$ et $N // 2$).
+
+* **Exemple de code de cours (18 lignes)** :
   ```python
-  s = "  Python 2026  "
-  s.strip()            # Supprime les espaces en début et fin -> "Python 2026"
-  s.lower()            # Passe tout en minuscules -> "  python 2026  "
-  s.replace(" ", "_")  # Remplace les espaces -> "__Python_2026__"
-  s[0]                 # Premier caractère
-  s[-1]                # Dernier caractère
-  "a,b,c".split(",")   # Découpe en liste -> ['a', 'b', 'c']
+  def permuter(t: list, i: int, j: int) -> None:
+      t[i], t[j] = t[j], t[i]
+
+  def tri_selection_en_place(t: list) -> None:
+      n = len(t)
+      for i in range(n - 1):
+          min_idx = i
+          for j in range(i + 1, n):
+              if t[j] < t[min_idx]:
+                  min_idx = j
+          if min_idx != i:
+              permuter(t, i, min_idx)
+
+  salaires = [2200, 1500, 4500]
+  tri_selection_en_place(salaires)
+  print("Salaires modifiés en mémoire :", salaires)
   ```
-* **Consignes** :
-  1. Écrivez `normaliser_identifiant(login_brut: str) -> str` : retirez les espaces périphériques (`.strip()`), mettez le texte en minuscules (`.lower()`) et remplacez les espaces restants par des tirets bas (`.replace(" ", "_")`).
-  2. Écrivez `masquer_mot_de_passe(mdp: str) -> str` : si le mot de passe a une longueur $\le 2$, retournez `'*' * len(mdp)`. Sinon, conservez le premier et le dernier caractère, et remplacez tous les caractères intermédiaires par autant d'étoiles `*`.
-  3. Écrivez `extraire_champs_log(ligne_log: str, separateur: str = "|") -> list[str]` : découpez la ligne de journal selon le séparateur fourni et retournez la liste de chaque champ débarrassé de ses espaces inutiles.
-* **Exemple d'exécution** :
-  ```text
-  Login normalisé       : 'admin_reseau_2026'
-  Mot de passe masqué   : S******************!
-  Champs de log extraits: ['2026-10-05 14:30:00', '192.168.1.50', 'AUTH_SUCCESS', 'SSH']
-  ```
+
+* **Exercices sur machine** :
+  * *2.1 (Guidé)* : Dans `api/tri_selection.py`, codez `tri_selection_en_place(t)` d'après le pseudo-code avec la permutation `t[i], t[min_idx] = t[min_idx], t[i]`.
+  * *2.2 (Semi-guidé)* : Codez `tri_selection_copie(t)` qui travaille sur `copie = list(t)`. Utilisez `afficher_tableau(t)` de `read_tab.py` pour valider que `tab_init = [15, 3, 8]` reste inchangé.
+  * *2.3 (Autonome — Activité 0.7 : Statistiques élémentaires & Problème de Nicolas)* :  
+    ![Médiane d'une série statistique - Problématique de Nicolas](img/mediane_nicolas.png)  
+    > **Problématique de Nicolas :**  
+    > Dans une entreprise de **9 salariés**, le salaire mensuel moyen est de **2 500 €**. Nicolas travaille dans cette entreprise et gagne **2 200 €** par mois.  
+    > Constatant que son salaire est inférieur au salaire moyen ($2\,200\text{ €} < 2\,500\text{ €}$), il affirme : *« Je suis dans les moins bien payés de l'entreprise ! »*. Que penser de cette affirmation ?  
+    >  
+    > *Élément d'analyse* : Nicolas confond salaire moyen et salaire médian. Quelques salaires élevés suffisent à tirer la moyenne vers le haut. Pour savoir s'il est réellement dans la tranche inférieure ou supérieure de l'entreprise, il faut ordonner la série et trouver la **médiane** qui sépare l'effectif en deux moitiés égales.  
+
+    Dans `api/statistique.py` et `api/main.py`, codez les fonctions `moyenne(tab)` et `mediane(tab)` sur liste ordonnée (sans `sorted()` ni `.sort()`). Triez la liste des 9 salaires de l'entreprise avec votre fonction `tri_selection_copie()` et affichez les résultats dans la console pour conclure scientifiquement sur l'affirmation de Nicolas (2 200 € vs médiane réelle de 2 000 €).
+
+* **Critère de validation** : L'exécution console affiche : `Moyenne = 2500.00 € | Médiane = 2000.00 €` et démontre que Nicolas a tort. Aucune mention de `sorted` ou `.sort` dans le code.
 
 ---
 
-#### Exercice 0.3 : Les Listes (`list`)
+#### 📍 SÉANCE 3 : Persistance JSON & Gestion d'Erreurs (2 h)
 
-* **Objectif pédagogique** :  
-  Maîtriser la structure de données la plus importante de Python : création avec `[]`, modification d'éléments, ajout dynamique avec `.append()`, parcours itératif avec une boucle `for`, test d'appartenance avec `in`, et fonctions d'agrégation (`len()`, `sum()`, `min()`, `max()`).
-* **Mise en situation Cybersécurité** :  
-  Collecter et filtrer des mesures réseau (pings, tentatives de connexion, listes blanches de ports).
-* **Fichiers** : `api/intro_cyber.py`.
-* **Ressource vidéo recommandée** :  
-  * 📺 [Maîtriser les LISTES avec Python - Docstring](https://www.youtube.com/watch?v=yK4CTsEP_B0) *(Les listes en détail : création, méthodes d'ajout et parcours)*.
-* **💡 Notions clés & syntaxe Python** :
+* **Objectif** : L'étudiant est capable de sérialiser et désérialiser des listes de dictionnaires dans un fichier `.json` avec le module `json`, en encapsulant les opérations dans des blocs `try / except`.
+
+* **📝 Travail sur table préalable (15 min — Débranché)** :
+  1. *Correspondance des types* : Remplissez la grille (Python `True` $\rightarrow$ JSON `true`, `None` $\rightarrow$ `null`, guillemets doubles stricts `""`).
+  2. *Chasse aux anomalies* : Identifiez les 3 erreurs de syntaxe dans un extrait JSON piégé (apostrophes, virgule finale en trop, majuscule à `True`).
+  3. *Organigramme try/except* : Dessinez l'arbre de décision en cas de fichier introuvable.
+
+* **Exemple de code de cours (17 lignes)** :
   ```python
-  nombres = [10, 20, 30]
-  nombres.append(40)     # Ajoute 40 à la fin -> [10, 20, 30, 40]
-  len(nombres)           # 4 éléments
-  sum(nombres)           # Somme totale : 100
-  min(nombres)           # Minimum : 10
-  
-  # Parcours avec boucle for :
-  resultat = []
-  for n in nombres:
-      if n > 15:
-          resultat.append(n)
+  import json
+
+  data = [{"id": 1, "nom": "Alice", "salaire": 1500}]
+  with open("test.json", "w", encoding="utf-8") as f:
+      json.dump(data, f, indent=4)
+
+  try:
+      with open("test.json", "r", encoding="utf-8") as f:
+          charge = json.load(f)
+          print(f"Employé chargé : {charge[0]['nom']}")
+  except FileNotFoundError:
+      print("Erreur : le fichier test.json n'existe pas.")
   ```
-* **Consignes** :
-  1. Écrivez `filtrer_ports_actifs(ports: list[int]) -> list[int]` : créez une nouvelle liste vide et ajoutez-y uniquement les ports dont la valeur est strictement supérieure à 0.
-  2. Écrivez `statistiques_latences(pings: list[float]) -> tuple[float, float, float]` : calculez et retournez `(min, max, moyenne)` des latences sans utiliser de module externe. Si la liste est vide, renvoyez `(0.0, 0.0, 0.0)`.
-  3. Écrivez `compter_occurrences(historique: list[str], cible: str) -> int` : parcourez la liste avec une boucle `for` et comptez manuellement combien de fois `cible` est présente.
-* **Exemple d'exécution** :
-  ```text
-  Ports bruts          : [22, -1, 80, 0, 443, -8080, 3306]
-  Ports actifs filtrés : [22, 80, 443, 3306]
-  Pings analysés       : [12.4, 8.1, 15.6, 9.8, 22.0]
-  Statistiques ping    : Min = 8.1 ms | Max = 22.0 ms | Moyenne = 13.58 ms
-  Occurrences de 192.168.1.1 : 3 fois
-  ```
+
+* **Exercices sur machine** :
+  * *3.1 (Guidé)* : Dans `gestion_json.py`, écrivez `sauvegarder_employes(fichier, data)` pour enregistrer les 9 salariés dans `employes.json`.
+  * *3.2 (Semi-guidé)* : Écrivez `augmenter_salaire(fichier, id_emp, pourcentage)` : chargez le JSON, appliquez $+10\,\%$ à Nicolas (2 420 €), réécrivez le fichier.
+  * *3.3 (Autonome)* : Écrivez `charger_employes_securise(chemin)` interceptant `FileNotFoundError` et `json.JSONDecodeError` pour éviter tout crash.
+
+* **Critère de validation** : `employes.json` est généré, contient un JSON valide de 9 enregistrements, et le test sur un fichier inexistant renvoie une liste vide sans planter.
 
 ---
 
-#### Exercice 0.4 : Tuples & Dictionnaires (`tuple`, `dict`)
+#### 📍 SÉANCE 4 : Python & MySQL (Accès aux Données & Sécurité) (2 h)
 
-* **Objectif pédagogique** :  
-  1. **Les Tuples** `(...)` : comprendre l'immutabilité (impossible d'altérer un tuple après sa création), le déballage (*unpacking*), et son intérêt pour sceller des données sensibles.
-  2. **Les Dictionnaires** `{...}` : comprendre les paires clé-valeur (structure fondamentale équivalente aux objets JSON des API REST Flask).
-* **Mise en situation Cybersécurité** :  
-  Un enregistrement de socket réseau ne doit pas pouvoir être corrompu en mémoire par un script tiers. Les fiches d'incidents SIEM sont stockées sous forme de dictionnaires.
-* **Fichiers** : `api/intro_cyber.py`.
-* **Ressource vidéo recommandée** :  
-  * 📺 [Apprendre les Dictionnaires en Python - Graven](https://www.youtube.com/watch?v=y2qIe9w61f8) *(Manipuler les paires clés-valeurs, `.get()` et les boucles)*.
-* **💡 Notions clés & syntaxe Python** :
+* **Objectif** : L'étudiant est capable de connecter Python à MySQL, d'exécuter des requêtes paramétrées sécurisées (`%s`), et de récupérer les lignes de résultats sous forme de dictionnaires avec `DictCursor`.
+
+* **📝 Travail sur table préalable (15 min — Débranché)** :
+  1. *Injection SQL* : Soit `sql = f"SELECT * FROM employes WHERE id = {id_saisi};"`. Montrez ce qui est exécuté si `id_saisi = "1 OR 1=1"`. Réécrivez avec `%s` et `(id_saisi,)`.
+  2. *Du tuple SQL au dictionnaire Python* : Reconstituez le dictionnaire créé par `DictCursor` pour la ligne `(3, "Nicolas", 2200.0)`.
+
+* **Exemple de code de cours (19 lignes)** :
   ```python
-  # 1. Tuple immuable :
-  socket_info = ("192.168.1.1", 443)
-  # socket_info[0] = "10.0.0.1" -> DÉCLENCHE UN TypeError !
-  ip, port = socket_info  # Unpacking direct
+  import os, pymysql
+  from pymysql.cursors import DictCursor
 
-  # 2. Dictionnaire clé-valeur :
-  incident = {"id": 1, "niveau": "CRITIQUE"}
-  incident["niveau"]            # Accès direct -> "CRITIQUE"
-  incident.get("resolu", False) # Accès sécurisé avec valeur par défaut si absente
-  incident["resolu"] = True     # Ajout/mise à jour d'un champ
+  conn = pymysql.connect(
+      host=os.environ.get("MYSQL_HOST", "db"),
+      user=os.environ.get("MYSQL_USER", "root"),
+      password=os.environ.get("MYSQL_PASSWORD", "root"),
+      database=os.environ.get("MYSQL_DATABASE", "CRUD"),
+      cursorclass=DictCursor
+  )
+  with conn.cursor() as cur:
+      cur.execute("SELECT nom, salaire FROM employes WHERE salaire > %s", (2000,))
+      resultats = cur.fetchall()
+      print(f"Salariés trouvés : {len(resultats)}")
+  conn.close()
   ```
-* **Consignes** :
-  1. Écrivez `creer_enregistrement_scelle(ip: str, port: int, protocole: str) -> tuple[str, int, str]`.
-  2. Écrivez `verifier_immutabilite_tuple(donnees: tuple) -> bool` utilisant un bloc `try / except TypeError` prouvant que Python interdit l'affectation `donnees[0] = ...`.
-  3. Écrivez `creer_rapport_incident(id_incident: int, source_ip: str, criticite: str) -> dict` créant un dictionnaire avec le statut `"resolu": False`.
-  4. Écrivez `analyser_frequence_alertes(journal_alertes: list[str]) -> dict[str, int]` comptant le nombre d'occurrences de chaque alerte à l'aide d'un dictionnaire.
-* **Exemple d'exécution** :
-  ```text
-  Socket scellé (tuple): ('192.168.1.1', 443, 'TCP')
-  Tentative d'altération en mémoire bloquée : True (TypeError capturé)
-  Fiche d'incident     : {'id': 101, 'source': '198.51.100.42', 'criticite': 'CRITIQUE', 'resolu': False}
-  Fréquences alertes   : {'BRUTE_FORCE': 3, 'SQLI': 2, 'XSS': 1}
-  ```
+
+* **Exercices sur machine** :
+  * *4.1 (Guidé)* : Dans `api/bdd.py`, créez `get_connection()` vers la base `CRUD` et testez `SELECT COUNT(*) FROM employes;`.
+  * *4.2 (Semi-guidé)* : Écrivez `get_employe_by_id(id_emp)` avec requête sécurisée `%s` et `cur.fetchone()`. Interdiction formelle de concaténer avec `f"..."`.
+  * *4.3 (Autonome)* : Écrivez `get_statistiques_bdd()` qui extrait tous les salaires, les trie avec `tri_selection_copie()`, calcule la médiane, et retourne `{"effectif": 9, "moyenne": 2500.0, "mediane": 2000.0}`.
+
+* **Critère de validation** : `docker compose exec api python bdd.py` se connecte sans erreur, extrait Nicolas pour l'ID 3 et calcule exactement 2 000.0 € de médiane.
 
 ---
 
-#### Exercice 0.5 : Références en mémoire & Copie défensive (`.copy()`)
+#### 📍 SÉANCE 5 : Fondamentaux de Flask & API REST (2 h)
 
-* **Objectif pédagogique** :  
-  Comprendre le piège numéro 1 de Python : l'affectation `b = a` ne duplique PAS une liste, elle copie simplement la **référence** (adresse mémoire commune vérifiable via `id(a) == id(b)`). Apprendre à créer une copie indépendante avec `.copy()`.
-* **Mise en situation Cybersécurité** :  
-  Lors d'une investigation légale (Forensics), modifier la liste originale détruit la preuve numérique. Vous devez impérativement travailler sur une copie isolée.
-* **Fichiers** : `api/intro_cyber.py`.
-* **⚠️ Le piège classique en Python** :
+* **Objectif** : L'étudiant est capable de déclarer des routes Flask associées à la méthode HTTP `GET`, de formater des réponses avec `jsonify()`, d'associer des codes HTTP (`200`, `404`), et de tester les endpoints avec Postman.
+
+* **📝 Travail sur table préalable (15 min — Débranché)** :
+  1. *Trame de la Requête HTTP Postman* : Remplissez `GET /api/employes/3 HTTP/1.1`, `Host: localhost:5000`, `Accept: application/json`.
+  2. *Trame de la Réponse HTTP Flask* : Remplissez `HTTP/1.1 200 OK`, `Content-Type: application/json`, corps JSON de Nicolas.
+  3. *Gestion d'erreur* : Quel code statut et corps JSON renvoyer pour un employé inconnu (`404`, `{"error": "..."}`) ?
+
+* **Exemple de code de cours (16 lignes)** :
   ```python
-  a = [10, 20, 30]
-  b = a            # ATTENTION : 'b' et 'a' pointent vers le MÊME espace mémoire !
-  b.append(40)     # 'a' est également modifié à votre insu : [10, 20, 30, 40]
+  from flask import Flask, jsonify
 
-  # La bonne pratique (Copie défensive) :
-  b = a.copy()     # 'b' possède son propre espace mémoire indépendant
+  app = Flask(__name__)
+
+  @app.route("/api/ping", methods=["GET"])
+  def ping():
+      return jsonify({"status": "ok", "message": "API opérationnelle"}), 200
+
+  @app.route("/api/hello/<nom>", methods=["GET"])
+  def saluer(nom):
+      return jsonify({"message": f"Bonjour {nom}"}), 200
+
+  if __name__ == "__main__":
+      app.run(host="0.0.0.0", port=5000, debug=True)
   ```
-* **Consignes** :
-  1. Écrivez `filtrer_ip_copie(liste_ips: list[str], ip_bannie: str) -> list[str]` : retournez une nouvelle liste sans modifier `liste_ips`.
-  2. Écrivez `dupliquer_et_nettoyer(ports: list[int]) -> tuple[list[int], list[int]]` : partez d'une copie défensive `.copy()`, supprimez les doublons en conservant l'ordre, et retournez `(ports_originaux, ports_sans_doublons)`.
-* **Lien avec la suite du TP** :  
-  Cette notion est le prérequis direct de l'**Exercice 4.1** (`tri_selection_copie()` vs `tri_selection_en_place()`).
+
+* **Exercices sur machine** :
+  * *5.1 (Guidé)* : Dans `api/app.py`, instanciez Flask avec `CORS(app)`. Créez la route `@app.route('/api/employes')` qui renvoie la liste complète des 9 salariés en JSON.
+  * *5.2 (Semi-guidé)* : Créez la route `/api/employes/<int:id_emp>` : renvoie le salarié avec le code `200`, ou `jsonify({"error": "..."}), 404` si absent.
+  * *5.3 (Autonome)* : Créez `/api/salaires/statistiques` appelant `get_statistiques_bdd()`. Ouvrez Postman et validez les requêtes pour l'employé 3 (`200 OK`), l'employé 99 (`404`), et les statistiques.
+
+* **Critère de validation** : Les requêtes sous Postman renvoient du JSON valide avec un statut 200 pour Nicolas et 404 pour un ID inexistant.
 
 ---
 
-#### Exercice 0.6 : Algorithmes de Chiffrement & Mini-Projet Défi Anti-IA (CIEL-Guard)
+#### 📍 SÉANCE 6 : Paramètres d'URL & Client Web `fetch()` (2 h)
 
-* **Objectif pédagogique** :  
-  Mobiliser toutes les notions acquises (fonctions, chaînes, listes, boucles, tuples, lecture de fichier) au sein d'algorithmes concrets de cryptographie symétrique et d'un projet d'investigation.
-* **Mise en situation Cybersécurité** :  
-  1. **Chiffrement de César** : décalage circulaire dans l'alphabet avec conversion de code ASCII (`ord()` et `chr()`) et modulo 26.
-  2. **Chiffrement XOR** : opérateur bit-à-bit `^` et répétition cyclique de clé via l'opérateur modulo (`cle[i % len(cle)]`).
-  3. **Défi Anti-IA (CIEL-Guard)** : analyse d'un artefact réseau réel [api/mystere.payload](api/mystere.payload) capturé dans le conteneur.
-* **Fichiers** : `api/mystere.payload`, `api/intro_cyber.py`.
-* **Ressources vidéo recommandées** :  
-  * 📺 [Python - Le chiffrement César avec ASCII](https://www.youtube.com/watch?v=B5TOZY1oBy0) *(Fonctions `ord()` et `chr()`, décalage avec modulo)*.
-  * 📺 [Qu'est-ce que la cryptographie symétrique ? (XOR et Masque jetable)](https://www.youtube.com/watch?v=EHCds8De34Q) *(Le rôle fondamental de l'opérateur XOR)*.
-* **Consignes** :
-  1. Écrivez `chiffrer_cesar(texte: str, decalage: int) -> str` et `dechiffrer_cesar(texte_chiffre: str, decalage: int) -> str`.
-  2. Écrivez `chiffrer_xor(texte: str, cle: str) -> list[int]` et `dechiffrer_xor(octets: list[int], cle: str) -> str`.
-  3. Écrivez `decoder_ciel_guard(chemin_fichier: str = "mystere.payload") -> tuple[str, int, int]` :
-     * Ouvrez et lisez [api/mystere.payload](api/mystere.payload).
-     * Calculez la clé dynamique `"CIEL" + str(nombre_octets)` et le décalage 10 (somme des chiffres de 2026).
-     * Déchiffrez en alternant : indices pairs par XOR, indices impairs par César inverse (-10).
-     * Retournez un tuple scellé `(message_restaure, total_octets, checksum)`.
-  4. Exécutez le script (`docker compose exec api python intro_cyber.py`) pour valider la chaîne et révéler le **FLAG** secret !
-* **Exemple de sortie attendue** :
-  ```text
-  César chiffré (+4)   : 'EPIVXI MRXVYWMSR 2026 !' -> Restauré : 'ALERTE INTRUSION 2026 !'
-  XOR chiffré          : [19, 24, 17, 22, 5, 12, 11, 6, 26, 1, 6, 26, 16, 0, 6] -> Restauré : 'PASSWORD_SECRET'
-  Artefact 'mystere.payload' lu avec succès (44 octets, checksum=3419)
-  -> MESSAGE SECRET DÉCODÉ : FLAG{ciel_python_2026_investigation_reussie}
-  -> Validation du Défi CIEL-Guard : SUCCÈS TOTAL !
+* **Objectif** : L'étudiant est capable de récupérer des filtres dans Flask via `request.args`, et de concevoir une page HTML/JavaScript qui consomme l'API via `fetch()` pour mettre à jour le DOM sans rechargement.
+
+* **📝 Travail sur table préalable (15 min — Débranché)** :
+  1. *Anatomie de l'URL* : Découpez `http://localhost:5000/api/employes/filtre?min=2000`. Complétez l'instruction Flask : `seuil = float(request.args.get("min", 0))`.
+  2. *Chronogramme séquentiel (1 à 5)* : Clic bouton $\rightarrow$ émission `fetch()` $\rightarrow$ réponse JSON Flask/MySQL $\rightarrow$ promesse `.json()` $\rightarrow$ injection DOM.
+
+* **Exemple de code de cours (19 lignes)** :
+  ```python
+  # Côté Flask (Python)
+  from flask import request, jsonify
+
+  @app.route("/api/filtrer", methods=["GET"])
+  def filtrer():
+      valeur_min = float(request.args.get("min", 0))
+      return jsonify({"seuil_recu": valeur_min}), 200
   ```
+  ```javascript
+  // Côté Client (JavaScript)
+  fetch('/api/filtrer?min=2000')
+      .then(response => response.json())
+      .then(data => {
+          document.getElementById('resultat').textContent = `Seuil : ${data.seuil_recu} €`;
+      });
+  ```
+
+* **Exercices sur machine** :
+  * *6.1 (Guidé)* : Dans `api/app.py`, ajoutez `/api/employes/filtre` lisant `request.args.get('min', 0)` et exécutant `SELECT * FROM employes WHERE salaire >= %s ORDER BY salaire ASC;`.
+  * *6.2 (Semi-guidé)* : Dans `index.html`, écrivez `chargerStats()` appelant `/api/salaires/statistiques` pour actualiser `<span id="moyenne">` et `<span id="mediane">`.
+  * *6.3 (Autonome)* : Ajoutez un champ `<input id="seuil">` et un bouton. Au clic, appelez l'API de filtrage et générez dynamiquement les lignes d'un tableau HTML `<table>`.
+
+* **Critère de validation** : Sur `http://localhost`, cliquer sur le bouton affiche immédiatement la médiane (2 000.0 €), et filtrer avec `3000` affiche exactement les 3 employés concernés (David, Henri, Bob) sans rechargement de page.
 
 ---
 
-#### Exercice 0.7 : Statistiques élémentaires et Problème de Nicolas
+### 🏁 Évaluation Diagnostique de Fin de Séquence (Mini-TP 30 min)
 
-![Médiane d'une série statistique - Problématique de Nicolas](img/mediane_nicolas.png)
+* **Énoncé** : « Le Micro-service de Prime Salariale »  
+* **Objectif** : Écrire `calculer_mediane(salaires)` (sans `sorted`), calculer une prime ($500\text{ €}$ si $<$ médiane, $200\text{ €}$ si $\ge$ médiane), extraire les salaires de MySQL et exposer la route `GET /api/employes/<int:id_emp>/prime`.
+* **Barème (/20)** : Médiane par sélection (/4), Logique prime (/2), Requête SQL paramétrée (/4), Extraction données (/2), Route typée Flask (/4), Réponse JSON & 404 (/4). *Seuil d'accès validé à l'activité finale : $\ge 12 / 20$.*
 
-> **Problématique de Nicolas :**
-> Dans une entreprise de **9 salariés**, le salaire mensuel moyen est de **2 500 €**. Nicolas travaille dans cette entreprise et gagne **2 200 €** par mois.
-> Constatant que son salaire est inférieur au salaire moyen (2 200 € < 2 500 €), il affirme : *« Je suis dans les moins bien payés de l'entreprise ! »*.
-> Que penser de cette affirmation ?
->
-> *Élément d'analyse* : Nicolas commet la confusion fréquente entre **salaire moyen** et **salaire médian**. Quelques très hauts salaires suffisent à tirer la moyenne vers le haut. Pour savoir s'il est réellement dans la tranche inférieure ou supérieure de l'entreprise, il faut ordonner la série et trouver la **médiane** qui sépare l'effectif en deux moitiés égales.
-
-* **Objectif** : Implémenter manuellement le calcul de la moyenne et de la médiane sur une liste, puis résoudre ce cas d'entreprise.
-* **Fichiers** : `api/statistique.py`, `api/main.py`.
-* **Consignes** :
-  * Dans `statistique.py`, codez la fonction `moyenne(tab)` sans module externe (calculer la somme et diviser par `len(tab)`).
-  * Dans `statistique.py`, codez la fonction `mediane(tab)` sur une série **supposée triée** :
-    * Si $N$ est impair : élément central à l'indice $N // 2$.
-    * Si $N$ est pair : moyenne des deux éléments centraux.
-  * Dans `main.py`, appliquez le calcul sur les salaires de l'entreprise : `[1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]`.
-  * Concluez formellement dans la console sur l'affirmation de Nicolas en comparant son salaire à la médiane.
-* **Exemple d'exécution** :
-  ```text
-  Salaires de l'entreprise : [1500, 4500, 2200, 1500, 3300, 1800, 1700, 2000, 4000]
-  Moyenne des salaires : 2500.00 €
-  Salaires triés       : [1500, 1500, 1700, 1800, 2000, 2200, 3300, 4000, 4500]
-  Médiane des salaires : 2000.00 €
-  Salaire de Nicolas   : 2200.00 €
-  -> Problématique : Nicolas gagne 2 200 € alors que le salaire moyen est de 2 500 €.
-     Il affirme : "Je suis dans les moins bien payés de l'entreprise !"
-  -> Analyse : FAUX. Nicolas confond salaire moyen et salaire médian.
-     La médiane réelle est de 2000.00 €. Avec 2200.00 €, Nicolas se situe
-     au-dessus de la médiane (6e sur 9). Il fait partie des salariés les mieux rémunérés.
-     La moyenne est tirée vers le haut par les salaires extrêmes (4000 € et 4500 €).
-  ```
+---
 
 ---
 
