@@ -118,80 +118,111 @@ for emp in liste_employes:
     >    | :---: | :---: | :---: | :---: | :--- | :---: |
     >    | 0 | 15 | 0 | Initialisation | - | 0 |
     >    | 1 | 3 | 0 | $3 < 15$ (VRAI) | $min\_idx \leftarrow 1$ | 1 |
-    >    | 2 | 22 | 1 | $22 < 3$ (FAUX) | Aucun changement | 1 |
-    >    | 3 | 8 | 1 | `____________________` | `____________________` | `____` |
-    > 2. Complétez le pseudo-code officiel :
+    >    | 2 | 22 | 1 | `____________________` | `____________________` | `____` |
+    >    | 3 | 8 | `____` | `____________________` | `____________________` | `____` |
+    > 2. Rédigez sur votre feuille de travail le pseudo-code de la fonction :
     >    ```text
     >    fonction indice_minimum(L : liste) -> entier
-    >        min_idx ← 0
-    >        pour i de 1 à longueur(L) - 1 :
-    >            si L[i] < L[min_idx] alors :
-    >                min_idx ← ____________
-    >        retourner min_idx
+    >        ____________________________________________________________
+    >        ____________________________________________________________
+    >        ____________________________________________________________
+    >        ____________________________________________________________
     >    fin fonction
     >    ```
-    > 3. Si le minimum apparaît plusieurs fois (ex: `[7, 3, 9, 3]`), quel indice votre fonction retourne-t-elle ? Pourquoi ?  
+    > 3. Si le minimum apparaît plusieurs fois (ex: `[7, 3, 9, 3]`), quel indice votre fonction doit-elle retourner en priorité ? Pourquoi ?  
     >    *Réponse :* `____________________________________________________________________`
   * **💻 Étape 2 : Implémentation sur machine** :  
     Dans `api/intro_base.py`, codez la fonction `indice_minimum(L)`. Testez avec `python api/intro_base.py`.
 
 ---
 
-* **Exercice 0.2 : Recherche dans une liste triée (Itératif & Récursivité facile)**
-  * **Énoncé** : Écrire une fonction prenant en argument une liste $L$ supposée croissante et une valeur quelconque $x$ et déterminant si cette valeur est dans la liste (retourne `True` ou `False`).  
-    *Exemple* : Retourne `True` pour `L = [2, 5, 8, 12, 19]` et $x = 8$. Retourne `False` pour $x = 7$.
+* **Exercice 0.2 : Somme des entiers de 1 à n (Itératif vs Récursif)**
+  * **Énoncé** : Écrire une fonction calculant la somme des entiers de $1$ à $n$ ($1 + 2 + \dots + n$) de deux manières :
+    1. Version itérative `somme_iterative(n)` utilisant une boucle `for` ;
+    2. Version récursive `somme_recursive(n)` utilisant la relation $somme(n) = n + somme(n - 1)$.
+    * *Exemple* : Pour $n = 5$, les deux fonctions retournent `15` ($1+2+3+4+5=15$).
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. *Optimisation grâce au tri (version itérative)* :  
-    >    Si on parcourt la liste ordonnée $[2, 5, 8, 12, 19]$ à la recherche de $x = 7$, à quel moment précis peut-on affirmer avec certitude que $7$ n'est pas dans la liste sans continuer jusqu'à la fin ?  
-    >    *Réponse :* `________________________________________________` *(Dès que l'élément rencontré est strictement supérieur à 7, ici 8 > 7).*
-    > 2. *Déroulé récursif facile* :  
-    >    Complétez les cas d'arrêt et l'appel récursif de `recherche_recursive_triee(L, x)` :
-    >    * **Cas d'arrêt 1 (échec)** : Si la liste $L$ est vide (`len(L) == 0`), alors retourner `______`.
-    >    * **Cas d'arrêt 2 (succès)** : Si le premier élément `L[0] == x`, alors retourner `______`.
-    >    * **Cas d'arrêt 3 (échec précoce)** : Si `L[0] > x`, alors retourner `______`.
-    >    * **Appel récursif** : Sinon, relancer la recherche sur le reste de la liste : `recherche_recursive_triee(____________, x)`.
-    > 3. Tracez les appels récursifs pour chercher $8$ dans $[2, 5, 8, 12, 19]$ :  
-    >    `recherche([2, 5, 8, 12, 19], 8)` $\rightarrow$ `recherche([5, 8, 12, 19], 8)` $\rightarrow$ `recherche([8, 12, 19], 8)` $\rightarrow$ `______`.
+    > 1. Déroulez l'arbre des appels récursifs pour $n = 4$ sur votre feuille :
+    >    ```text
+    >    somme(4) = 4 + somme(3)
+    >             = 4 + (3 + somme(____))
+    >             = 4 + (3 + (____ + somme(____)))
+    >             = 4 + 3 + ____ + ____ = ____
+    >    ```
+    > 2. Complétez les deux composantes obligatoires de la fonction récursive :
+    >    * **Cas d'arrêt (ou de base)** : Si $n \le 0$ (ou $n == 1$), la fonction retourne immédiatement : `______`.
+    >    * **Cas récursif** : Pour $n > 1$, la fonction s'appelle elle-même : `n + somme_recursive(____________)`.
+    > 3. Que se passerait-il en Python si l'on omettait le cas de base ? Quelle exception serait déclenchée ?  
+    >    *Réponse :* `____________________________________________________________________`
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `recherche_liste_triee(L, x)` et `recherche_recursive_triee(L, x)`.
+    Dans `api/intro_base.py`, codez `somme_iterative(n)` et `somme_recursive(n)`. Testez avec $n = 5$.
 
 ---
 
-* **Exercice 0.3 : Taille totale d'une liste de listes**
-  * **Énoncé** : Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la taille totale de la liste $L$.  
+* **Exercice 0.3 : Puissance $x^n$ (Itératif vs Récursif — Exercice simple de même type)**
+  * **Énoncé** : Écrire une fonction calculant $x^n$ ($x$ élevé à la puissance $n \ge 0$) de deux manières :
+    1. Version itérative `puissance_iterative(x, n)` avec une boucle `for` ;
+    2. Version récursive `puissance_recursive(x, n)` utilisant la relation $x^n = x \times x^{n-1}$.
+    * *Exemple* : Pour $x = 2$ et $n = 4$, les deux fonctions retournent `16` ($2 \times 2 \times 2 \times 2 = 16$).
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Déroulez l'arbre des appels pour $x = 2$ et $n = 3$ ($2^3$) sur votre feuille :
+    >    ```text
+    >    puissance(2, 3) = 2 * puissance(2, 2)
+    >                    = 2 * (2 * puissance(2, ____))
+    >                    = 2 * (2 * (____ * puissance(____, 0)))
+    >                    = 2 * 2 * ____ * ____ = ____
+    >    ```
+    > 2. Définissez le cas d'arrêt mathématique : pour $n = 0$, que vaut $x^0$ ?  
+    >    *Réponse :* `______`.
+    > 3. Rédigez sur votre feuille le pseudo-code de la fonction récursive :
+    >    ```text
+    >    fonction puissance_recursive(x, n)
+    >        ____________________________________________________________
+    >        ____________________________________________________________
+    >        ____________________________________________________________
+    >    fin fonction
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `puissance_iterative(x, n)` et `puissance_recursive(x, n)`. Testez avec $x = 2, n = 4$.
+
+---
+
+* **Exercice 0.4 : Taille totale d'une liste de listes**
+  * **Énoncé** : Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la taille totale (nombre total d'éléments) de la liste $L$.  
     *Exemple* : La fonction retourne `7` pour la liste de listes `[[2, 5, 4], [3, 6], [4], [2]]`.
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. Schématisez la liste de listes en mémoire (un tableau de références vers 4 sous-listes) :
+    > 1. Schématisez la liste de listes en mémoire (un tableau principal pointant vers 4 sous-listes) :
     >    ```text
-    >    L -> [ [0] -> [2, 5, 4]  (longueur 3)
-    >           [1] -> [3, 6]     (longueur 2)
-    >           [2] -> [4]        (longueur 1)
-    >           [3] -> [2]        (longueur 1) ]
+    >    L -> [ [0] -> [2, 5, 4]  (taille ____)
+    >           [1] -> [3, 6]     (taille ____)
+    >           [2] -> [4]        (taille ____)
+    >           [3] -> [2]        (taille ____) ]
     >    ```
-    > 2. Remplissez le tableau de cumul de taille :
-    >    | Indice de la sous-liste | Contenu | `len(sous_liste)` | Total cumulé |
+    > 2. Remplissez le tableau de cumul :
+    >    | Indice $k$ | Sous-liste | `len(sous_liste)` | Total cumulé |
     >    | :---: | :---: | :---: | :---: |
     >    | 0 | `[2, 5, 4]` | 3 | 3 |
     >    | 1 | `[3, 6]` | 2 | 5 |
     >    | 2 | `[4]` | `____` | `____` |
     >    | 3 | `[2]` | `____` | `____` |
-    > 3. Complétez le pseudo-code :
+    > 3. Rédigez le pseudo-code de calcul de la taille totale :
     >    ```text
-    >    total ← 0
-    >    Pour chaque sous_liste dans L :
-    >        total ← total + ____________
-    >    Retourner total
+    >    ________________________________________________________________
+    >    ________________________________________________________________
+    >    ________________________________________________________________
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
     Dans `api/intro_base.py`, codez `taille_totale(L)`. Validez avec `assert taille_totale([[2, 5, 4], [3, 6], [4], [2]]) == 7`.
 
 ---
 
-* **Exercice 0.4 : Somme et Maximum d'une liste de listes**
+* **Exercice 0.5 : Somme et Maximum d'une liste de listes**
   * **Énoncé** :
     1. Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la somme de tous les nombres dans toutes les listes de $L$.  
        *Exemple* : Retourne `26` pour `[[2, 5, 4], [3, 6], [4], [2]]`.
@@ -201,25 +232,21 @@ for emp in liste_employes:
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
     > 1. Déroulez le calcul de la somme sur feuille :  
-    >    $\text{Somme} = (2 + 5 + 4) + (3 + 6) + (4) + (2) = 11 + 9 + 4 + 2 = 26$.
+    >    $\text{Somme} = (2 + 5 + 4) + (3 + 6) + (4) + (2) = \text{______}$.
     > 2. Pourquoi ne faut-il **JAMAIS** initialiser la recherche du maximum avec `max_val = 0` ?  
-    >    *Réponse :* `____________________________________________________________________`  
-    >    *(Si la liste ne contient que des nombres négatifs, 0 fausserait entièrement le résultat).*
-    > 3. Complétez le pseudo-code pour le maximum :
+    >    *Réponse :* `____________________________________________________________________`
+    > 3. Rédigez le pseudo-code pour la recherche du maximum :
     >    ```text
-    >    max_val ← None
-    >    Pour chaque sous_liste dans L :
-    >        Pour chaque val dans sous_liste :
-    >            Si max_val est None ou val > max_val alors :
-    >                max_val ← ____________
-    >    Retourner max_val
+    >    ________________________________________________________________
+    >    ________________________________________________________________
+    >    ________________________________________________________________
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
     Dans `api/intro_base.py`, codez `somme_liste_de_listes(L)` et `maximum_liste_de_listes(L)`.
 
 ---
 
-* **Exercice 0.5 : Création de Matrice 2D Régulière & Inversion Binaire**
+* **Exercice 0.6 : Création de Matrice 2D Régulière & Inversion Binaire**
   * **Énoncé** :
     1. Écrire une fonction `creer_matrice(nb_lignes, nb_colonnes, valeur_defaut=0)` qui crée une matrice $N \times P$ avec des lignes indépendantes construites avec `.append()`.
     2. Écrire une fonction `inverser_matrice_binaire(M)` qui prend une matrice de 0 et de 1 et retourne une nouvelle matrice où chaque 0 devient 1 et chaque 1 devient 0.
@@ -227,23 +254,22 @@ for emp in liste_employes:
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
     > 1. *Piège de la référence partagée en Python* :  
-    >    Expliquez pourquoi l'instruction `M = [[0] * 4] * 3` est formellement interdite :  
-    >    *Réponse :* `____________________________________________________________________`  
-    >    *(Toutes les lignes pointent vers la même liste physique en mémoire ; toute modification en affecterait toutes les lignes simultanément).*
+    >    Pourquoi l'instruction `M = [[0] * 4] * 3` est-elle formellement interdite ?  
+    >    *Réponse :* `____________________________________________________________________`
     > 2. Dessinez sur quadrillage une matrice de 3 lignes et 4 colonnes, puis placez la valeur `9` à la coordonnée `M[1][2]` (ligne 1, colonne 2) :
     >    ```text
     >    Ligne 0 : [ 0,  0,  0,  0 ]
     >    Ligne 1 : [ 0,  0,  _,  0 ]
     >    Ligne 2 : [ 0,  0,  0,  0 ]
     >    ```
-    > 3. Pour la matrice binaire `M = [[0, 1, 0], [1, 1, 0]]`, écrivez la matrice inversée attendue :  
+    > 3. Pour la matrice binaire `M = [[0, 1, 0], [1, 1, 0]]`, complétez la matrice inversée attendue :  
     >    *Résultat :* `[[ ____, ____, ____ ], [ ____, ____, ____ ]]`.
   * **💻 Étape 2 : Implémentation sur machine** :  
     Dans `api/intro_base.py`, codez `creer_matrice(nb_lignes, nb_colonnes, valeur_defaut)` et `inverser_matrice_binaire(M)`.
 
 ---
 
-* **Exercice 0.6 : Produit cartésien de deux listes (Génération de couples)**
+* **Exercice 0.7 : Produit cartésien de deux listes (Génération de couples)**
   * **Énoncé** : Écrire une fonction prenant en entrée deux listes et qui retourne la liste de tous les couples formés d'un élément de la première liste et d'un élément de la deuxième liste.  
     *Exemple* : Pour `L1 = [0, 1]` et `L2 = [1, 4]`, la fonction retourne `[(0, 1), (0, 4), (1, 1), (1, 4)]`.
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
@@ -252,24 +278,22 @@ for emp in liste_employes:
     > 1. Remplissez le tableau cartésien pour $L_1 = [0, 1]$ et $L_2 = [1, 4]$ :
     >    | $a \in L_1 \backslash b \in L_2$ | **1** | **4** |
     >    | :---: | :---: | :---: |
-    >    | **0** | `(0, 1)` | `(0, 4)` |
-    >    | **1** | `(1, 1)` | `(1, 4)` |
-    > 2. Si $L_1$ possède $n$ éléments et $L_2$ possède $p$ éléments, combien de couples contient la liste résultante ?  
-    >    *Réponse :* $n \times p$ couples.
-    > 3. Complétez le pseudo-code avec double boucle imbriquée :
+    >    | **0** | `( ____, ____ )` | `( ____, ____ )` |
+    >    | **1** | `( ____, ____ )` | `( ____, ____ )` |
+    > 2. Si $|L_1| = n$ et $|L_2| = p$, combien de couples contiendra la liste finale ?  
+    >    *Réponse :* `______` couples.
+    > 3. Rédigez le pseudo-code générant les couples avec une double boucle :
     >    ```text
-    >    couples ← []
-    >    Pour chaque a dans L1 :
-    >        Pour chaque b dans L2 :
-    >            couples.append((____________, ____________))
-    >    Retourner couples
+    >    ________________________________________________________________
+    >    ________________________________________________________________
+    >    ________________________________________________________________
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `produit_cartesien(L1, L2)`. Validez sur l'exemple.
+    Dans `api/intro_base.py`, codez `produit_cartesien(L1, L2)`.
 
 ---
 
-* **Exercice 0.7 : Réorganisation ordonnée de couples selon un pivot (Permutation)**
+* **Exercice 0.8 : Réorganisation ordonnée de couples selon un pivot (Permutation)**
   * **Énoncé** : Écrire une fonction prenant en entrée une liste `l` de couples et un indice `i` entre 0 (inclus) et la taille de `l` (exclue) et qui retourne une liste formant une permutation de la liste `l`, selon la règle suivante :
     1. D'abord on met le couple à l'indice `i` ;
     2. Puis les couples dans la liste dont le premier élément est égal à celui à l'indice `i` dans l'ordre dans lequel ils figurent dans `l` ;
@@ -280,92 +304,64 @@ for emp in liste_employes:
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
     > 1. Identifiez le couple pivot pour `l` et `i = 4` :  
-    >    *Pivot :* `l[4] = (3, 4)`. Sa première composante (la clé de comparaison) vaut `3`.
-    > 2. Classez les couples restants de `l` dans leur ordre d'apparition :
-    >    * Couples dont le premier élément vaut 3 (hors pivot) : `[(3, 5), (3, 0)]`.
-    >    * Autres couples : `[(2, 3), (1, 0), (2, 1), (2, 5)]`.
+    >    *Pivot :* `l[4] = ( ____, ____ )`. Sa première composante (clé de comparaison) vaut : `____`.
+    > 2. Partitionnez les couples restants de `l` dans leur ordre d'apparition :
+    >    * Couples dont le premier élément vaut cette clé : `[ ____________________ ]`.
+    >    * Autres couples : `[ ____________________ ]`.
     > 3. Écrivez la concaténation ordonnée finale :  
-    >    `[(3, 4)] + [(3, 5), (3, 0)] + [(2, 3), (1, 0), (2, 1), (2, 5)]`.
-    > 4. Complétez le pseudo-code de l'algorithme :
+    >    `[ ______ ] + [ ____________________ ] + [ ____________________ ]`.
+    > 4. Rédigez le pseudo-code de la réorganisation ordonnée :
     >    ```text
-    >    pivot ← l[i]
-    >    cle ← pivot[0]
-    >    meme_cle ← []
-    >    autres ← []
-    >    Pour k de 0 à longueur(l) - 1 :
-    >        Si k ≠ i alors :
-    >            Si l[k][0] == cle alors :
-    >                meme_cle.append(l[k])
-    >            Sinon :
-    >                autres.append(l[k])
-    >    Retourner [pivot] + meme_cle + autres
+    >    ________________________________________________________________
+    >    ________________________________________________________________
+    >    ________________________________________________________________
+    >    ________________________________________________________________
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `reorganiser_couples(l, i)`. Testez avec la liste de l'énoncé et `i = 4`.
+    Dans `api/intro_base.py`, codez `reorganiser_couples(l, i)`.
 
 ---
 
-* **Exercice 0.8 : Motif console de $2n - 1$ lignes (Figure en sablier / double triangle)**
-  * **Énoncé** : Écrire une fonction prenant en entrée un entier naturel $n$ et imprimant la figure de la forme ci-dessous sur $2n - 1$ lignes (ici pour $n = 6$, soit $11$ lignes) :
+* **Exercice 0.9 : Triangle d'étoiles simple (Boucle & Affichage console)**
+  * **Énoncé** : Écrire une fonction `afficher_triangle_simple(n)` prenant en entrée un entier naturel $n \ge 1$ et imprimant un triangle rectangle simple de hauteur $n$.  
+    Chaque ligne $i$ (pour $i$ allant de $1$ à $n$) contient exactement $i$ étoiles.  
+    *Exemple pour $n = 4$* :
     ```text
-    ******
-    *****
-    ****
-    ***
-    **
     *
     **
     ***
     ****
-    *****
-    ******
     ```
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > 1. Décomposez le problème en deux boucles consécutives :
-    >    * Partie 1 (décroissante) : $n$ lignes, allant de $n$ étoiles à 1 étoile.
-    >    * Partie 2 (croissante) : $n - 1$ lignes, allant de 2 étoiles à $n$ étoiles.  
-    >    * Total de lignes : $n + (n - 1) = 2n - 1$. Pour $n = 6$ : $2 \times 6 - 1 = 11$ lignes.
-    > 2. Complétez le pseudo-code :
+    > 1. Remplissez le tableau de trace pour $n = 4$ :
+    >    | Ligne $i$ | Nombre d'étoiles | Rendu console attendu |
+    >    | :---: | :---: | :--- |
+    >    | 1 | 1 | `*` |
+    >    | 2 | `____` | `____` |
+    >    | 3 | `____` | `____` |
+    >    | 4 | `____` | `____` |
+    > 2. Rédigez le pseudo-code traçant le triangle :
     >    ```text
-    >    Pour k de n à 1 (par pas de -1) :
-    >        afficher k fois le caractère '*'
-    >    Pour k de 2 à n (par pas de +1) :
-    >        afficher k fois le caractère '*'
+    >    procédure triangle_simple(entier n)
+    >        ____________________________________________________________
+    >        ____________________________________________________________
+    >    fin procédure
     >    ```
-    > 3. En Python, quelle opération concise permet d'obtenir une chaîne de $k$ étoiles sans boucle interne ?  
-    >    *Réponse :* `'*' * k`.
+    > 3. En Python, quelle opération concise sur chaîne permet d'afficher $i$ étoiles sans boucle interne ?  
+    >    *Réponse :* `________________________________________________`
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `afficher_figure_etoiles(n)`. Testez avec $n = 6$.
+    Dans `api/intro_base.py`, codez `afficher_triangle_simple(n)`. Testez avec $n = 4$.
 
 ---
 
-* **Exercice 0.9 : Objets & Dictionnaires (`dict`) & Manipulation de propriétés**
+* **Exercice 0.10 : Objets & Dictionnaires (`dict`) & Statistiques de promotion**
   * **Énoncé** :
-    1. Écrire une fonction `creer_fiche_etudiant(nom, note, age=None)` qui retourne un dictionnaire contenant les clés `"nom"`, `"note"`, et `"age"`.
-    2. Écrire une fonction `modifier_note(fiche, nouvelle_note)` qui met à jour la note directement en mémoire.
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > 1. Dessinez la boîte mémoire de la variable `fiche = {"nom": "Alice", "note": 14.5, "age": 19}` associant chaque étiquette clé à sa valeur.
-    > 2. Que se passe-t-il si vous tentez d'exécuter `print(fiche["ville"])` ? Quelle exception Python est levée ?  
-    >    *Réponse :* `________________________________________________` *(KeyError)*.
-    > 3. Quelle méthode permet d'accéder à une propriété en fournissant une valeur par défaut sans provoquer d'erreur ?  
-    >    *Instruction :* `fiche.get("ville", "Non renseignée")`.
-    > 4. Écrivez l'instruction Python pour modifier la note d'Alice à $16.0$ :  
-    >    *Instruction :* `fiche[________] = ________`
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `creer_fiche_etudiant(nom, note, age)` et `modifier_note(fiche, nouvelle_note)`.
-
----
-
-* **Exercice 0.10 : Tableaux d'Objets (Liste de dictionnaires) & Statistiques de promotion**
-  * **Énoncé** : Écrire une fonction `statistiques_promo(etudiants)` prenant en entrée une liste de fiches d'étudiants (dictionnaires avec clés `"nom"` et `"note"`) et qui retourne un dictionnaire de synthèse contenant :
-    * `"effectif"` : nombre total d'étudiants ;
-    * `"moyenne"` : moyenne des notes (arrondie à 2 décimales) ;
-    * `"note_max"` : la meilleure note ;
-    * `"admis"` : la liste des noms des étudiants ayant une note $\ge 10.0$.
+    1. Écrire `creer_fiche_etudiant(nom, note, age=None)` retournant un dictionnaire `{"nom": nom, "note": note, "age": age}`.
+    2. Écrire `modifier_note(fiche, nouvelle_note)` qui modifie la note directement en mémoire.
+    3. Écrire `statistiques_promo(etudiants)` prenant une liste de fiches d'étudiants et retournant un dictionnaire :
+       `{"effectif": ..., "moyenne": ..., "note_max": ..., "admis": [...]}` (admis : note $\ge 10.0$).
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
@@ -380,18 +376,18 @@ for emp in liste_employes:
     > ```
     > 1. Calculez les résultats statistiques attendus sur feuille :
     >    * Effectif = `______`
-    >    * Somme des notes = $14.5 + 8.0 + 15.0 + 9.5 = 47.0$ $\rightarrow$ Moyenne = $47.0 / 4 =$ `______`
+    >    * Somme des notes = `______` $\rightarrow$ Moyenne = `______`
     >    * Note maximale = `______`
     >    * Liste des admis (note $\ge 10.0$) : `[ ____________, ____________ ]`.
-    > 2. Complétez le pseudo-code pour le filtrage des admis avec `.append()` :
+    > 2. Rédigez le pseudo-code pour le calcul de la moyenne et le filtrage des admis :
     >    ```text
-    >    admis ← []
-    >    Pour chaque etudiant dans promo :
-    >        Si etudiant["note"] >= 10.0 alors :
-    >            admis.append(____________)
+    >    ________________________________________________________________
+    >    ________________________________________________________________
+    >    ________________________________________________________________
+    >    ________________________________________________________________
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez `statistiques_promo(etudiants)`. Validez avec la promotion de test.
+    Dans `api/intro_base.py`, codez les fonctions associées. Validez avec la promotion de test.
 
 ---
 
@@ -407,15 +403,15 @@ for emp in liste_employes:
   > ✍️ **Cadre de réponse écrite (Travail sur table) :**
   > 
   > 1. *Schéma mémoire d'une liste de dictionnaires* :  
-  >    Dessinez sur feuille la structure de la variable `employes` de 3 salariés (Alice 1500, Bob 4500, Nicolas 2200).  
+  >    Dessinez sur feuille la structure de la variable `employes` de 3 salariés (Alice 1500, Bob 4500, Nicolas 2200) :  
   >    ```text
   >    employes (liste) -> [ [0] -> {"id": 1, "nom": "Alice",   "salaire": 1500},
-  >                          [1] -> {"id": 2, "nom": "Bob",     "salaire": 4500},
-  >                          [2] -> {"id": 3, "nom": "Nicolas", "salaire": 2200} ]
+  >                          [1] -> {"id": 2, "nom": "Bob",     "salaire": ______},
+  >                          [2] -> {"id": 3, "nom": "________", "salaire": ______} ]
   >    ```
   > 2. *Accès direct à une propriété imbriquée* :  
   >    Écrivez l'expression Python accédant au salaire de Bob :  
-  >    *Réponse :* `employes[______][______]` *(donne 4500)*.
+  >    *Réponse :* `employes[______][______]`
   > 3. *Tableau de trace de la boucle de calcul et filtrage* :  
   >    Remplissez le tableau pour la boucle calculant la masse salariale (`total += emp["salaire"]`) et testant `emp["salaire"] > 2000` :
   >    | Tour | Salarié | Salaire | Total cumulé | Condition `> 2000` | Affichage produit |
@@ -454,16 +450,16 @@ for emp in liste_employes:
 * **📺 Vidéo support de l'algorithme** :  
   👉 [Visualiser l'animation et le principe du Tri par Sélection](https://youtu.be/8u3Yq-5DTN8?si=749n7xBfh2mbJTXS) *(Observez comment le plus petit élément restant est recherché puis permuté avec l'élément courant)*.
 
-* **Pseudo-code officiel imposé** :
+* **Pseudo-code officiel à compléter sur table** :
   ```text
   procédure tri_selection(tableau t)
       n ← longueur(t)
-      pour i de 0 à n - 2
-          min ← i
-          pour j de i + 1 à n - 1
-              si t[j] < t[min], alors min ← j
+      pour i de 0 à ____________
+          min ← ____________
+          pour j de i + 1 à ____________
+              si t[j] < t[min], alors min ← ____________
           fin pour
-          si min ≠ i, alors échanger t[i] et t[min]
+          si min ≠ i, alors échanger ________________________
       fin pour
   fin procédure
   ```
@@ -475,14 +471,18 @@ for emp in liste_employes:
   >    | Étape $i$ | Indice $min$ initial | Indice $j$ | Comparaison $t[j] < t[min]$ | Nouveau $min$ | Échange $t[i] \leftrightarrow t[min]$ | État du tableau $t$ |
   >    | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
   >    | 0 | 0 ($t[0]=15$) | 1 | $3 < 15$ (VRAI) | 1 | - | - |
-  >    | 0 | 1 ($t[1]=3$) | 2 | $8 < 3$ (FAUX) | 1 | $t[0] \leftrightarrow t[1]$ | `[3, 15, 8]` |
-  >    | 1 | 1 ($t[1]=15$) | 2 | $8 < 15$ (VRAI) | 2 | $t[1] \leftrightarrow t[2]$ | `[3, 8, 15]` |
+  >    | 0 | 1 ($t[1]=3$) | 2 | `____________` | `____` | `__________________` | `________________` |
+  >    | 1 | `____________` | 2 | `____________` | `____` | `__________________` | `________________` |
   > 2. *Schéma mémoire : Passage par Référence vs Copie Défensive* :
-  >    * Si `b = t` : `id(b) == id(t)`. `b` et `t` partagent le même emplacement. Modifier `b[0]` modifie aussi `t[0]`.
-  >    * Si `b = list(t)` : `id(b) != id(t)`. Un clone distinct est créé. `t` reste strictement intact.
+  >    * Si `b = t` : que partagent les deux variables ? Si l'on modifie `b[0]`, que devient `t[0]` ?  
+  >      *Réponse :* `____________________________________________________________`
+  >    * Si `b = list(t)` : que se passe-t-il pour le tableau `t` d'origine si l'on modifie `b[0]` ?  
+  >      *Réponse :* `____________________________________________________________`
   > 3. *Formule d'indice de la médiane sur série triée de taille $N$* :
-  >    * Si $N$ est impair ($N=9$) : `indice = N // 2` *(indice 4, soit le 5e élément)*.
-  >    * Si $N$ est pair ($N=8$) : `mediane = (t[N // 2 - 1] + t[N // 2]) / 2` *(moyenne des indices 3 et 4)*.
+  >    * Si $N$ est impair ($N=9$) : quelle formule donne l'indice du centre ?  
+  >      *Réponse :* `indice = ________________`
+  >    * Si $N$ est pair ($N=8$) : comment calcule-t-on la valeur médiane ?  
+  >      *Réponse :* `mediane = ________________________________`
 
 * **Exemple de code de cours (18 lignes)** :
   ```python
@@ -531,21 +531,21 @@ for emp in liste_employes:
   > 1. *Grille de correspondance de syntaxe Python $\leftrightarrow$ JSON* :
   >    | Type / Valeur | En Python | En JSON strict |
   >    | :--- | :--- | :--- |
-  >    | Booléen vrai | `True` | `true` |
-  >    | Booléen faux | `False` | `false` |
-  >    | Absence de valeur | `None` | `null` |
-  >    | Chaîne de texte | `'texte'` ou `"texte"` | `"texte"` (guillemets doubles stricts) |
+  >    | Booléen vrai | `True` | `______` |
+  >    | Booléen faux | `False` | `______` |
+  >    | Absence de valeur | `None` | `______` |
+  >    | Chaîne de texte | `'texte'` ou `"texte"` | `______` |
   > 2. *Chasse aux anomalies syntaxiques JSON* :  
   >    Identifiez et corrigez les 3 erreurs dans cet extrait invalide :
   >    ```json
   >    { 'nom': "Alice", "actif": True, "salaire": 1500, }
   >    ```
-  >    *Erreur 1 :* `'nom'` $\rightarrow$ `"nom"` (guillemets simples interdits).  
-  >    *Erreur 2 :* `True` $\rightarrow$ `true` (majuscule interdite).  
-  >    *Erreur 3 :* `1500,` $\rightarrow$ `1500` (virgule finale interdite).
+  >    *Erreur 1 :* `____________________________________________________________`  
+  >    *Erreur 2 :* `____________________________________________________________`  
+  >    *Erreur 3 :* `____________________________________________________________`  
   > 3. *Organigramme try / except* :  
   >    Que fait le programme si `open("employes.json")` déclenche une `FileNotFoundError` ?  
-  >    *Réponse :* Le bloc `except` intercepte l'erreur sans planter et retourne une liste vide `[]`.
+  >    *Réponse :* `____________________________________________________________`
 
 * **Exemple de code de cours (17 lignes)** :
   ```python
@@ -581,13 +581,14 @@ for emp in liste_employes:
   > 
   > 1. *Requêtes préparées vs Concaténation de chaînes* :  
   >    Soit une variable Python `id_saisi = 3`. Pourquoi ne doit-on jamais concaténer de chaînes avec `f"SELECT * FROM employes WHERE id = {id_saisi}"` ?  
-  >    *Réponse :* La concaténation ouvre la porte aux erreurs de syntaxe et aux corruptions si la saisie contient des caractères spéciaux. Réécriture robuste :
+  >    *Réponse :* `____________________________________________________________`  
+  >    Réécrivez la requête sous forme préparée sécurisée avec le connecteur MySQL :  
   >    ```python
-  >    cur.execute("SELECT * FROM employes WHERE id = %s", (id_saisi,))
+  >    cur.execute("SELECT * FROM employes WHERE id = ______", (____________,))
   >    ```
   > 2. *Du tuple SQL au dictionnaire Python avec DictCursor* :  
   >    Pour la ligne retournée `(3, "Nicolas", 2200.0)`, écrivez le dictionnaire généré par le curseur :  
-  >    *Dictionnaire :* `{"id": 3, "nom": "Nicolas", "salaire": 2200.0}`.
+  >    *Dictionnaire :* `{ ____________________________________________________ }`.
 
 * **Exemple de code de cours (19 lignes)** :
   ```python
@@ -625,20 +626,23 @@ for emp in liste_employes:
   > ✍️ **Cadre de réponse écrite (Travail sur table) :**
   > 
   > 1. *Trame de la Requête HTTP émise par le client (Postman)* :
+  >    Complétez la trame pour interroger l'employé d'ID 3 :
   >    ```http
-  >    GET /api/employes/3 HTTP/1.1
+  >    ______ /api/employes/3 HTTP/1.1
   >    Host: localhost:5000
-  >    Accept: application/json
+  >    Accept: ____________
   >    ```
   > 2. *Trame de la Réponse HTTP renvoyée par Flask* :
+  >    Complétez la réponse HTTP avec les en-têtes et le corps JSON de l'employé 3 :
   >    ```http
-  >    HTTP/1.1 200 OK
-  >    Content-Type: application/json
+  >    HTTP/1.1 ______ OK
+  >    Content-Type: ____________________
   >
-  >    { "id": 3, "nom": "Nicolas", "salaire": 2200.0 }
+  >    { "id": ____, "nom": "________", "salaire": ________ }
   >    ```
   > 3. *Code d'état HTTP en cas d'employé inconnu* :  
-  >    *Code statut :* `404 Not Found` | *Corps JSON :* `{"error": "Employé introuvable"}`.
+  >    Quel code HTTP et quel corps JSON devez-vous retourner si l'employé n'existe pas ?  
+  >    *Code statut :* `______` | *Corps JSON :* `{ "error": "____________________" }`.
 
 * **Exemple de code de cours (16 lignes)** :
   ```python
@@ -676,13 +680,16 @@ for emp in liste_employes:
   > 
   > 1. *Anatomie d'une URL avec Query String* :  
   >    Soit l'URL `http://localhost:5000/api/employes/filtre?min=2000`.  
-  >    * Paramètre extrait dans Flask : `request.args.get("min", 0)` (renvoie la chaîne `"2000"`).  
-  >    * Conversion obligatoire en Python : `seuil = float(request.args.get("min", 0))`.
+  >    * Paramètre extrait dans Flask : quelle instruction permet de lire `min` ?  
+  >      *Réponse :* `request.args.get(______, ______))`  
+  >    * Conversion obligatoire en Python : pourquoi et comment convertir la chaîne reçue ?  
+  >      *Réponse :* `seuil = ________________(request.args.get("min", 0))`  
   > 2. *Chronogramme séquentiel (de 1 à 5)* :  
+  >    Ordonnez et complétez les 5 étapes du cycle client-serveur :  
   >    * Étape 1 : L'utilisateur clique sur le bouton de l'interface web.  
-  >    * Étape 2 : Le JavaScript émet la requête asynchrone `fetch('/api/employes/filtre?min=2000')`.  
-  >    * Étape 3 : Flask exécute la requête SQL et renvoie la réponse HTTP en JSON.  
-  >    * Étape 4 : Le navigateur résout la promesse avec `response.json()`.  
+  >    * Étape 2 : Le JavaScript émet la requête asynchrone : `fetch('________________________')`.  
+  >    * Étape 3 : Flask exécute la requête SQL et renvoie : `________________________________`.  
+  >    * Étape 4 : Le navigateur résout la promesse avec : `________________________________`.  
   >    * Étape 5 : Le script met à jour le DOM sans recharger la page (`innerHTML` ou `textContent`).
 
 * **Exemple de code de cours (19 lignes)** :
@@ -731,23 +738,23 @@ for emp in liste_employes:
   > ✍️ **Cadre de réponse écrite (Travail sur table) :**
   > 
   > 1. Pour $n = 4$, combien d'étoiles doit afficher chaque ligne $i$ (pour $i$ allant de $1$ à $n$) ?  
-  >    *Réponse :* La ligne $i$ affiche exactement `i` étoiles.
+  >    *Réponse :* `____________________________________________________________`
   > 2. Remplissez le tableau de trace pour $n = 4$ :
   >    | Ligne $i$ | Nombre d'étoiles | Rendu console attendu |
   >    | :---: | :---: | :--- |
   >    | 1 | 1 | `*` |
-  >    | 2 | 2 | `**` |
-  >    | 3 | 3 | `***` |
-  >    | 4 | 4 | `****` |
-  > 3. Écrivez le pseudo-code officiel de la fonction :
+  >    | 2 | `____` | `____` |
+  >    | 3 | `____` | `____` |
+  >    | 4 | `____` | `____` |
+  > 3. Rédigez le pseudo-code officiel de la fonction :
   >    ```text
   >    procédure triangle(entier n)
-  >        pour i de 1 à n :
-  >            afficher i fois le caractère '*'
+  >        ____________________________________________________________
+  >        ____________________________________________________________
   >    fin procédure
   >    ```
   > 4. Comment accède-t-on au premier argument utilisateur passé dans le terminal via `sys.argv` ?  
-  >    *Réponse :* `int(sys.argv[1])` *(attention, `sys.argv[0]` contient le nom du script lui-même)*.
+  >    *Réponse :* `____________________________________________________________`
 
 * **💻 Étape 2 : Implémentation sur machine** :
   * Implémentez la fonction `triangle(n)` qui trace un triangle rectangle d'étoiles de hauteur $n$.
@@ -777,12 +784,12 @@ for emp in liste_employes:
   >    | $i \backslash j$ | 1 | 2 | 3 | 4 |
   >    | :---: | :---: | :---: | :---: | :---: |
   >    | **1** | 1 | 2 | 3 | 4 |
-  >    | **2** | 2 | 4 | 6 | 8 |
-  >    | **3** | 3 | 6 | 9 | 12 |
+  >    | **2** | 2 | `__` | `__` | `__` |
+  >    | **3** | `__` | `__` | `__` | `__` |
   > 2. Pourquoi l'instruction naïve `print(i * j, end=" ")` produit-elle une grille décalée dès qu'un nombre dépasse 9 ?  
-  >    *Réponse :* `________________________________________________` *(Les nombres à deux chiffres occupent 2 caractères au lieu d'un, ce qui décale les colonnes).*
+  >    *Réponse :* `____________________________________________________________`
   > 3. Donnez la syntaxe f-string pour forcer chaque nombre à occuper exactement 4 caractères de large alignés à droite :  
-  >    *Réponse :* `print(f"{i * j:4d}", end="")`
+  >    *Réponse :* `____________________________________________________________`
 
 * **💻 Étape 2 : Implémentation sur machine** :
   * Écrivez `multiplication_n_m(n, m)` qui affiche la table complète de $1 \times 1$ jusqu'à $n \times m$.
@@ -808,19 +815,19 @@ for emp in liste_employes:
   > 1. Déroulez l'arbre des appels récursifs pour `somme_recursive(4)` :
   >    ```text
   >    somme(4) = 4 + somme(3)
-  >             = 4 + (3 + somme(2))
-  >             = 4 + (3 + (2 + somme(1)))
-  >             = 4 + 3 + 2 + 1 = 10
+  >             = 4 + (3 + somme(____))
+  >             = 4 + (3 + (____ + somme(____)))
+  >             = 4 + 3 + ____ + ____ = ____
   >    ```
   > 2. Déroulez l'arbre des appels pour `factorielle_recursive(4)` ($4!$) :
   >    ```text
-  >    fact(4) = 4 * fact(3) = 4 * 6 = 24
-  >    fact(3) = 3 * fact(2) = 3 * 2 = 6
-  >    fact(2) = 2 * fact(1) = 2 * 1 = 2
-  >    fact(1) = 1 (cas de base)
+  >    fact(4) = 4 * fact(3) = 4 * ____ = ____
+  >    fact(3) = 3 * fact(____) = 3 * ____ = ____
+  >    fact(2) = 2 * fact(____) = 2 * ____ = ____
+  >    fact(1) = ____ (cas de base)
   >    ```
   > 3. Quel est le rôle vital du **cas d'arrêt** dans une fonction récursive ? Que se passe-t-il s'il est omis en Python ?  
-  >    *Réponse :* `________________________________________________` *(Une boucle infinie d'appels provoquant l'exception RecursionError).*
+  >    *Réponse :* `____________________________________________________________`
 
 * **💻 Étape 2 : Implémentation sur machine** :
   * Codez `somme_iterative(n)` puis `somme_recursive(n)` pour calculer $1 + 2 + \dots + n$.
@@ -838,16 +845,16 @@ for emp in liste_employes:
 ### Exercice 4.1 : Tri par sélection (Valeur vs Référence)
 * **Objectif** : Coder un algorithme de tri impératif et maîtriser la mutabilité des listes en Python.
 * **Fichiers** : `api/tri_selection.py`, `api/read_tab.py`.
-* **Pseudo-code obligatoire** :
+* **Pseudo-code officiel à compléter sur table** :
 ```text
 procédure tri_selection(tableau t)
     n ← longueur(t)
-    pour i de 0 à n - 2
-        min ← i
-        pour j de i + 1 à n - 1
-            si t[j] < t[min], alors min ← j
+    pour i de 0 à ____________
+        min ← ____________
+        pour j de i + 1 à ____________
+            si t[j] < t[min], alors min ← ____________
         fin pour
-        si min ≠ i, alors échanger t[i] et t[min]
+        si min ≠ i, alors échanger ________________________
     fin pour
 fin procédure
 ```
@@ -860,12 +867,12 @@ fin procédure
   > | Tour $i$ | Indice $min$ initial | Indice $j$ | Comparaison $t[j] < t[min]$ | Nouveau $min$ | Échange effectué | État du tableau $t$ |
   > | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
   > | 0 | 0 ($t[0]=15$) | 1 | $3 < 15$ (VRAI) | 1 | - | - |
-  > | 0 | 1 ($t[1]=3$) | 2 | $8 < 3$ (FAUX) | 1 | $t[0] \leftrightarrow t[1]$ | `[3, 15, 8]` |
-  > | 1 | 1 ($t[1]=15$) | 2 | $8 < 15$ (VRAI) | 2 | $t[1] \leftrightarrow t[2]$ | `[3, 8, 15]` |
+  > | 0 | 1 ($t[1]=3$) | 2 | `____________` | `____` | `__________________` | `________________` |
+  > | 1 | `____________` | 2 | `____________` | `____` | `__________________` | `________________` |
   > 
   > *Schéma mémoire :*
-  > * Passage par référence : `tri_selection_en_place(t)` mute directement l'adresse mémoire de `t`.
-  > * Copie défensive : `tri_selection_copie(t)` instancie `copie = list(t)` pour isoler les mutations.
+  > * Passage par référence : que modifie `tri_selection_en_place(t)` ? `____________________________________________________________`
+  > * Copie défensive : pourquoi utiliser `copie = list(t)` dans `tri_selection_copie(t)` ? `____________________________________________________________`
 
 * **💻 Étape 2 : Implémentation sur machine** :
   * Codez `tri_selection_copie(t)` qui retourne une **nouvelle** liste triée sans modifier la liste d'origine.
@@ -902,34 +909,31 @@ fin procédure
   > 1. *Extraction et conversion de la Query String dans Flask* :  
   >    Soit la requête HTTP reçue par Flask : `GET /api/tri?t=15,3,22,8`.  
   >    * Quel est le type et la valeur retournée par l'instruction `request.args.get("t")` ?  
-  >      *Réponse :* Type `str`, valeur `"15,3,22,8"`.  
+  >      *Réponse :* Type `______`, valeur `________________`.  
   >    * Écrivez l'instruction Python permettant de convertir cette chaîne en une véritable liste d'entiers `[15, 3, 22, 8]` :  
-  >      *Réponse :* `t_liste = [int(x) for x in request.args.get("t").split(",")]`  
+  >      *Réponse :* `t_liste = ____________________________________________________`  
   > 2. *Calcul manuel de la médiane sur feuille pour $N = 4$ (effectif pair)* :  
   >    * Série triée par sélection : `[3, 8, 15, 22]`.  
   >    * Quels sont les deux indices centraux en base 0 pour $N = 4$ ?  
-  >      *Réponse :* Indice `N // 2 - 1 = 1` ($valeur = 8$) et Indice `N // 2 = 2` ($valeur = 15$).  
+  >      *Réponse :* Indice `____________` et Indice `____________`.  
   >    * Calculez la médiane exacte :  
-  >      *Réponse :* $(8 + 15) / 2 = 23 / 2 = 11.5$.  
+  >      *Réponse :* `________________________________`  
   > 3. *Contrat d'échange JSON de la réponse HTTP* :  
   >    Complétez la structure JSON attendue renvoyée par l'API :  
   >    ```json
   >    {
   >      "original": [15, 3, 22, 8],
-  >      "tri": [3, 8, 15, 22],
-  >      "mediane": 11.5
+  >      "tri": [____, ____, ____, ____],
+  >      "mediane": ______
   >    }
   >    ```
   > 4. *Pseudo-code de la saisie séquentielle et condition d'arrêt côté client (JavaScript)* :  
+  >    Rédigez le pseudo-code pour demander des entiers et les pousser dans un tableau jusqu'à une valeur $\le 0$ :
   >    ```text
-  >    tableau_saisi ← []
-  >    Répéter :
-  >        valeur ← demander_entier("Entrez un nombre (> 0) :")
-  >        Si valeur > 0 alors :
-  >            tableau_saisi.push(valeur)
-  >            mettre_a_jour_affichage(tableau_saisi)
-  >    Jusqu'à ce que valeur <= 0
-  >    envoyer_requete_fetch(tableau_saisi)
+  >    ____________________________________________________________
+  >    ____________________________________________________________
+  >    ____________________________________________________________
+  >    ____________________________________________________________
   >    ```
 
 * **💻 Étape 2 : Implémentation sur machine** :
@@ -988,23 +992,23 @@ fin procédure
   > 1. *Génération aléatoire d'un entier en JavaScript dans $[min, max]$* :  
   >    * Rappel : `Math.random()` génère un nombre décimal pseudo-aléatoire dans $[0, 1[$.  
   >    * Complétez la formule JS pour obtenir un entier aléatoire compris entre $1\,200$ et $5\,000$ inclus :  
-  >      *Réponse :* `Math.floor(Math.random() * (5000 - 1200 + 1)) + 1200`  
+  >      *Réponse :* `Math.floor(Math.random() * (____________)) + ______`  
   > 2. *Pseudo-code de constitution du tableau de salaires en JavaScript* :  
+  >    Rédigez le pseudo-code générant une liste de 9 salaires aléatoires :
   >    ```text
-  >    salaires ← []
-  >    Pour i de 1 à 9 :
-  >        valeur_aleatoire ← Math.floor(Math.random() * (5000 - 1200 + 1)) + 1200
-  >        salaires.push(valeur_aleatoire)
-  >    Fin Pour
+  >    ____________________________________________________________
+  >    ____________________________________________________________
+  >    ____________________________________________________________
   >    ```
   > 3. *Préparation de l'URL pour la requête `fetch()`* :  
   >    Comment convertir le tableau JavaScript `[2200, 1500, 3400]` en chaîne pour le paramètre d'URL `?t=...` ?  
-  >    *Réponse :* `salaires.join(",")` *(produit `"2200,1500,3400"`)*.  
+  >    *Réponse :* `salaires.________________` *(donne `"2200,1500,3400"`)*.  
   > 4. *Chronogramme séquentiel de mise à jour asynchrone du DOM* :  
+  >    Complétez les 4 étapes du cycle d'interaction :  
   >    * Étape 1 : Clic sur `<button id="btn-random">`.  
-  >    * Étape 2 : Génération des 9 salaires aléatoires et affichage immédiat dans `<span id="span-brut">`.  
-  >    * Étape 3 : Émission de la requête asynchrone `fetch('/api/tri?t=' + salaires.join(','))`.  
-  >    * Étape 4 : Réception du JSON et injection de `data.tri` dans `<span id="span-trie">` et de `data.mediane` dans `<span id="span-mediane">`.
+  >    * Étape 2 : Génération des 9 salaires aléatoires et affichage immédiat dans `<span id="____________">`.  
+  >    * Étape 3 : Émission de la requête asynchrone `fetch('/api/tri?t=' + ________________)`.  
+  >    * Étape 4 : Réception du JSON et injection de `data.tri` dans `<span id="____________">` et de `data.mediane` dans `<span id="____________">`.
 
 * **💻 Étape 2 : Implémentation sur machine** :
   * **Éléments HTML fournis dans `index.html` (section `sec-random`) :**
@@ -1036,31 +1040,31 @@ fin procédure
   > 1. *Concaténation de listes en Python & Immutabilité relative* :  
   >    Soit $t_1 = [12, 18, 5]$ et $t_2 = [20, 8, 14]$.  
   >    * Quelle est la valeur de la liste résultant de l'opération `fusion = t1 + t2` ?  
-  >      *Réponse :* `[12, 18, 5, 20, 8, 14]`.  
+  >      *Réponse :* `[ ________________________________ ]`.  
   >    * L'opération `t1 + t2` modifie-t-elle les listes d'origine `t1` ou `t2` en mémoire ?  
-  >      *Réponse :* Non, l'opérateur `+` alloue une nouvelle liste distincte en mémoire sans altérer les listes opérandes.  
+  >      *Réponse :* `____________________________________________________________`  
   > 2. *Tri par sélection et Médiane sur table de la liste fusionnée ($N = 6$)* :  
   >    * Série brute fusionnée : `[12, 18, 5, 20, 8, 14]`  
-  >    * Série ordonnée (après tri par sélection) : `[5, 8, 12, 14, 18, 20]`  
+  >    * Série ordonnée (après tri par sélection) : `[ ____, ____, ____, ____, ____, ____ ]`  
   >    * Puisque l'effectif $N=6$ est pair, quels sont les indices (base 0) et les valeurs des deux éléments centraux ?  
-  >      * Indice `N // 2 - 1 = 2` $\rightarrow$ Valeur : $12$  
-  >      * Indice `N // 2 = 3` $\rightarrow$ Valeur : $14$  
+  >      * Indice `N // 2 - 1 = ______` $\rightarrow$ Valeur : `______`  
+  >      * Indice `N // 2 = ______` $\rightarrow$ Valeur : `______`  
   >    * Calculez la médiane globale de la fusion :  
-  >      *Réponse :* $(12 + 14) / 2 = 26 / 2 = 13.0$.  
+  >      *Réponse :* `________________________________`  
   > 3. *Structure d'URL multi-paramètres et Question théorique* :  
-  >    * Quel symbole sépare l'URL des paramètres de requête ? `?`  
-  >    * Quel symbole sépare deux paramètres distincts entre eux ? `&`  
+  >    * Quel symbole sépare l'URL des paramètres de requête ? `______`  
+  >    * Quel symbole sépare deux paramètres distincts entre eux ? `______`  
   >    * **Question théorique obligatoire** : Quelle URI et structure de requête devez-vous adopter pour transmettre et fusionner 3 tableaux $t_1$, $t_2$ et $t_3$ ?  
-  >      *Réponse :* `/api/fusion?t1=12,18,5&t2=20,8,14&t3=1,2,3` *(les paramètres sont cumulés avec le séparateur `&`)*.  
+  >      *Réponse :* `____________________________________________________________`  
   > 4. *Contrat d'échange JSON attendu* :  
   >    Remplissez le JSON que devra renvoyer l'API :  
   >    ```json
   >    {
   >      "t1": [12, 18, 5],
   >      "t2": [20, 8, 14],
-  >      "fusion": [12, 18, 5, 20, 8, 14],
-  >      "tri": [5, 8, 12, 14, 18, 20],
-  >      "mediane": 13.0
+  >      "fusion": [____________________],
+  >      "tri": [____________________],
+  >      "mediane": ______
   >    }
   >    ```
 
@@ -1146,32 +1150,32 @@ fin procédure
   > 1. *Rédaction des requêtes SQL sur la table `employees`* :  
   >    * Requête pour extraire la colonne des salaires de l'ensemble du personnel :  
   >      ```sql
-  >      SELECT salary FROM employees;
+  >      SELECT ____________ FROM employees;
   >      ```
   >    * Requête paramétrée sécurisée pour extraire un employé spécifique selon son `id` :  
   >      ```sql
-  >      SELECT id, name, address, salary FROM employees WHERE id = %s;
+  >      SELECT id, name, address, salary FROM employees WHERE id = ______;
   >      ```
   > 2. *Calcul statistique sur table des données réelles de la BDD ($N = 6$)* :  
   >    * Salaires bruts en base : `[6500, 8000, 1200, 25000, 100000, 40000]`  
-  >    * Ordonnez manuellement la série : `[1200, 6500, 8000, 25000, 40000, 100000]`  
+  >    * Ordonnez manuellement la série : `[ ____, ____, ____, ____, ____, ____ ]`  
   >    * Calculez la moyenne arithmétique :  
-  >      $\text{Somme} = 1200 + 6500 + 8000 + 25000 + 40000 + 100000 = 180\,700\text{ €}$  
-  >      $\text{Moyenne} = 180\,700 / 6 \approx 30\,116.67\text{ €}$  
+  >      $\text{Somme} = ________________________________ = \text{____________ €}$  
+  >      $\text{Moyenne} = ____________ / 6 \approx \text{____________ €}$  
   >    * Calculez la médiane (effectif pair $N=6$) :  
-  >      Éléments centraux aux indices 2 et 3 ($8\,000$ et $25\,000$).  
-  >      $\text{Médiane} = (8\,000 + 25\,000) / 2 = 33\,000 / 2 = 16\,500.00\text{ €}$.  
+  >      Éléments centraux aux indices ______ et ______ (`______` et `______`).  
+  >      $\text{Médiane} = (______ + ______) / 2 = \text{____________ €}$.  
   > 3. *Analyse de situation de Martin Blank (ID 3, salaire 8 000 €)* :  
   >    * Salaire de Martin Blank : $8\,000\text{ €}$.  
-  >    * Comparaison à la moyenne ($30\,116.67\text{ €}$) : Inférieur ($8\,000 < 30\,116.67$).  
-  >    * Comparaison à la médiane ($16\,500.00\text{ €}$) : Inférieur ($8\,000 < 16\,500$).  
-  >    * Conclusion sociologique : Martin Blank fait partie des $50\,\%$ des employés les moins bien payés de l'entreprise, bien que la moyenne de l'entreprise soit tirée vers le haut par deux salaires atypiques.  
+  >    * Comparaison à la moyenne : `________________________________`  
+  >    * Comparaison à la médiane : `________________________________`  
+  >    * Conclusion sociologique : `____________________________________________________________`  
   > 4. *Contrat d'échange JSON attendu pour Martin Blank* :  
   >    ```json
   >    {
   >      "employe": {"id": 3, "name": "Martin Blank", "salary": 8000},
-  >      "statistiques_globales": {"moyenne": 30116.67, "mediane": 16500.0},
-  >      "situation": {"par_rapport_a_la_moyenne": "inférieur", "par_rapport_a_la_mediane": "inférieur"}
+  >      "statistiques_globales": {"moyenne": ____________, "mediane": ____________},
+  >      "situation": {"par_rapport_a_la_moyenne": "____________", "par_rapport_a_la_mediane": "____________"}
   >    }
   >    ```
 
@@ -1248,47 +1252,47 @@ fin procédure
   >    if p and d1 and d2:
   >        cas = "employe_periode"
   >    elif p and (d1 or d2):
-  >        cas = "employe_partir_de"
+  >        cas = "____________________"
   >    elif not p and d1 and d2:
-  >        cas = "mediane_periode"
+  >        cas = "____________________"
   >    else:
-  >        cas = "mediane_globale"
+  >        cas = "____________________"
   >    ```
   > 2. *Rédaction des requêtes SQL avec Jointure relationnelle (`CRUD2`)* :  
   >    * *Cas 1 (Moyenne d'un employé entre d1 et d2)* :  
   >      ```sql
   >      SELECT e.id, e.name, AVG(s.salary) AS salaire_moyen
   >      FROM employes e
-  >      INNER JOIN salaires s ON e.id = s.employe_id
+  >      INNER JOIN salaires s ON ________________________
   >      WHERE e.id = %s AND s.date BETWEEN %s AND %s
-  >      GROUP BY e.id, e.name;
+  >      GROUP BY ____________________;
   >      ```
   >    * *Cas 3 (Moyenne de chaque employé sur période pour calcul médiane)* :  
   >      ```sql
   >      SELECT e.id, e.name, AVG(s.salary) AS salaire_moyen
   >      FROM employes e
-  >      INNER JOIN salaires s ON e.id = s.employe_id
+  >      INNER JOIN salaires s ON ________________________
   >      WHERE s.date BETWEEN %s AND %s
-  >      GROUP BY e.id, e.name
+  >      GROUP BY ____________________
   >      ORDER BY e.id;
   >      ```
   >    * *Cas 4 (Moyenne historique globale de chaque employé)* :  
   >      ```sql
   >      SELECT e.id, e.name, AVG(s.salary) AS salaire_moyen
   >      FROM employes e
-  >      INNER JOIN salaires s ON e.id = s.employe_id
-  >      GROUP BY e.id, e.name
+  >      INNER JOIN salaires s ON ________________________
+  >      GROUP BY ____________________
   >      ORDER BY e.id;
   >      ```
   > 3. *Calcul manuel sur table de la médiane des moyennes sur 2022 (`CRUD2`)* :  
-  >    * Moyenne Roland Mendel (id 1) : $5\,300.00\text{ €}$  
-  >    * Moyenne Victoria Ashworth (id 2) : $6\,600.00\text{ €}$  
-  >    * Moyenne Martin Blank (id 3) : $8\,000.00\text{ €}$  
-  >    * Liste ordonnée des moyennes : `[5300.0, 6600.0, 8000.0]` ($N = 3$, effectif impair).  
-  >    * Indice médian : $3 // 2 = 1$.  
-  >    * Médiane des moyennes = **6 600.00 €**.  
+  >    * Moyenne Roland Mendel (id 1) : `____________ €`  
+  >    * Moyenne Victoria Ashworth (id 2) : `____________ €`  
+  >    * Moyenne Martin Blank (id 3) : `____________ €`  
+  >    * Liste ordonnée des moyennes : `[ ____________, ____________, ____________ ]` ($N = 3$, effectif impair).  
+  >    * Indice médian : `____________`.  
+  >    * Médiane des moyennes = `____________ €`.  
   > 4. *Pourquoi le calcul de la médiane est-il réalisé en Python et non directement en SQL ?* :  
-  >    *Réponse :* SQL (et MySQL en particulier) ne possède pas de fonction d'agrégation native `MEDIAN()`. Les moyennes individuelles sont donc calculées efficacement par le moteur de base de données via `AVG()`, puis Python trie la liste des moyennes avec l'algorithme `tri_selection_copie()` pour en déduire la médiane exacte.
+  >    *Réponse :* `____________________________________________________________________`
 
 * **💻 Étape 2 : Implémentation sur machine** :
   * **1. Simulation avec un serveur Mock Postman (définition du contrat d'API)** :
