@@ -25,52 +25,59 @@ docker compose exec api python main.py intro
 **Sortie attendue :**
 ```text
 ========================================================================
-BTS CIEL // EXERCICE 0 : FONDAMENTAUX DE PYTHON (BASES CONCRÈTES)
+BTS CIEL // EXERCICE 0 : FONDAMENTAUX DE PYTHON (ALGORITHMIQUE & DONNÉES)
 ========================================================================
 
---- [Exercice 0.1] Les Chaînes de caractères (str) & Slicing ---
-Saisie brute       : '   BTS CIEL 2026   '
-Texte nettoyé      : 'bts ciel 2026'
-'radar' est palindrome ? True
-'python' est palindrome ? False
-'kayak' est palindrome ? True
-Villes découpées   : ['Paris', 'Lyon', 'Marseille', 'Toulouse']
+--- [Exercice 0.1] Indice du minimum d'une liste ---
+Liste : [15, 3, 22, 8] -> Indice du minimum : 1 (valeur = 3)
 
---- [Exercice 0.2] Les Listes (list) & Accumulateur .append() (push JS) ---
-Liste initiale     : [12, 5, 8, 21, 14, 3, 30]
-Pairs (avec .append) : [12, 8, 14, 30]
-Somme = 93.0 | Moyenne = 13.29
+--- [Exercice 0.2] Recherche dans une liste croissante (Itératif & Récursif) ---
+Liste triée : [2, 5, 8, 12, 19]
+Présence de 8 (itératif) : True
+Présence de 8 (récursif) : True
+Présence de 7 (itératif) : False
+Présence de 7 (récursif) : False
 
---- [Exercice 0.3] Les Dictionnaires (dict) & Liste de fiches ---
-Nombre d'élèves    : 4
-Moyenne de classe  : 11.75/20
-Élèves admis       : ['Alice', 'Nicolas']
+--- [Exercice 0.3] Taille totale d'une liste de listes ---
+Liste L : [[2, 5, 4], [3, 6], [4], [2]]
+Taille totale : 7 éléments
 
---- [Exercice 0.4] Création de Matrice 2D & Manipulation d'Indices ---
-Matrice 3x4 générée avec .append() (modification en [1][2] = 9) :
+--- [Exercice 0.4] Somme et Maximum d'une liste de listes ---
+Somme de tous les éléments : 26
+Maximum figurant dans L    : 6
+
+--- [Exercice 0.5] Matrice régulière 2D & Inversion binaire ---
+Matrice 3x4 créée avec .append() et modification en [1][2] = 9 :
   [0, 0, 0, 0]
   [0, 0, 9, 0]
   [0, 0, 0, 0]
+Grille binaire inversée : [[1, 0, 1], [0, 0, 1]]
 
---- [Exercices 0.5 & 0.6] Traitement d'Image : Image Cachée dans une Image ---
-Matrice apparente 8x8 (niveaux de gris) :
-  [120, 135, 143, 110, 102, 187, 191, 104]
-  [115, 133, 141, 127, 189, 175, 163, 147]
-  [161, 179, 145, 137, 189, 177, 123, 145]
-  ...
+--- [Exercice 0.6] Produit cartésien de deux listes (Couples) ---
+L1 = [0, 1], L2 = [1, 4] -> Couples : [(0, 1), (0, 4), (1, 1), (1, 4)]
 
-Révélation de l'image secrète par parité des pixels (pixel % 2 != 0) :
-+--------+
-| ##  ## |
-|########|
-|########|
-|########|
-| ###### |
-|  ####  |
-|   ##   |
-|        |
-+--------+
--> L'image secrète (un cœur) a été révélée avec succès !
+--- [Exercice 0.7] Réorganisation ordonnée selon un pivot ---
+Liste originale : [(2, 3), (1, 0), (2, 1), (3, 5), (3, 4), (3, 0), (2, 5)]
+Pivot choisi à l'indice 4 : (3, 4)
+Liste réorganisée        : [(3, 4), (3, 5), (3, 0), (2, 3), (1, 0), (2, 1), (2, 5)]
+
+--- [Exercice 0.8] Figure sablier d'étoiles (n = 6, 11 lignes) ---
+******
+*****
+****
+***
+**
+*
+**
+***
+****
+*****
+******
+
+--- [Exercices 0.9 & 0.10] Objets (dict) & Statistiques de promotion ---
+Fiches étudiantes chargées : 4
+Statistiques calculées : Effectif = 4, Moyenne = 11.75/20, Note max = 15.0
+Étudiants admis (>= 10) : ['Alice', 'Nicolas']
 ========================================================================
 ```
 
