@@ -103,311 +103,295 @@ for emp in liste_employes:
 
 ---
 
-#### 2. Entraînement : Chaînes de Caractères (`str`) & Slicing
-
-```python
-# Rappel Slicing : chaine[debut:fin:pas]
-s = "PYTHON2026"
-s[0]     # 'P' (premier caractère)
-s[-1]    # '6' (dernier caractère)
-s[:6]    # 'PYTHON' (du début à l'indice 6 exclu)
-s[6:]    # '2026' (de l'indice 6 à la fin)
-s[::-1]  # '6202NOHTYP' (inversion complète !)
-```
-
-* **Exercice 0.1 : Nettoyage & mise en forme de texte**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > Complétez le tableau d'évaluation ci-dessous en prédisant sur feuille la sortie exacte de chaque opération de chaîne :
-    > 
-    > | Chaîne brute `s` | Expression Python | Résultat attendu (entre guillemets) |
-    > | :--- | :--- | :--- |
-    > | `"  BTS CIEL  "` | `s.strip()` | `____________________` |
-    > | `"Alice DUPONT"` | `s.lower()` | `____________________` |
-    > | `"   python 2026   "` | `s.strip().upper()` | `____________________` |
-    > | `"bts-ciel-sn"` | `s.replace("-", "_")` | `____________________` |
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, écrivez la fonction `nettoyer_texte(s: str) -> str` qui supprime les espaces de début/fin (`.strip()`) et convertit la chaîne en minuscules (`.lower()`). Testez avec `python api/intro_base.py`.
-
-* **Exercice 0.2 : Découpage, Slicing & Palindrome**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > Soit le mot `mot = "RADAR"` de longueur 5 :
-    > 1. Remplissez la grille des indices positifs et négatifs :
-    >    | Caractère | R | A | D | A | R |
-    >    | :--- | :---: | :---: | :---: | :---: | :---: |
-    >    | **Indice positif (0 à 4)** | 0 | 1 | 2 | 3 | 4 |
-    >    | **Indice négatif (-5 à -1)** | -5 | -4 | -3 | -2 | -1 |
-    > 2. Quelle expression utilisant le découpage par tranches (*slicing*) permet d'obtenir la chaîne inversée ?  
-    >    *Réponse :* `mot[____ : ____ : ____]`
-    > 3. Écrivez la condition logique complète vérifiant si un mot est un palindrome (sans boucle `for`) :  
-    >    *Condition :* `________________________________________________`
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `est_palindrome(mot: str) -> bool`. Vérifiez que `"radar"` et `"kayak"` retournent `True`, tandis que `"python"` retourne `False`.
-
-* **Exercice 0.3 : Découpage & réassemblage (`.split` et `.join`)**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > 1. Soit `texte = "Paris,Lyon,Marseille,Toulouse"`. Que retourne l'instruction `texte.split(",")` ?  
-    >    *Réponse (liste Python) :* `[ ____________________________________________________ ]`
-    > 2. Si `villes = ["Paris", "Lyon", "Marseille"]`, que retourne `"-".join(villes)` ?  
-    >    *Réponse (chaîne) :* `"________________________________________"`
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `decouper_liste_mots(texte, separateur)` retournant la liste des mots nettoyés.
+#### 2. Les Exercices Fondamentaux d'Algorithmique & Structures de Données
 
 ---
 
-#### 3. Entraînement : Les Listes (`list`) & l'Accumulateur (`append` vs `push`)
-
-* **Exercice 0.4 : Filtrage avec accumulateur `.append()`**
+* **Exercice 0.1 : Indice du minimum d'une liste (Recherche d'extremum)**
+  * **Énoncé** : Écrire une fonction prenant en entrée une liste et qui retourne l'indice où se trouve son minimum.  
+    *Exemple* : Pour `L = [15, 3, 22, 8]`, la fonction retourne `1` (car le minimum 3 est à l'indice 1).
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > Soit la liste `nombres = [12, 5, 8, 21, 14, 3, 30]`. On souhaite extraire les nombres pairs dans une liste `pairs = []`.  
-    > Remplissez le tableau de trace de l'algorithme :
-    > 
-    > | Étape (Tour de boucle) | Variable courante `n` | Condition `n % 2 == 0` | Action sur la liste `pairs` | Contenu de `pairs` après l'étape |
-    > | :---: | :---: | :---: | :--- | :--- |
-    > | Début | - | - | Initialisation | `[]` |
-    > | 1 | 12 | VRAI (12 est pair) | `pairs.append(12)` | `[12]` |
-    > | 2 | 5 | FAUX (5 est impair) | Rien | `[12]` |
-    > | 3 | 8 | `____` | `____________________` | `[____, ____]` |
-    > | 4 | 21 | `____` | `____________________` | `[____, ____]` |
-    > | 5 | 14 | `____` | `____________________` | `[____, ____, ____]` |
-    > | 6 | 3 | `____` | `____________________` | `[____, ____, ____]` |
-    > | 7 | 30 | `____` | `____________________` | `[____, ____, ____, ____]` |
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `filtrer_pairs(nombres: list[int]) -> list[int]`. Validez que le résultat final est exactement `[12, 8, 14, 30]`.
-
-* **Exercice 0.5 : Somme et moyenne manuelles d'une liste**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > Soit la liste de 5 notes `notes = [12.5, 14.0, 9.0, 16.5, 11.0]`.  
-    > 1. Complétez le pseudo-code sans utiliser les fonctions magiques `sum()` ou `len()` :
+    > 1. Déroulez manuellement l'algorithme sur la liste $L = [15, 3, 22, 8]$ :
+    >    | Indice $i$ | Valeur $L[i]$ | Indice $min\_idx$ avant test | Test $L[i] < L[min\_idx]$ | Action sur $min\_idx$ | Nouveau $min\_idx$ |
+    >    | :---: | :---: | :---: | :---: | :--- | :---: |
+    >    | 0 | 15 | 0 | Initialisation | - | 0 |
+    >    | 1 | 3 | 0 | $3 < 15$ (VRAI) | $min\_idx \leftarrow 1$ | 1 |
+    >    | 2 | 22 | 1 | $22 < 3$ (FAUX) | Aucun changement | 1 |
+    >    | 3 | 8 | 1 | `____________________` | `____________________` | `____` |
+    > 2. Complétez le pseudo-code officiel :
     >    ```text
-    >    total ← 0.0
-    >    compteur ← 0
-    >    Pour chaque note dans notes :
-    >        total ← total + ____________
-    >        compteur ← compteur + ____________
-    >    moyenne ← ____________ / ____________
+    >    fonction indice_minimum(L : liste) -> entier
+    >        min_idx ← 0
+    >        pour i de 1 à longueur(L) - 1 :
+    >            si L[i] < L[min_idx] alors :
+    >                min_idx ← ____________
+    >        retourner min_idx
+    >    fin fonction
     >    ```
-    > 2. Calculez la moyenne sur feuille : Somme = `______` | Moyenne = `______`.
+    > 3. Si le minimum apparaît plusieurs fois (ex: `[7, 3, 9, 3]`), quel indice votre fonction retourne-t-elle ? Pourquoi ?  
+    >    *Réponse :* `____________________________________________________________________`
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `calculer_somme_et_moyenne(valeurs)` et vérifiez que `Somme = 63.0` et `Moyenne = 12.6`.
+    Dans `api/intro_base.py`, codez la fonction `indice_minimum(L)`. Testez avec `python api/intro_base.py`.
 
 ---
 
-#### 4. Entraînement : Les Objets & Dictionnaires (`dict`)
-
-> 💡 **Comprendre un Objet / Dictionnaire en mémoire :**  
-> En programmation, un dictionnaire (ou objet en JS) modélise une **entité** réelle (un élève, un salarié, un capteur).  
-> En mémoire, c'est une boîte contenant des étiquettes uniques (**clés**) associées à des **valeurs** :  
-> ```text
-> Référence en mémoire -> { "nom": "Alice", "age": 20, "note": 14.5 }
->                            ^ Clé (str)   ^ Valeur
-> ```
-
-* **Exercice 0.6 : Fiche objet d'un élève & accès sécurisé `.get()`**
+* **Exercice 0.2 : Recherche dans une liste triée (Itératif & Récursivité facile)**
+  * **Énoncé** : Écrire une fonction prenant en argument une liste $L$ supposée croissante et une valeur quelconque $x$ et déterminant si cette valeur est dans la liste (retourne `True` ou `False`).  
+    *Exemple* : Retourne `True` pour `L = [2, 5, 8, 12, 19]` et $x = 8$. Retourne `False` pour $x = 7$.
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > Soit le dictionnaire `eleve = {"nom": "Nicolas", "age": 19, "note": 14.5}` :
-    > 1. Dessinez sur feuille le schéma de la boîte mémoire avec ses 3 paires clé/valeur.
-    > 2. Quelle est la valeur de `eleve["note"]` ? `__________`
-    > 3. Que se passe-t-il si vous tentez d'exécuter `print(eleve["ville"])` ?  
-    >    *Réponse :* `________________________________________________`
-    > 4. Écrivez l'instruction Python permettant d'ajouter la clé `"ville"` avec pour valeur `"Toulouse"` :  
-    >    *Instruction :* `eleve[____________] = ____________`
-    > 5. Quelle méthode permet d'obtenir la valeur d'une clé sans planter si elle n'existe pas, en renvoyant une valeur par défaut ?  
-    >    *Instruction :* `eleve.get("option", ____________)`
+    > 1. *Optimisation grâce au tri (version itérative)* :  
+    >    Si on parcourt la liste ordonnée $[2, 5, 8, 12, 19]$ à la recherche de $x = 7$, à quel moment précis peut-on affirmer avec certitude que $7$ n'est pas dans la liste sans continuer jusqu'à la fin ?  
+    >    *Réponse :* `________________________________________________` *(Dès que l'élément rencontré est strictement supérieur à 7, ici 8 > 7).*
+    > 2. *Déroulé récursif facile* :  
+    >    Complétez les cas d'arrêt et l'appel récursif de `recherche_recursive_triee(L, x)` :
+    >    * **Cas d'arrêt 1 (échec)** : Si la liste $L$ est vide (`len(L) == 0`), alors retourner `______`.
+    >    * **Cas d'arrêt 2 (succès)** : Si le premier élément `L[0] == x`, alors retourner `______`.
+    >    * **Cas d'arrêt 3 (échec précoce)** : Si `L[0] > x`, alors retourner `______`.
+    >    * **Appel récursif** : Sinon, relancer la recherche sur le reste de la liste : `recherche_recursive_triee(____________, x)`.
+    > 3. Tracez les appels récursifs pour chercher $8$ dans $[2, 5, 8, 12, 19]$ :  
+    >    `recherche([2, 5, 8, 12, 19], 8)` $\rightarrow$ `recherche([5, 8, 12, 19], 8)` $\rightarrow$ `recherche([8, 12, 19], 8)` $\rightarrow$ `______`.
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `creer_fiche_eleve(nom, age, note)` et vérifiez l'accès sécurisé avec `.get()`.
+    Dans `api/intro_base.py`, codez `recherche_liste_triee(L, x)` et `recherche_recursive_triee(L, x)`.
 
-* **Exercice 0.7 : Tableaux d'Objets (Liste de dictionnaires) & Calculs**
+---
+
+* **Exercice 0.3 : Taille totale d'une liste de listes**
+  * **Énoncé** : Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la taille totale de la liste $L$.  
+    *Exemple* : La fonction retourne `7` pour la liste de listes `[[2, 5, 4], [3, 6], [4], [2]]`.
   * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
     > ✍️ **Cadre de réponse écrite (Travail sur table) :**
     > 
-    > Soit la liste de 4 fiches d'élèves :
+    > 1. Schématisez la liste de listes en mémoire (un tableau de références vers 4 sous-listes) :
+    >    ```text
+    >    L -> [ [0] -> [2, 5, 4]  (longueur 3)
+    >           [1] -> [3, 6]     (longueur 2)
+    >           [2] -> [4]        (longueur 1)
+    >           [3] -> [2]        (longueur 1) ]
+    >    ```
+    > 2. Remplissez le tableau de cumul de taille :
+    >    | Indice de la sous-liste | Contenu | `len(sous_liste)` | Total cumulé |
+    >    | :---: | :---: | :---: | :---: |
+    >    | 0 | `[2, 5, 4]` | 3 | 3 |
+    >    | 1 | `[3, 6]` | 2 | 5 |
+    >    | 2 | `[4]` | `____` | `____` |
+    >    | 3 | `[2]` | `____` | `____` |
+    > 3. Complétez le pseudo-code :
+    >    ```text
+    >    total ← 0
+    >    Pour chaque sous_liste dans L :
+    >        total ← total + ____________
+    >    Retourner total
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `taille_totale(L)`. Validez avec `assert taille_totale([[2, 5, 4], [3, 6], [4], [2]]) == 7`.
+
+---
+
+* **Exercice 0.4 : Somme et Maximum d'une liste de listes**
+  * **Énoncé** :
+    1. Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne la somme de tous les nombres dans toutes les listes de $L$.  
+       *Exemple* : Retourne `26` pour `[[2, 5, 4], [3, 6], [4], [2]]`.
+    2. Écrire une fonction prenant en entrée une liste de listes $L$ contenant des nombres et qui retourne le plus grand nombre figurant dans $L$, sans le localiser.  
+       *Exemple* : Retourne `6` pour `[[2, 5, 4], [3, 6], [4], [2]]`.
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Déroulez le calcul de la somme sur feuille :  
+    >    $\text{Somme} = (2 + 5 + 4) + (3 + 6) + (4) + (2) = 11 + 9 + 4 + 2 = 26$.
+    > 2. Pourquoi ne faut-il **JAMAIS** initialiser la recherche du maximum avec `max_val = 0` ?  
+    >    *Réponse :* `____________________________________________________________________`  
+    >    *(Si la liste ne contient que des nombres négatifs, 0 fausserait entièrement le résultat).*
+    > 3. Complétez le pseudo-code pour le maximum :
+    >    ```text
+    >    max_val ← None
+    >    Pour chaque sous_liste dans L :
+    >        Pour chaque val dans sous_liste :
+    >            Si max_val est None ou val > max_val alors :
+    >                max_val ← ____________
+    >    Retourner max_val
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `somme_liste_de_listes(L)` et `maximum_liste_de_listes(L)`.
+
+---
+
+* **Exercice 0.5 : Création de Matrice 2D Régulière & Inversion Binaire**
+  * **Énoncé** :
+    1. Écrire une fonction `creer_matrice(nb_lignes, nb_colonnes, valeur_defaut=0)` qui crée une matrice $N \times P$ avec des lignes indépendantes construites avec `.append()`.
+    2. Écrire une fonction `inverser_matrice_binaire(M)` qui prend une matrice de 0 et de 1 et retourne une nouvelle matrice où chaque 0 devient 1 et chaque 1 devient 0.
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. *Piège de la référence partagée en Python* :  
+    >    Expliquez pourquoi l'instruction `M = [[0] * 4] * 3` est formellement interdite :  
+    >    *Réponse :* `____________________________________________________________________`  
+    >    *(Toutes les lignes pointent vers la même liste physique en mémoire ; toute modification en affecterait toutes les lignes simultanément).*
+    > 2. Dessinez sur quadrillage une matrice de 3 lignes et 4 colonnes, puis placez la valeur `9` à la coordonnée `M[1][2]` (ligne 1, colonne 2) :
+    >    ```text
+    >    Ligne 0 : [ 0,  0,  0,  0 ]
+    >    Ligne 1 : [ 0,  0,  _,  0 ]
+    >    Ligne 2 : [ 0,  0,  0,  0 ]
+    >    ```
+    > 3. Pour la matrice binaire `M = [[0, 1, 0], [1, 1, 0]]`, écrivez la matrice inversée attendue :  
+    >    *Résultat :* `[[ ____, ____, ____ ], [ ____, ____, ____ ]]`.
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `creer_matrice(nb_lignes, nb_colonnes, valeur_defaut)` et `inverser_matrice_binaire(M)`.
+
+---
+
+* **Exercice 0.6 : Produit cartésien de deux listes (Génération de couples)**
+  * **Énoncé** : Écrire une fonction prenant en entrée deux listes et qui retourne la liste de tous les couples formés d'un élément de la première liste et d'un élément de la deuxième liste.  
+    *Exemple* : Pour `L1 = [0, 1]` et `L2 = [1, 4]`, la fonction retourne `[(0, 1), (0, 4), (1, 1), (1, 4)]`.
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Remplissez le tableau cartésien pour $L_1 = [0, 1]$ et $L_2 = [1, 4]$ :
+    >    | $a \in L_1 \backslash b \in L_2$ | **1** | **4** |
+    >    | :---: | :---: | :---: |
+    >    | **0** | `(0, 1)` | `(0, 4)` |
+    >    | **1** | `(1, 1)` | `(1, 4)` |
+    > 2. Si $L_1$ possède $n$ éléments et $L_2$ possède $p$ éléments, combien de couples contient la liste résultante ?  
+    >    *Réponse :* $n \times p$ couples.
+    > 3. Complétez le pseudo-code avec double boucle imbriquée :
+    >    ```text
+    >    couples ← []
+    >    Pour chaque a dans L1 :
+    >        Pour chaque b dans L2 :
+    >            couples.append((____________, ____________))
+    >    Retourner couples
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `produit_cartesien(L1, L2)`. Validez sur l'exemple.
+
+---
+
+* **Exercice 0.7 : Réorganisation ordonnée de couples selon un pivot (Permutation)**
+  * **Énoncé** : Écrire une fonction prenant en entrée une liste `l` de couples et un indice `i` entre 0 (inclus) et la taille de `l` (exclue) et qui retourne une liste formant une permutation de la liste `l`, selon la règle suivante :
+    1. D'abord on met le couple à l'indice `i` ;
+    2. Puis les couples dans la liste dont le premier élément est égal à celui à l'indice `i` dans l'ordre dans lequel ils figurent dans `l` ;
+    3. Puis tous les autres couples de `l` en préservant également leur ordre.  
+    *Exemple* : Pour `l = [(2, 3), (1, 0), (2, 1), (3, 5), (3, 4), (3, 0), (2, 5)]` et `i = 4`, la fonction retourne :  
+    `[(3, 4), (3, 5), (3, 0), (2, 3), (1, 0), (2, 1), (2, 5)]`.
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Identifiez le couple pivot pour `l` et `i = 4` :  
+    >    *Pivot :* `l[4] = (3, 4)`. Sa première composante (la clé de comparaison) vaut `3`.
+    > 2. Classez les couples restants de `l` dans leur ordre d'apparition :
+    >    * Couples dont le premier élément vaut 3 (hors pivot) : `[(3, 5), (3, 0)]`.
+    >    * Autres couples : `[(2, 3), (1, 0), (2, 1), (2, 5)]`.
+    > 3. Écrivez la concaténation ordonnée finale :  
+    >    `[(3, 4)] + [(3, 5), (3, 0)] + [(2, 3), (1, 0), (2, 1), (2, 5)]`.
+    > 4. Complétez le pseudo-code de l'algorithme :
+    >    ```text
+    >    pivot ← l[i]
+    >    cle ← pivot[0]
+    >    meme_cle ← []
+    >    autres ← []
+    >    Pour k de 0 à longueur(l) - 1 :
+    >        Si k ≠ i alors :
+    >            Si l[k][0] == cle alors :
+    >                meme_cle.append(l[k])
+    >            Sinon :
+    >                autres.append(l[k])
+    >    Retourner [pivot] + meme_cle + autres
+    >    ```
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `reorganiser_couples(l, i)`. Testez avec la liste de l'énoncé et `i = 4`.
+
+---
+
+* **Exercice 0.8 : Motif console de $2n - 1$ lignes (Figure en sablier / double triangle)**
+  * **Énoncé** : Écrire une fonction prenant en entrée un entier naturel $n$ et imprimant la figure de la forme ci-dessous sur $2n - 1$ lignes (ici pour $n = 6$, soit $11$ lignes) :
+    ```text
+    ******
+    *****
+    ****
+    ***
+    **
+    *
+    **
+    ***
+    ****
+    *****
+    ******
+    ```
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Décomposez le problème en deux boucles consécutives :
+    >    * Partie 1 (décroissante) : $n$ lignes, allant de $n$ étoiles à 1 étoile.
+    >    * Partie 2 (croissante) : $n - 1$ lignes, allant de 2 étoiles à $n$ étoiles.  
+    >    * Total de lignes : $n + (n - 1) = 2n - 1$. Pour $n = 6$ : $2 \times 6 - 1 = 11$ lignes.
+    > 2. Complétez le pseudo-code :
+    >    ```text
+    >    Pour k de n à 1 (par pas de -1) :
+    >        afficher k fois le caractère '*'
+    >    Pour k de 2 à n (par pas de +1) :
+    >        afficher k fois le caractère '*'
+    >    ```
+    > 3. En Python, quelle opération concise permet d'obtenir une chaîne de $k$ étoiles sans boucle interne ?  
+    >    *Réponse :* `'*' * k`.
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `afficher_figure_etoiles(n)`. Testez avec $n = 6$.
+
+---
+
+* **Exercice 0.9 : Objets & Dictionnaires (`dict`) & Manipulation de propriétés**
+  * **Énoncé** :
+    1. Écrire une fonction `creer_fiche_etudiant(nom, note, age=None)` qui retourne un dictionnaire contenant les clés `"nom"`, `"note"`, et `"age"`.
+    2. Écrire une fonction `modifier_note(fiche, nouvelle_note)` qui met à jour la note directement en mémoire.
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > 1. Dessinez la boîte mémoire de la variable `fiche = {"nom": "Alice", "note": 14.5, "age": 19}` associant chaque étiquette clé à sa valeur.
+    > 2. Que se passe-t-il si vous tentez d'exécuter `print(fiche["ville"])` ? Quelle exception Python est levée ?  
+    >    *Réponse :* `________________________________________________` *(KeyError)*.
+    > 3. Quelle méthode permet d'accéder à une propriété en fournissant une valeur par défaut sans provoquer d'erreur ?  
+    >    *Instruction :* `fiche.get("ville", "Non renseignée")`.
+    > 4. Écrivez l'instruction Python pour modifier la note d'Alice à $16.0$ :  
+    >    *Instruction :* `fiche[________] = ________`
+  * **💻 Étape 2 : Implémentation sur machine** :  
+    Dans `api/intro_base.py`, codez `creer_fiche_etudiant(nom, note, age)` et `modifier_note(fiche, nouvelle_note)`.
+
+---
+
+* **Exercice 0.10 : Tableaux d'Objets (Liste de dictionnaires) & Statistiques de promotion**
+  * **Énoncé** : Écrire une fonction `statistiques_promo(etudiants)` prenant en entrée une liste de fiches d'étudiants (dictionnaires avec clés `"nom"` et `"note"`) et qui retourne un dictionnaire de synthèse contenant :
+    * `"effectif"` : nombre total d'étudiants ;
+    * `"moyenne"` : moyenne des notes (arrondie à 2 décimales) ;
+    * `"note_max"` : la meilleure note ;
+    * `"admis"` : la liste des noms des étudiants ayant une note $\ge 10.0$.
+  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
+    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
+    > 
+    > Soit la liste de 4 fiches d'étudiants :
     > ```python
-    > classe = [
+    > promo = [
     >     {"nom": "Alice", "note": 14.5},
     >     {"nom": "Bob", "note": 8.0},
     >     {"nom": "Nicolas", "note": 15.0},
     >     {"nom": "Chloé", "note": 9.5}
     > ]
     > ```
-    > 1. Dessinez la liste `classe` en mémoire : un tableau de 4 cases (`[0]`, `[1]`, `[2]`, `[3]`), chaque case pointant vers son dictionnaire respectif.
-    > 2. Écrivez l'expression Python permettant d'accéder à la note de Nicolas :  
-    >    *Expression :* `classe[______][______]`
-    > 3. Complétez le pseudo-code pour calculer la moyenne de la classe et filtrer les admis ($\ge 10$) :
+    > 1. Calculez les résultats statistiques attendus sur feuille :
+    >    * Effectif = `______`
+    >    * Somme des notes = $14.5 + 8.0 + 15.0 + 9.5 = 47.0$ $\rightarrow$ Moyenne = $47.0 / 4 =$ `______`
+    >    * Note maximale = `______`
+    >    * Liste des admis (note $\ge 10.0$) : `[ ____________, ____________ ]`.
+    > 2. Complétez le pseudo-code pour le filtrage des admis avec `.append()` :
     >    ```text
-    >    somme_notes ← 0.0
     >    admis ← []
-    >    Pour chaque fiche dans classe :
-    >        somme_notes ← somme_notes + fiche["note"]
-    >        Si fiche["note"] >= 10.0 alors :
+    >    Pour chaque etudiant dans promo :
+    >        Si etudiant["note"] >= 10.0 alors :
     >            admis.append(____________)
-    >    moyenne ← somme_notes / longueur(classe)
-    >    ```
-    > 4. Remplissez à l'écrit : Moyenne de classe = `______ / 20` | Liste des admis = `[ ____________, ____________ ]`.
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `calculer_moyenne_classe(eleves)` et `filtrer_admis(eleves, 10.0)`.
-
----
-
-#### 5. Entraînement : Création de Matrices 2D & Opérations de Base
-
-> 💡 **Comprendre une Matrice 2D en mémoire :**  
-> Une matrice (ou grille 2D) est un tableau à double entrée composé de **lignes** et de **colonnes**.  
-> En Python, elle est modélisée par une **liste de listes** :  
-> ```text
-> Matrice M (3 lignes, 4 colonnes) :
->          Col 0   Col 1   Col 2   Col 3
-> Lig 0 : [ (0,0),  (0,1),  (0,2),  (0,3) ]
-> Lig 1 : [ (1,0),  (1,1),  (1,2),  (1,3) ]
-> Lig 2 : [ (2,0),  (2,1),  (2,2),  (2,3) ]
-> ```
-> * **Règle d'or de l'indexation** : `M[i][j]` où :
->   * `i` est le numéro de **ligne** (indice vertical de `0` à `nb_lignes - 1`).
->   * `j` est le numéro de **colonne** (indice horizontal de `0` à `nb_colonnes - 1`).
-> * **Dimensions** : `hauteur = len(M)` (lignes) | `largeur = len(M[0])` (colonnes).
-
-* **Exercice 0.8 : Création et initialisation d'une matrice $N \times P$**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > 1. *Le piège de la référence partagée* :  
-    >    Pourquoi ne faut-il **JAMAIS** écrire `M = [[0] * 4] * 3` pour créer une matrice $3 \times 4$ ?  
-    >    *Réponse :* `____________________________________________________________________`  
-    >    *(Explication : toutes les lignes pointeraient vers la même adresse mémoire ! Modifier `M[0][0]` modifierait toutes les lignes simultanément !)*
-    > 
-    > 2. *Algorithme correct avec boucles imbriquées et `.append()`* :  
-    >    Complétez le pseudo-code pour construire proprement une matrice indépendante :
-    >    ```text
-    >    matrice ← []
-    >    Pour i de 0 à nb_lignes - 1 :
-    >        ligne ← []
-    >        Pour j de 0 à nb_colonnes - 1 :
-    >            ligne.append(____________)
-    >        matrice.append(____________)
-    >    Retourner matrice
-    >    ```
-    > 3. Dessinez sur quadrillage une matrice de 3 lignes et 4 colonnes initialisée avec des zéros.
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Dans `api/intro_base.py`, codez la fonction :
-    ```python
-    def creer_matrice(nb_lignes: int, nb_colonnes: int, valeur_defaut=0) -> list[list]:
-        matrice = []
-        for _ in range(nb_lignes):
-            ligne = []
-            for _ in range(nb_colonnes):
-                ligne.append(valeur_defaut)
-            matrice.append(ligne)
-        return matrice
-    ```
-    Testez `creer_matrice(3, 4, 0)`.
-
-* **Exercice 0.9 : Manipulation et modification de coordonnées dans une matrice 2D**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > Soit `M = creer_matrice(3, 4, 0)`.
-    > 1. Écrivez l'instruction Python pour placer le chiffre `9` à la **ligne 1**, **colonne 2** :  
-    >    *Instruction :* `M[______][______] = 9`
-    > 2. Dessinez l'état de la matrice après cette modification :
-    >    ```text
-    >    [ 0, 0, 0, 0 ]
-    >    [ 0, 0, _, 0 ]
-    >    [ 0, 0, 0, 0 ]
-    >    ```
-    > 3. Écrivez le pseudo-code pour parcourir chaque case et inverser une matrice binaire ($0 \rightarrow 1$ et $1 \rightarrow 0$) :
-    >    ```text
-    >    Pour i de 0 à hauteur - 1 :
-    >        Pour j de 0 à largeur - 1 :
-    >            Si M[i][j] == 0 alors :
-    >                M[i][j] ← 1
-    >            Sinon :
-    >                M[i][j] ← 0
     >    ```
   * **💻 Étape 2 : Implémentation sur machine** :  
-    Appliquez la modification `matrice[1][2] = 9` et affichez la matrice ligne par ligne avec une boucle `for ligne in matrice: print(ligne)`.
-
----
-
-#### 6. Application Visuelle & Concrète : Traitement d'Image & L'Image Cachée
-
-> 💡 **Une image numérique n'est rien d'autre qu'une matrice 2D !**  
-> Une image en noir et blanc de dimensions $8 \times 8$ est exactement une liste de 8 listes de 8 entiers.
-
-* **Exercice 0.10 : Affichage d'une matrice de pixels en console**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > Soit le dessin binaire $4 \times 4$ représentant la lettre "A" :
-    > ```python
-    > dessin = [
-    >     [0, 1, 1, 0],
-    >     [1, 0, 0, 1],
-    >     [1, 1, 1, 1],
-    >     [1, 0, 0, 1]
-    > ]
-    > ```
-    > 1. Remplissez sur quadrillage le rendu console attendu en remplaçant chaque `1` par `'#'` et chaque `0` par un espace `' '` :
-    >    ```text
-    >    Ligne 0 : |  ##  |
-    >    Ligne 1 : | #  # |
-    >    Ligne 2 : | #### |
-    >    Ligne 3 : | #  # |
-    >    ```
-    > 2. Écrivez le pseudo-code permettant d'afficher ce motif ligne par ligne dans le terminal.
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `afficher_image_console(grille_caracteres)` et observez la lettre "A" se dessiner dans la console.
-
-* **Exercice 0.11 : Révéler une Image Cachée dans une Image (Stéganographie visuelle)**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > On dispose d'une matrice hôte `image_hote` ($8 \times 8$) dont les pixels contiennent des niveaux de gris apparemment ordinaires entre 100 et 200.  
-    > **Règle de dissimulation** :  
-    > * Si `pixel % 2 != 0` (pixel **impair**) : le pixel secret est **allumé** (`'#'`).  
-    > * Si `pixel % 2 == 0` (pixel **pair**) : le pixel secret est **éteint** (`' '`).  
-    > 
-    > 1. Sur cet extrait de la première ligne `[120, 135, 143, 110, 102, 187, 191, 104]`, calculez la parité de chaque nombre :
-    >    | Valeur pixel | 120 | 135 | 143 | 110 | 102 | 187 | 191 | 104 |
-    >    | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-    >    | Parité (Pair/Impair) | Pair | Impair | Impair | Pair | Pair | Impair | Impair | Pair |
-    >    | Caractère secret (`#` ou espace) | `' '` | `'#'` | `'#'` | `' '` | `' '` | `'#'` | `'#'` | `' '` |
-    > 2. Déduisez le motif de la ligne 0 : `| ##  ## |`.  
-    > 3. Complétez le pseudo-code de la fonction :
-    >    ```text
-    >    image_revelee ← []
-    >    Pour chaque ligne dans image_hote :
-    >        ligne_revelee ← []
-    >        Pour chaque pixel dans ligne :
-    >            Si pixel % 2 != 0 alors :
-    >                ligne_revelee.append("#")
-    >            Sinon :
-    >                ligne_revelee.append(" ")
-    >        image_revelee.append(ligne_revelee)
-    >    Retourner image_revelee
-    >    ```
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `reveler_image_secrete(image_hote)`. Exécutez le script et constatez la révélation du cœur pixelisé dans la console !
-
-* **Exercice 0.12 : Cacher son propre motif secret (Encodage)**
-  * **📝 Étape 1 : Travail sur table préalable (Débranché)** :
-    > ✍️ **Cadre de réponse écrite (Travail sur table) :**
-    > 
-    > Soit un pixel de l'image hôte valant `pixel = 120` (pair). On souhaite y cacher un pixel secret valant `1` (allumé, donc nécessitant une valeur impaire).  
-    > Quelle opération simple sur `pixel` permet de le rendre impair sans altérer visuellement l'image ?  
-    > *Réponse :* `pixel = pixel + 1` (donne 121, impair).
-  * **💻 Étape 2 : Implémentation sur machine** :  
-    Codez `cacher_motif(image_base, motif_binaire)` et testez avec votre propre motif.
+    Dans `api/intro_base.py`, codez `statistiques_promo(etudiants)`. Validez avec la promotion de test.
 
 ---
 
