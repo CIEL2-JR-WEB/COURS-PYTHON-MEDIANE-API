@@ -14,14 +14,35 @@ docker compose up -d
 
 ## 2. Commandes de test par exercice et sorties attendues
 
-### Exercice 0 : Fondamentaux Python (Bases Concrètes) & Statistiques (0.1 à 0.7)
-
-#### Exercices 0.1 à 0.6 : Chaînes (str), Listes (append), Dictionnaires (dict) & Image Cachée
+### Cahier d'Exercices Préparatoires Fondamentaux (10 Modules)
 ```bash
-docker compose exec api python intro_base.py
-# ou alternativement :
-docker compose exec api python main.py intro
+docker compose exec api python exercices_fondamentaux.py
 ```
+**Sortie attendue :**
+```text
+======================================================================
+BTS CIEL // SUITE D'AUTO-CONTRÔLE : EXERCICES FONDAMENTAUX (CORRECTION)
+======================================================================
+  [SUCCES] M1 - decomposer_secondes
+  [SUCCES] M2 - formater_ligne_service
+  [SUCCES] M3 - dupliquer_sans_effet_de_bord
+  [SUCCES] M4 - calculer_somme_et_moyenne
+  [SUCCES] M4 - generer_lignes_triangle
+  [SUCCES] M5 - categoriser_valeur
+  [SUCCES] M6 - sauvegarder/charger_json
+  [SUCCES] M7 - compter_frequences_elements
+  [SUCCES] M8 - calculer_extremums_et_etendue
+  [SUCCES] M9 - Salarie (classe & méthodes)
+  [SUCCES] M10 - traiter_pipeline_salaries
+----------------------------------------------------------------------
+Bilan de votre progression : 11 / 11 validés.
+Félicitations ! Tous les fondamentaux sont maîtrisés.
+======================================================================
+```
+
+---
+
+### Exercice 0 : Ancienne série Fondamentaux Python (intro_base.py)
 **Sortie attendue :**
 ```text
 ========================================================================
